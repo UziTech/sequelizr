@@ -1,0 +1,2 @@
+# sequelizr
+Manage Sequelize models
