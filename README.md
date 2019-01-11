@@ -4,9 +4,9 @@ Manage Sequelize models
 
 # Usage
 
-- [Check models match database](#Check-models-match-database)
-- [Download models from database](#Download-models-from-database)
-- [Upload models to database](#Upload-models-to-database)
+- [Check models match database](#check-models-match-database)
+- [Download models from database](#download-models-from-database)
+- [Upload models to database](#upload-models-to-database)
 
 ## Check models match database
 
