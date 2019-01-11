@@ -1,0 +1,37 @@
+{
+  "name": "sequelizr",
+  "version": "0.0.0",
+  "description": "Manage Sequelize models",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/UziTech/sequelizr.git"
+  },
+  "bin": "./bin/sequelizr.js",
+  "keywords": [
+    "sequelize",
+    "model",
+    "models",
+    "sync",
+    "create",
+    "download",
+    "upload"
+  ],
+  "author": "Tony Brix",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/UziTech/sequelizr/issues"
+  },
+  "homepage": "https://github.com/UziTech/sequelizr#readme",
+  "dependencies": {
+    "sequelize": "^4.42.0",
+    "yargs": "^12.0.5"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.0"
+  }
+}
