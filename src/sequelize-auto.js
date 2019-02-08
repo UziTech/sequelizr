@@ -454,7 +454,7 @@ class AutoSequelize {
 							val += ".ZEROFILL";
 						}
 					} else if (_attr.match(/^(float|float4)/)) {
-						val = `DataTypes.FLOAT${/length(\(\d+(,\s?\d+)?\)/)}`;
+						val = `DataTypes.FLOAT${length(/\(\d+(,\s?\d+)?\)/)}`;
 					} else if (_attr.match(/^(float8|double precision|numeric)/)) {
 						val = `DataTypes.DOUBLE${length(/\(\d+(,\s?\d+)?\)/)}`;
 					} else if (_attr.match(/^decimal/)) {
