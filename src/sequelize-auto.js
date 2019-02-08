@@ -454,13 +454,13 @@ class AutoSequelize {
 							val += ".ZEROFILL";
 						}
 					} else if (_attr.match(/^(float|float4)/)) {
-						val = `DataTypes.FLOAT${/\(\d+(,\s?\d+)?\)/}`;
+						val = `DataTypes.FLOAT${/length(\(\d+(,\s?\d+)?\)/)}`;
 					} else if (_attr.match(/^(float8|double precision|numeric)/)) {
-						val = `DataTypes.DOUBLE${/\(\d+(,\s?\d+)?\)/}`;
+						val = `DataTypes.DOUBLE${length(/\(\d+(,\s?\d+)?\)/)}`;
 					} else if (_attr.match(/^decimal/)) {
-						val = `DataTypes.DECIMAL${/\(\d+,\s?\d+\)/}`;
+						val = `DataTypes.DECIMAL${length(/\(\d+,\s?\d+\)/)}`;
 					} else if (_attr.match(/^real/)) {
-						val = `DataTypes.REAL${/\(\d+(,\s?\d+)?\)/}`;
+						val = `DataTypes.REAL${length(/\(\d+(,\s?\d+)?\)/)}`;
 					} else if (_attr === "boolean" || _attr === "bit(1)" || _attr === "bit") {
 						val = "DataTypes.BOOLEAN";
 					} else if (match = _attr.match(/^(tiny|medium|long)?blob/)) { // eslint-disable-line no-cond-assign
