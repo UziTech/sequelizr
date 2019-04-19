@@ -1,5 +1,8 @@
 # sequelizr
 
+[![Build Status](https://travis-ci.com/UziTech/sequelizr.svg?branch=master)](https://travis-ci.com/UziTech/sequelizr)
+[![dependencies Status](https://david-dm.org/UziTech/sequelizr/status.svg)](https://david-dm.org/UziTech/sequelizr)
+
 Manage Sequelize models
 
 # Usage
