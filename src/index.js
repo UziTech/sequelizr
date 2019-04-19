@@ -214,7 +214,6 @@ async function uploadModels(options = {}) {
 		host,
 		dialect,
 		port,
-		operatorsAliases: false,
 		logging: false,
 		dialectOptions,
 	});
@@ -292,7 +291,6 @@ async function downloadModels(options = {}) {
 		directory,
 		port,
 		tables,
-		operatorsAliases: false,
 		logging: false,
 		dialectOptions,
 		overwrite,
