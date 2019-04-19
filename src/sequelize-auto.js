@@ -20,9 +20,12 @@ class AutoSequelize {
 		} else if (options.dialect === "mssql") {
 			const dialectOptions = options.dialectOptions || {};
 			options.dialectOptions = {
-				requestTimeout: 0,
-				connectTimeout: 1000 * 60 * 1,
 				...dialectOptions,
+				options: {
+					requestTimeout: 0,
+					connectTimeout: 1000 * 60 * 1,
+					...dialectOptions.options,
+				},
 			};
 			const pool = options.pool || {};
 			options.pool = {
@@ -94,7 +97,7 @@ class AutoSequelize {
 
 		const results = await this.sequelize.query(sql, {
 			type: this.sequelize.QueryTypes.SELECT,
-			raw: true
+			raw: true,
 		});
 
 		for (let ref of results) {
@@ -159,7 +162,7 @@ class AutoSequelize {
 		const sql = this.dialect.getIndexesQuery(table, this.sequelize.config.database);
 		const results = await this.sequelize.query(sql, {
 			type: this.sequelize.QueryTypes.SELECT,
-			raw: true
+			raw: true,
 		});
 
 		let indexes = [];
@@ -201,7 +204,7 @@ class AutoSequelize {
 			const showTablesSql = this.dialect.showTablesQuery(this.options.schema);
 			tables = await this.sequelize.query(showTablesSql, {
 				raw: true,
-				type: this.sequelize.QueryTypes.SHOWTABLES
+				type: this.sequelize.QueryTypes.SHOWTABLES,
 			});
 			tables = tables.reduce((acc, i) => {
 				return acc.concat(i);
@@ -268,7 +271,7 @@ class AutoSequelize {
 	generateText(table, indent) {
 		let text = "";
 
-		text += "module.exports = function(sequelize, DataTypes) {\n";
+		text += "module.exports = function (sequelize, DataTypes) {\n";
 		text += `${indent(1)}return sequelize.define("${table}", {\n`;
 
 		let createdAt = false;
@@ -322,12 +325,12 @@ class AutoSequelize {
 			const attrs = Object.keys(this.tables[table][field]);
 			attrs.forEach((attr) => {
 				const isSerialKey = this.tables[table][field].foreignKey && this.dialect.isSerialKey && this.dialect.isSerialKey(this.tables[table][field].foreignKey);
-
+				const attrValue = this.tables[table][field][attr];
 				// We don't need the special attribute from postgresql describe table..
 				if (attr === "special") {
 					return;
 				} else if (attr === "autoIncrement") {
-					if (!hasAutoIncrement && this.tables[table][field][attr]) {
+					if (!hasAutoIncrement && attrValue) {
 						hasAutoIncrement = true;
 						text += `${indent(3)}autoIncrement: true`;
 					} else {
@@ -345,32 +348,32 @@ class AutoSequelize {
 						text += `${indent(3)}references: {\n`;
 						if (this.options.schema) {
 							text += `${indent(4)}model: {\n`;
-							text += `${indent(5)}tableName: "${this.tables[table][field][attr].foreignSources.target_table}",\n`;
-							text += `${indent(5)}schema: "${this.tables[table][field][attr].foreignSources.target_schema}"\n`;
+							text += `${indent(5)}tableName: "${attrValue.foreignSources.target_table}",\n`;
+							text += `${indent(5)}schema: "${attrValue.foreignSources.target_schema}"\n`;
 							text += `${indent(4)}},\n`;
 						} else {
-							text += `${indent(4)}model: "${this.tables[table][field][attr].foreignSources.target_table}",\n`;
+							text += `${indent(4)}model: "${attrValue.foreignSources.target_table}",\n`;
 						}
-						text += `${indent(4)}key: "${this.tables[table][field][attr].foreignSources.target_column}"\n`;
+						text += `${indent(4)}key: "${attrValue.foreignSources.target_column}"\n`;
 						text += `${indent(3)}}`;
 					} else {
 						return;
 					}
 				} else if (attr === "primaryKey") {
-					if (this.tables[table][field][attr] === true && (!this.tables[table][field].foreignKey || (this.tables[table][field].foreignKey && this.tables[table][field].foreignKey.isPrimaryKey))) {
+					if (attrValue === true && (!this.tables[table][field].foreignKey || (this.tables[table][field].foreignKey && this.tables[table][field].foreignKey.isPrimaryKey))) {
 						text += `${indent(3)}primaryKey: true`;
 					} else {
 						return;
 					}
 				} else if (attr === "allowNull") {
-					text += `${indent(3)}${attr}: ${this.tables[table][field][attr]}`;
+					text += `${indent(3)}${attr}: ${attrValue}`;
 				} else if (attr === "defaultValue") {
 					if (this.sequelize.options.dialect === "mssql" && defaultVal && defaultVal.toLowerCase() === "(newid())") {
 						// disable adding "default value" attribute for UUID fields if generating for MS SQL
 						defaultVal = null;
 					}
 
-					let val_text = defaultVal;
+					let val = defaultVal;
 
 					if (isSerialKey) {
 						return;
@@ -378,24 +381,24 @@ class AutoSequelize {
 
 					// mySql Bit fix
 					if (this.tables[table][field].type.toLowerCase() === "bit(1)") {
-						val_text = defaultVal === "b'1'" ? 1 : 0;
+						val = defaultVal === "b'1'" ? 1 : 0;
 					} else if (this.sequelize.options.dialect === "mssql" && this.tables[table][field].type.toLowerCase() === "bit") {
 						// mssql bit fix
-						val_text = defaultVal === "((1))" ? 1 : 0;
+						val = defaultVal === "((1))" ? 1 : 0;
 					}
 
 					if (typeof defaultVal === "string") {
-						const field_type = this.tables[table][field].type.toLowerCase();
-						if (defaultVal.endsWith("()")) {
-							val_text = `sequelize.fn("${defaultVal.replace(/\(\)$/, "")}")`;
-						} else if (field_type.indexOf("date") === 0 || field_type.indexOf("timestamp") === 0) {
+						const fieldType = this.tables[table][field].type.toLowerCase();
+						if (defaultVal.match(/^\(?\w+\(\)\)?$/)) {
+							val = `sequelize.fn("${defaultVal.replace(/[()]/g, "")}")`;
+						} else if (fieldType.indexOf("date") === 0 || fieldType.indexOf("timestamp") === 0) {
 							if (["current_timestamp", "current_date", "current_time", "localtime", "localtimestamp"].includes(defaultVal.toLowerCase())) {
-								val_text = `sequelize.literal("${defaultVal}")`;
+								val = `sequelize.literal("${defaultVal}")`;
 							} else {
-								val_text = `"${val_text}"`;
+								val = `"${val}"`;
 							}
 						} else {
-							val_text = `"${val_text}"`;
+							val = `"${val}"`;
 						}
 					}
 
@@ -403,37 +406,49 @@ class AutoSequelize {
 						return;
 					}
 
-					if (typeof val_text === "string" && !val_text.match(/^sequelize\.[^(]+\(.*\)$/)) {
-						val_text = SqlString.escape(val_text.replace(/^"+|"+$/g, ""), null, this.options.dialect);
+					if (typeof val === "string" && !val.match(/^sequelize\.[^(]+\(.*\)$/)) {
+						val = SqlString.escape(val.replace(/^"+|"+$/g, ""), null, this.options.dialect);
 					}
 
 					// don't prepend N for MSSQL when building models...
-					val_text = val_text.replace(/^N/, "");
+					val = val.replace(/^N/, "");
 					// use double quotes
-					val_text = val_text.replace(/^'(.*)'$/, "\"$1\"");
-					text += `${indent(3)}${attr}: ${val_text}`;
+					val = val.replace(/^'(.*)'$/, "\"$1\"");
+					text += `${indent(3)}${attr}: ${val}`;
 
-				} else if (attr === "type" && this.tables[table][field][attr].indexOf("ENUM") === 0) {
-					text += `${indent(3)}${attr}: DataTypes.${this.tables[table][field][attr]}`;
-				} else {
-					const _attr = (this.tables[table][field][attr] || "").toLowerCase();
-					const length = (reg, m = 0) => {
-						const l = _attr.match(reg);
-						return l ? l[m] : "";
+				} else if (attr === "type") {
+					const _attr = (attrValue || "").toLowerCase();
+					const length = () => {
+						const l = attrValue.match(/\((.+?)\)/);
+						if (!l) {
+							return "";
+						}
+
+						const lengths = l[1].split(",").map(n => {
+							const len = n.trim().replace(/^'(.*)'$/, "\"$1\"").replace(/\\'/g, "'");
+							if (len.match(/[^-.\d]/) && len.match(/^[^"]/)) {
+								return `"${len}"`;
+							}
+							return len;
+						});
+
+						return `(${lengths.join(", ")})`;
 					};
-					let val = `"${this.tables[table][field][attr]}"`;
+					let val = `"${attrValue}"`;
 					let match = null;
 
-					if (_attr.match(/^varchar/)) {
-						val = `DataTypes.STRING${length(/\(\d+\)/)}`;
+					if (_attr.match(/^(enum|set)/)) {
+						val = `DataTypes.ENUM${length()}`;
+					} else if (_attr.match(/^varchar/)) {
+						val = `DataTypes.STRING${length()}`;
 
 						if (_attr.match(/binary/)) {
 							val += ".BINARY";
 						}
-					} else if (_attr.match(/^string|varying|nvarchar/)) {
+					} else if (_attr.match(/^(string|varying|nvarchar|xml)/)) {
 						val = "DataTypes.STRING";
-					} else if (_attr.match(/^char/)) {
-						val = `DataTypes.CHAR${length(/\(\d+\)/)}`;
+					} else if (_attr.match(/^(n)?char/)) {
+						val = `DataTypes.CHAR${length()}`;
 					} else if (_attr.match(/text|ntext$/)) {
 						val = "DataTypes.TEXT";
 					} else if (match = _attr.match(/^(tinyint|smallint|mediumint|int|bigint)/)) { // eslint-disable-line no-cond-assign
@@ -442,9 +457,9 @@ class AutoSequelize {
 							smallint: "SMALLINT",
 							mediumint: "MEDIUMINT",
 							int: "INTEGER",
-							bigint: "BIgINT",
+							bigint: "BIGINT",
 						};
-						val = `DataTypes.${int[match[0]]}${length(/\(\d+\)/)}`;
+						val = `DataTypes.${int[match[0]]}${length()}`;
 
 						if (_attr.match(/unsigned/)) {
 							val += ".UNSIGNED";
@@ -454,21 +469,21 @@ class AutoSequelize {
 							val += ".ZEROFILL";
 						}
 					} else if (_attr.match(/^(float|float4)/)) {
-						val = `DataTypes.FLOAT${length(/\(\d+(,\s?\d+)?\)/)}`;
-					} else if (_attr.match(/^(float8|double precision|numeric)/)) {
-						val = `DataTypes.DOUBLE${length(/\(\d+(,\s?\d+)?\)/)}`;
-					} else if (_attr.match(/^decimal/)) {
-						val = `DataTypes.DECIMAL${length(/\(\d+,\s?\d+\)/)}`;
+						val = `DataTypes.FLOAT${length()}`;
+					} else if (_attr.match(/^(float8|double|numeric)/)) {
+						val = `DataTypes.DOUBLE${length()}`;
+					} else if (_attr.match(/^decimal|money/)) {
+						val = `DataTypes.DECIMAL${length()}`;
 					} else if (_attr.match(/^real/)) {
-						val = `DataTypes.REAL${length(/\(\d+(,\s?\d+)?\)/)}`;
+						val = `DataTypes.REAL${length()}`;
 					} else if (_attr === "boolean" || _attr === "bit(1)" || _attr === "bit") {
 						val = "DataTypes.BOOLEAN";
-					} else if (match = _attr.match(/^(tiny|medium|long)?blob/)) { // eslint-disable-line no-cond-assign
-						const l = match[1] ? `(${match[1]})` : "";
+					} else if (match = _attr.match(/^(?:(tiny|medium|long)?blob|(?:var)?binary|image)/)) { // eslint-disable-line no-cond-assign
+						const l = match[1] ? `("${match[1]}")` : "";
 						val = `DataTypes.BLOB${l}`;
 					} else if (_attr === "date") {
 						val = "DataTypes.DATEONLY";
-					} else if (_attr.match(/^(date|timestamp)/)) {
+					} else if (_attr.match(/^((small)?date|timestamp)/)) {
 						val = "DataTypes.DATE";
 					} else if (_attr.match(/^(time)/)) {
 						val = "DataTypes.TIME";
@@ -484,6 +499,14 @@ class AutoSequelize {
 						val = "DataTypes.GEOMETRY";
 					}
 					text += `${indent(3)}${attr}: ${val}`;
+				} else if (attr === "comment" && attrValue === null) {
+					return;
+				} else {
+					try {
+						text += `${indent(3)}${attr}: ${JSON.stringify(attrValue)}`;
+					} catch (ex) {
+						// skip attr
+					}
 				}
 
 				text += ",";
