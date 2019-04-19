@@ -62,6 +62,7 @@
 		"brace-style": [2, "1tbs"],
 		"comma-spacing": 2,
 		"comma-style": 2,
+		"comma-dangle": [2, "always-multiline"],
 		"computed-property-spacing": 2,
 		"eol-last": 1,
 		"func-call-spacing": 2,

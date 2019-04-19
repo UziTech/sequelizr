@@ -94,5 +94,5 @@ module.exports = {
 	 */
 	isSerialKey: function (record) {
 		return typeof record === "object" && ("extra" in record) && record.extra === "auto_increment";
-	}
+	},
 };

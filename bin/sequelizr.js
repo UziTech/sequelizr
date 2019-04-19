@@ -121,7 +121,7 @@ yargs
 			port,
 			dialect,
 			directory,
-			...(config ? require(config) : {})
+			...(config ? require(config) : {}),
 		};
 
 		sequelizr.checkModels(options);
@@ -178,7 +178,7 @@ yargs
 			dialect,
 			directory,
 			overwrite,
-			...(config ? require(config) : {})
+			...(config ? require(config) : {}),
 		};
 
 		sequelizr.downloadModels(options);
@@ -235,7 +235,7 @@ yargs
 			dialect,
 			directory,
 			overwrite,
-			...(config ? require(config) : {})
+			...(config ? require(config) : {}),
 		};
 
 		sequelizr.uploadModels(options);

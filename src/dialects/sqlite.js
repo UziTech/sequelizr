@@ -31,5 +31,5 @@ module.exports = {
 	 */
 	isPrimaryKey: function (record) {
 		return typeof record === "object" && ("primaryKey" in record) && record.primaryKey === true;
-	}
+	},
 };

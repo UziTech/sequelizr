@@ -86,5 +86,5 @@ module.exports = {
 	 */
 	isSerialKey: function (record) {
 		return typeof record === "object" && this.isPrimaryKey(record) && (("is_identity" in record) && record.is_identity);
-	}
+	},
 };

@@ -107,5 +107,5 @@ module.exports = {
 	 */
 	showTablesQuery: function (schema) {
 		return `SELECT table_name FROM information_schema.tables WHERE table_schema = '${schema}' AND table_type LIKE '%TABLE' AND table_name != 'spatial_ref_sys';`;
-	}
+	},
 };
