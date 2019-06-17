@@ -591,7 +591,7 @@ class AutoSequelize {
 		process.stdout.clearLine();
 		process.stdout.cursorTo(0);
 
-		this.sequelize.close();
+		await this.sequelize.close();
 
 		if (this.options.directory) {
 			await this.write();
