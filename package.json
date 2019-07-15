@@ -29,7 +29,7 @@
   "homepage": "https://github.com/UziTech/sequelizr#readme",
   "dependencies": {
     "sequelize": "^5.10.1",
-    "yargs": "^13.2.4"
+    "yargs": "^13.3.0"
   },
   "devDependencies": {
     "eslint": "^6.0.1"
