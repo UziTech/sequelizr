@@ -200,7 +200,7 @@ class AutoSequelize {
 
 	async build() {
 		let tables = [];
-		if (this.options.dialect === "postgres" && this.options.schema) {
+		if ((this.options.dialect === "postgres" && this.options.schema) || ["mysql", "mssql"].includes(this.options.dialect)) {
 			const showTablesSql = this.dialect.showTablesQuery(this.options.schema);
 			tables = await this.sequelize.query(showTablesSql, {
 				raw: true,

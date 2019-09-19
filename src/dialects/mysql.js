@@ -95,4 +95,13 @@ module.exports = {
 	isSerialKey: function (record) {
 		return typeof record === "object" && ("extra" in record) && record.extra === "auto_increment";
 	},
+
+	/**
+	 * Overwrites Sequelize's native method for showing all tables.
+	 * This allows showing all tables and views from the current schema
+	 * @return {String} return
+	 */
+	showTablesQuery: function () {
+		return "SHOW TABLES;";
+	},
 };

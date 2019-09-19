@@ -87,4 +87,13 @@ module.exports = {
 	isSerialKey: function (record) {
 		return typeof record === "object" && this.isPrimaryKey(record) && (("is_identity" in record) && record.is_identity);
 	},
+
+	/**
+	 * Overwrites Sequelize's native method for showing all tables.
+	 * This allows showing all tables and views from the current schema
+	 * @return {String} return
+	 */
+	showTablesQuery: function () {
+		return "SELECT TABLE_NAME, TABLE_SCHEMA FROM INFORMATION_SCHEMA.TABLES;";
+	},
 };
