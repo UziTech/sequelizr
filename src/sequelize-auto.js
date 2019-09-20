@@ -258,7 +258,6 @@ class AutoSequelize {
 				});
 				pool.add(tables.map((t) => async () => {
 					if (this.options.foreignKeys) {
-						// FIXME: mysql foreign keys query takes about 10s per table
 						await this.buildForeignKeys(t);
 					}
 					if (this.options.indexes) {
