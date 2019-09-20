@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const yargs = require("yargs");
-const sequelizr = require("../src/index.js");
+const sequelizr = require("../");
 
 const args = {
 	server: {
