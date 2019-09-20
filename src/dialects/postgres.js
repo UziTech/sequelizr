@@ -102,10 +102,11 @@ module.exports = {
 	/**
 	 * Overwrites Sequelize's native method for showing all tables.
 	 * This allows custom schema support
-	 * @param {String} schema The schema to list all tables from
+	 * @param {String} options Options
+	 * @param {String} [options.schema] The schema to list all tables from
 	 * @return {String} return
 	 */
-	showTablesQuery: function (schema) {
-		return `SELECT table_name FROM information_schema.tables WHERE table_schema = '${schema}' AND table_type LIKE '%TABLE' AND table_name != 'spatial_ref_sys';`;
+	showTablesQuery: function (options) {
+		return `SELECT table_name FROM information_schema.tables WHERE table_schema = '${options.schema}' AND table_type LIKE '%TABLE' AND table_name != 'spatial_ref_sys';`;
 	},
 };

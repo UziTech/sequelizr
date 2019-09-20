@@ -99,9 +99,26 @@ module.exports = {
 	/**
 	 * Overwrites Sequelize's native method for showing all tables.
 	 * This allows showing all tables and views from the current schema
+	 * @param {String} options Options
+	 * @param {String} [options.database] The database to list all tables from
+	 * @param {String} [options.includeViews] Include views with tables
 	 * @return {String} return
 	 */
-	showTablesQuery: function () {
-		return "SHOW TABLES;";
+	showTablesQuery: function (options) {
+		let query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES";
+		const wheres = [];
+		if (!options.includeViews) {
+			wheres.push("TABLE_TYPE = 'BASE TABLE'");
+		}
+		if (options.database) {
+			wheres.push(`TABLE_SCHEMA = '${options.database}'`);
+		} else {
+			wheres.push("TABLE_SCHEMA NOT IN ('MYSQL', 'INFORMATION_SCHEMA', 'PERFORMANCE_SCHEMA')");
+		}
+
+		if (wheres.length > 0) {
+			query += ` WHERE ${wheres.join(" AND ")}`;
+		}
+		return `${query};`;
 	},
 };

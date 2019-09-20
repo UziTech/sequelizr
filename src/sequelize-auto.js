@@ -59,6 +59,7 @@ class AutoSequelize {
 		this.dialect = dialects[this.sequelize.options.dialect];
 
 		this.options = {
+			database,
 			spaces: false,
 			indentation: 1,
 			directory: "./models",
@@ -68,6 +69,7 @@ class AutoSequelize {
 			skipTables: null,
 			foreignKeys: true,
 			indexes: true,
+			includeViews: true,
 			...options,
 		};
 
@@ -201,21 +203,21 @@ class AutoSequelize {
 	async build() {
 		let tables = [];
 		if ((this.options.dialect === "postgres" && this.options.schema) || ["mysql", "mssql"].includes(this.options.dialect)) {
-			const showTablesSql = this.dialect.showTablesQuery(this.options.schema);
+			const showTablesSql = this.dialect.showTablesQuery(this.options);
 			tables = await this.sequelize.query(showTablesSql, {
 				raw: true,
 				type: this.sequelize.QueryTypes.SHOWTABLES,
 			});
-			tables = tables.reduce((acc, i) => {
-				return acc.concat(i);
-			}, []);
 		} else {
 			tables = await this.queryInterface.showAllTables();
 		}
 
-		if (this.sequelize.options.dialect === "mssql") {
-			tables = tables.map(t => t.tableName);
-		}
+		tables = tables.reduce((acc, i) => {
+			if (i.tableName) {
+				return acc.concat(i.tableName);
+			}
+			return acc.concat(i);
+		}, []);
 
 		if (this.options.tables) {
 			if (this.options.tables instanceof RegExp) {

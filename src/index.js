@@ -269,6 +269,7 @@ async function uploadModels(options = {}) {
  * @param  {Array<string>} [options.tables] Database tables
  * @param  {Object} [options.dialectOptions] Database options
  * @param  {bool} [options.overwrite] Overwrite files if exist
+ * @param  {bool} [options.includeViews] IncludeViews along with tables
  * @return {Promise<SequelizeAuto|Object>} Resolves to SequelizeAuto on success
  */
 async function downloadModels(options = {}) {
@@ -283,6 +284,7 @@ async function downloadModels(options = {}) {
 		tables,
 		dialectOptions,
 		overwrite,
+		includeViews,
 	} = options;
 
 	const auto = new SequelizeAuto(database, username, password, {
@@ -294,6 +296,7 @@ async function downloadModels(options = {}) {
 		logging: false,
 		dialectOptions,
 		overwrite,
+		includeViews,
 	});
 
 	await auto.run();
