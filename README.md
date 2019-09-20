@@ -78,3 +78,49 @@ Command Options:
 Global Options:
   --help, -h  Show help                                                         [boolean]
 ```
+
+## Configuration
+
+You can use a config file instead of cli arguments. The file can be a JSON or JavaScript file that exports an object.
+
+Example config:
+```js
+// config.js
+module.exports = {
+  database: "database",
+  username: "username",
+  password: "password",
+  host: "host",
+  port: 1433,
+  dialect: "mssql",
+  directory: "C:\\models\\database",
+  tables: ["table1", "table2"],
+  dialectOptions: {...},
+
+  // `check` specific options
+  includeViews: true, // Check models for views along with tables. Default = true
+  output: true, // TRUE(default) = Output errors to console
+                // FALSE = Reject error string
+                // EventEmitter = emit "error" for each error
+
+  // `download` specific options
+  overwrite: false,   // Overwrite model files. Default = false
+  includeViews: true, // Download models for views along with tables. Default = true
+
+  // `upload` specific options
+  overwrite: false, // Drop tables before create. Default = false
+}
+```
+
+## API
+
+You can also use this module programmatically.
+
+```js
+const {checkModels, downloadModels, uploadModels} = require("sequelizr");
+const config = require("./config");
+
+checkModels(config);
+downloadModels(config);
+uploadModels(config);
+```
