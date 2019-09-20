@@ -1,19 +1,30 @@
 language: node_js
 
+node_js: 10
+
+env:
+  global:
+    - SEQ_DB=sequelizr_test
+    - SEQ_USER=sequelizr_test
+    - SEQ_PW=sequelizr_test
+    - SEQ_HOST=127.0.0.1
+    - MYSQLDB_ENTRYPOINT=$TRAVIS_BUILD_DIR/scripts/mysql
+    - SEQ_MYSQL_PORT=8980
+    - DIALECT=mysql
+
 jobs:
   include:
-    # - stage: test 👩🏽‍💻
-    #   script: npm run test
-    #   node_js: lts/*
-    # - node_js: node
+    - stage: test 👩🏽‍💻
+      sudo: required
+      before_script: docker run --link mysql-80:db -e CHECK_PORT=3306 -e CHECK_HOST=db --net sequelizr_default giorgos/takis;
+      script: npm run test
 
     - stage: lint ✨
       script: npm run lint
-      node_js: lts/*
 
-cache:
-  directories:
-    - node_modules
+cache: npm
+
+sudo: true
 
 git:
   depth: 3
