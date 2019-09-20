@@ -16,7 +16,9 @@ jobs:
   include:
     - stage: test 👩🏽‍💻
       sudo: required
-      before_script: docker run --link mysql-80:db -e CHECK_PORT=3306 -e CHECK_HOST=db --net sequelizr_default giorgos/takis;
+      before_script:
+        - docker-compose up -d mysql-80;
+        - docker run --link mysql-80:db -e CHECK_PORT=3306 -e CHECK_HOST=db --net sequelizr_default giorgos/takis;
       script: npm run test
 
     - stage: lint ✨
