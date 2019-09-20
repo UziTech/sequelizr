@@ -49,6 +49,7 @@ function convertToGenericType(type) {
  * @param  {string} [options.directory] Model directory
  * @param  {Array<string>} [options.tables] Database tables
  * @param  {Object} [options.dialectOptions] Database options
+ * @param  {bool} [options.includeViews] Include views along with tables
  * @param  {bool|EventEmitter} [options.output] FALSE = Reject error string, TRUE(default) = Output errors to console, EventEmitter = emit "error" for each error
  * @return {Promise<void>} Resolves on success
  */
@@ -63,6 +64,7 @@ async function checkModels(options = {}) {
 		directory,
 		tables,
 		dialectOptions,
+		includeViews,
 	} = options;
 	const output = options.output || options.output !== false;
 
@@ -76,6 +78,7 @@ async function checkModels(options = {}) {
 		directory: false,
 		tables,
 		dialectOptions,
+		includeViews,
 	});
 
 
