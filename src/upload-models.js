@@ -8,7 +8,6 @@ const checkModels = require("./check-models.js");
 /**
  * Sync models with database
  * @param  {Object} [options={}] Options
- * @param  {string} [options.server] Server name
  * @param  {string} [options.database] Database name
  * @param  {string} [options.username] Datbase username
  * @param  {string} [options.password] Database password
@@ -23,7 +22,6 @@ const checkModels = require("./check-models.js");
  */
 async function uploadModels(options = {}) {
 	const {
-		server,
 		database,
 		username,
 		password,
@@ -41,9 +39,9 @@ async function uploadModels(options = {}) {
 		files = await readdirAsync(directory);
 	} catch (err) {
 		if (err.code === "ENOENT") {
-			throw new Error(`No models for '${server}.${database}'`);
+			throw new Error(`No models for '${host}.${database}'`);
 		}
-		throw new Error(`Cannot sync '${server}.${database}' models`);
+		throw new Error(`Cannot sync '${host}.${database}' models`);
 	}
 
 	const db = new Sequelize(database, username, password, {
@@ -79,7 +77,7 @@ async function uploadModels(options = {}) {
 						error = ex;
 					}
 					if (error) {
-						throw new Error(`Cannot sync '${server}.${database}.${table}' model\n         ${error.message.trim()}`);
+						throw new Error(`Cannot sync '${host}.${database}.${table}' model\n         ${error.message.trim()}`);
 					}
 				}
 			}
