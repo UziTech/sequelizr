@@ -7,11 +7,18 @@ Manage Sequelize models
 
 # Usage
 
-- [Check models match database](#check-models-match-database)
-- [Download models from database](#download-models-from-database)
-- [Upload models to database](#upload-models-to-database)
+-   [CLI](#cli)
+    -   [Check models match database](#check-models-match-database)
+    -   [Download models from database](#download-models-from-database)
+    -   [Upload models to database](#upload-models-to-database)
+-   [API](#api)
+-   [Configuration](#configuration)
 
-## Check models match database
+## CLI
+
+You can use Sequelizr from the command line with the following commands:
+
+### Check models match database
 
 Check if models match database tables.
 
@@ -33,7 +40,7 @@ Global Options:
   --help, -h  Show help                                                         [boolean]
 ```
 
-## Download models from database
+### Download models from database
 
 Create model files from database tables.
 
@@ -56,7 +63,7 @@ Global Options:
   --help, -h  Show help                                                         [boolean]
 ```
 
-## Upload models to database
+### Upload models to database
 
 Create database tables from model files.
 
@@ -79,6 +86,19 @@ Global Options:
   --help, -h  Show help                                                         [boolean]
 ```
 
+## API
+
+You can also use Sequelizr programmatically.
+
+```js
+const {checkModels, downloadModels, uploadModels} = require("sequelizr");
+const config = require("./config");
+
+checkModels(config);
+downloadModels(config);
+uploadModels(config);
+```
+
 ## Configuration
 
 You can use a config file instead of cli arguments. The file can be a JSON or JavaScript file that exports an object.
@@ -99,9 +119,9 @@ module.exports = {
 
   // `check` specific options
   includeViews: true, // Check models for views along with tables. Default = true
-  output: true, // TRUE(default) = Output errors to console
-                // FALSE = Reject error string
-                // EventEmitter = emit "error" for each error
+  output: true,       // TRUE(default) = Output errors to console
+                      // FALSE = Reject error string
+                      // EventEmitter = emit "error" for each error
 
   // `download` specific options
   overwrite: false,   // Overwrite model files. Default = false
@@ -110,17 +130,4 @@ module.exports = {
   // `upload` specific options
   overwrite: false, // Drop tables before create. Default = false
 }
-```
-
-## API
-
-You can also use this module programmatically.
-
-```js
-const {checkModels, downloadModels, uploadModels} = require("sequelizr");
-const config = require("./config");
-
-checkModels(config);
-downloadModels(config);
-uploadModels(config);
 ```
