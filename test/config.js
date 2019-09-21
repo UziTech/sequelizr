@@ -1,6 +1,6 @@
 const {env} = process;
 
-switch (env.dialect) {
+switch (env.DIALECT) {
 	case "mysql": {
 		module.exports = {
 			database: env.SEQ_MYSQL_DB || env.SEQ_DB || "sequelizr_test",
