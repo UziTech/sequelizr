@@ -25,7 +25,7 @@ switch (env.DIALECT) {
 			// ignore
 		}
 
-		module.exports = mssqlConfig || {
+		module.exports = {
 			database: env.SEQ_MSSQL_DB || env.SEQ_DB || "sequelizr_test",
 			username: env.SEQ_MSSQL_USER || env.SEQ_USER || "sequelize",
 			password: env.SEQ_MSSQL_PW || env.SEQ_PW || "nEGkLma26gXVHFUAHJxcmsrK",
@@ -41,6 +41,7 @@ switch (env.DIALECT) {
 				max: env.SEQ_MSSQL_POOL_MAX || env.SEQ_POOL_MAX || 5,
 				idle: env.SEQ_MSSQL_POOL_IDLE || env.SEQ_POOL_IDLE || 3000,
 			},
+			...(mssqlConfig || {}),
 		};
 		break;
 	}
