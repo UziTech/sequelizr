@@ -1,3 +1,4 @@
+const Sequelize = require("sequelize");
 const {downloadModels} = require("../../");
 const {
 	database,
@@ -10,8 +11,7 @@ const {
 } = require("../config.js");
 
 describe("download", () => {
-
-	test("should build tables", async () => {
+	test("should be able to connect", async () => {
 		const auto = await downloadModels({
 			database,
 			username,
