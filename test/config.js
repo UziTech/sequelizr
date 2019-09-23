@@ -51,6 +51,8 @@ switch (env.DIALECT) {
 			password: env.SEQ_PW || null,
 			database: env.SEQ_DB || "sequelizr_test",
 			host: env.SEQ_HOST || "127.0.0.1",
+			port: env.SEQ_PORT,
+			dialect: env.DIALECT,
 			pool: {
 				max: env.SEQ_POOL_MAX || 5,
 				idle: env.SEQ_POOL_IDLE || 30000,
