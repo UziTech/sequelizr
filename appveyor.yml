@@ -1,0 +1,27 @@
+version: '{build}'
+
+platform:
+  - x64
+
+services:
+  - mssql2017
+
+shallow_clone: true
+
+environment:
+  matrix:
+    - { NODE_VERSION: 10, DIALECT: mssql }
+
+install:
+  - ps: Install-Product node $env:NODE_VERSION x64
+  - node --version
+  - npm --version
+  - npm install
+
+build: off
+
+before_test:
+  - ps: . .\scripts\appveyor-setup.ps1
+
+test_script:
+  - 'npm test'

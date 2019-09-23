@@ -90,4 +90,4 @@ async function uploadModels(options = {}) {
 	}
 }
 
-module.exports = uploadModels();
+module.exports = uploadModels;
