@@ -27,7 +27,7 @@ switch (env.DIALECT) {
 
 		module.exports = {
 			database: env.SEQ_MSSQL_DB || env.SEQ_DB || "sequelizr_test",
-			username: env.SEQ_MSSQL_USER || env.SEQ_USER || "sequelize",
+			username: env.SEQ_MSSQL_USER || env.SEQ_USER || "sequelizr",
 			password: env.SEQ_MSSQL_PW || env.SEQ_PW || "nEGkLma26gXVHFUAHJxcmsrK",
 			host: env.SEQ_MSSQL_HOST || env.SEQ_HOST || "127.0.0.1",
 			port: env.SEQ_MSSQL_PORT || env.SEQ_PORT || 1433,
