@@ -1,6 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const util = require("util");
+const readline = require("readline");
 const Sequelize = require("sequelize");
 const dialects = require("./dialects");
 const SqlString = require("./sql-string");
@@ -242,8 +243,8 @@ class AutoSequelize {
 					if (pool.percent !== lastUpdate) {
 						lastUpdate = pool.percent;
 						if (pool.successful >= tables.length) {
-							process.stdout.clearLine();
-							process.stdout.cursorTo(0);
+							readline.clearLine(process.stdout, 0);
+							readline.cursorTo(process.stdout, 0);
 							resolve();
 						} else {
 							const percent = pool.percent.toFixed(precision);
@@ -252,8 +253,8 @@ class AutoSequelize {
 					}
 				});
 				pool.onError((ex) => {
-					process.stdout.clearLine();
-					process.stdout.cursorTo(0);
+					readline.clearLine(process.stdout, 0);
+					readline.cursorTo(process.stdout, 0);
 					reject(ex);
 				});
 				pool.add(tables.map((t) => async () => {
@@ -589,8 +590,8 @@ class AutoSequelize {
 			process.stdout.write(`\rgenerating... ${percent}%`);
 			this.text[table] = this.generateText(table, indent);
 		}
-		process.stdout.clearLine();
-		process.stdout.cursorTo(0);
+		readline.clearLine(process.stdout, 0);
+		readline.cursorTo(process.stdout, 0);
 
 		await this.sequelize.close();
 
@@ -635,8 +636,8 @@ class AutoSequelize {
 					if (pool.percent !== lastUpdate) {
 						lastUpdate = pool.percent;
 						if (pool.successful >= tables.length) {
-							process.stdout.clearLine();
-							process.stdout.cursorTo(0);
+							readline.clearLine(process.stdout, 0);
+							readline.cursorTo(process.stdout, 0);
 							resolve();
 						} else {
 							const percent = pool.percent.toFixed(precision);
@@ -645,8 +646,8 @@ class AutoSequelize {
 					}
 				});
 				pool.onError((ex) => {
-					process.stdout.clearLine();
-					process.stdout.cursorTo(0);
+					readline.clearLine(process.stdout, 0);
+					readline.cursorTo(process.stdout, 0);
 					reject(ex);
 				});
 				pool.add(tables.map((t) => async () => {
