@@ -21,26 +21,12 @@ async function downloadModels(options = {}) {
 		database,
 		username,
 		password,
-		host,
-		port,
-		dialect,
-		directory,
-		tables,
-		dialectOptions,
-		overwrite,
-		includeViews,
+		...opts
 	} = options;
 
 	const auto = new SequelizeAuto(database, username, password, {
-		host,
-		dialect,
-		directory,
-		port,
-		tables,
+		...opts,
 		logging: false,
-		dialectOptions,
-		overwrite,
-		includeViews,
 	});
 
 	await auto.run();
