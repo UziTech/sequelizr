@@ -90,11 +90,8 @@ async function uploadModels(options = {}) {
 				}
 			}
 		}
+	} finally {
 		await db.close();
-		process.exit();
-	} catch (err) {
-		await db.close();
-		throw err;
 	}
 }
 

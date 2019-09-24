@@ -1,5 +1,19 @@
+class SequelizeMock {
+	constructor(database, username, password, options) {
+		this.database = database;
+		this.username = username;
+		this.password = password;
+		this.options = options;
+	}
 
-jest.genMockFromModule("sequelize");
+	get getQueryInterface() {
+		return jest.fn(() => {
+			return {};
+		});
+	}
+}
+jest.doMock("sequelize", () => SequelizeMock);
+
 const AutoSequelize = require("../../src/sequelize-auto.js");
 const dialect = process.env.DIALECT;
 

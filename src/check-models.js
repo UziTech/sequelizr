@@ -10,7 +10,8 @@ const downloadModels = require("./download-models.js");
  * @return {string} Generic type string
  */
 function convertToGenericType(type) {
-	switch (type) {
+	const genericType = type.replace(/\(\d+\)$/, "");
+	switch (genericType) {
 		case "DATETIME2":
 		case "TIMESTAMP":
 		case "DATETIMEOFFSET":
@@ -28,13 +29,8 @@ function convertToGenericType(type) {
 		case "UUIDV4":
 			return "UNIQUEIDENTIFIER";
 		default:
-			if (type.match(/^NVARCHAR(\(\d+\))?$/)) {
-				return "VARCHAR";
-			} else if (type.match(/^CHAR(\(\d+\))?$/)) {
-				return "CHAR";
-			}
+			return genericType;
 	}
-	return type;
 }
 
 /**
