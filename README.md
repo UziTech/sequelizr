@@ -35,6 +35,7 @@ Command Options:
   --port, -r                 Port                                                [number]
   --dialect, -l              Dialect                 [string] [choices: "mysql", "mssql"]
   --models, -m, --directory  Model Directory                      [string] [default: "."]
+  --quiet, -q                Build Models Silently             [boolean] [default: false]
   --config, -c               Config File                                         [string]
 
 Global Options:
@@ -58,6 +59,7 @@ Command Options:
   --dialect, -l              Dialect                 [string] [choices: "mysql", "mssql"]
   --models, -m, --directory  Model Directory                      [string] [default: "."]
   --overwrite, -o            Overwrite files if they exist.    [boolean] [default: false]
+  --quiet, -q                Build Models Silently             [boolean] [default: false]
   --config, -c               Config File                                         [string]
 
 Global Options:
@@ -81,6 +83,7 @@ Command Options:
   --dialect, -l              Dialect                 [string] [choices: "mysql", "mssql"]
   --models, -m, --directory  Model Directory                      [string] [default: "."]
   --overwrite, -o            Drop tables before creating them. [boolean] [default: false]
+  --quiet, -q                Build Models Silently             [boolean] [default: false]
   --config, -c               Config File                                         [string]
 
 Global Options:

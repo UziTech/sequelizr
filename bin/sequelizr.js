@@ -62,6 +62,13 @@ const args = {
 		default: false,
 		group: "Command Options:",
 	},
+	quiet: {
+		alias: ["q"],
+		type: "boolean",
+		default: false,
+		description: "Build Models Silently",
+		group: "Command Options:",
+	},
 	config: {
 		alias: ["c"],
 		type: "string",
@@ -84,6 +91,7 @@ yargs
 			port,
 			dialect,
 			models,
+			quiet,
 			config,
 		} = args;
 		yargs
@@ -96,6 +104,7 @@ yargs
 				port,
 				dialect,
 				models,
+				quiet,
 				config,
 			})
 			.hide("version");
@@ -109,6 +118,7 @@ yargs
 			port,
 			dialect,
 			directory,
+			quiet,
 			config,
 		} = argv;
 
@@ -121,6 +131,7 @@ yargs
 			port,
 			dialect,
 			directory,
+			quiet,
 			...(config ? require(config) : {}),
 		};
 
@@ -137,6 +148,7 @@ yargs
 			dialect,
 			models,
 			overwrite,
+			quiet,
 			config,
 		} = args;
 		overwrite.description = "Overwrite files if they exist.";
@@ -151,6 +163,7 @@ yargs
 				dialect,
 				models,
 				overwrite,
+				quiet,
 				config,
 			})
 			.hide("version");
@@ -165,6 +178,7 @@ yargs
 			dialect,
 			directory,
 			overwrite,
+			quiet,
 			config,
 		} = argv;
 
@@ -178,6 +192,7 @@ yargs
 			dialect,
 			directory,
 			overwrite,
+			quiet,
 			...(config ? require(config) : {}),
 		};
 
@@ -194,6 +209,7 @@ yargs
 			dialect,
 			models,
 			overwrite,
+			quiet,
 			config,
 		} = args;
 		overwrite.description = "Drop tables before creating them.";
@@ -208,6 +224,7 @@ yargs
 				dialect,
 				models,
 				overwrite,
+				quiet,
 				config,
 			})
 			.hide("version");
@@ -222,6 +239,7 @@ yargs
 			dialect,
 			directory,
 			overwrite,
+			quiet,
 			config,
 		} = argv;
 
@@ -235,6 +253,7 @@ yargs
 			dialect,
 			directory,
 			overwrite,
+			quiet,
 			...(config ? require(config) : {}),
 		};
 
