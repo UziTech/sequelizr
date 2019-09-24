@@ -6,6 +6,8 @@
   "scripts": {
     "test": "jest --verbose",
     "test:cover": "jest --coverage",
+    "test:mysql": "cross-env DIALECT=mysql jest --verbose",
+    "test:mssql": "cross-env DIALECT=mssql jest --verbose",
     "lint": "eslint ."
   },
   "repository": {
@@ -33,6 +35,7 @@
     "yargs": "^14.0.0"
   },
   "devDependencies": {
+    "cross-env": "^6.0.0",
     "eslint": "^6.4.0",
     "jest-cli": "^24.9.0",
     "mysql2": "1.7.0",
