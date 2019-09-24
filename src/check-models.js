@@ -50,35 +50,18 @@ function convertToGenericType(type) {
  * @param  {Array<string>} [options.tables] Database tables
  * @param  {Object} [options.dialectOptions] Database options
  * @param  {bool} [options.includeViews] Include views along with tables
+ * @param  {bool} [options.quiet] Don't output to stdout
  * @param  {bool|EventEmitter} [options.output] FALSE = Reject error string, TRUE(default) = Output errors to console, EventEmitter = emit "error" for each error
  * @return {Promise<void>} Resolves on success
  */
 async function checkModels(options = {}) {
-	const {
-		database,
-		username,
-		password,
-		host,
-		port,
-		dialect,
-		directory,
-		tables,
-		dialectOptions,
-		includeViews,
-	} = options;
+	const {directory, ...opts} = options;
 	const output = options.output || options.output !== false;
+	delete opts.output;
 
 	const auto = await downloadModels({
-		database,
-		username,
-		password,
-		host,
-		port,
-		dialect,
+		...opts,
 		directory: false,
-		tables,
-		dialectOptions,
-		includeViews,
 	});
 
 

@@ -117,6 +117,7 @@ module.exports = {
   directory: "C:\\models\\database",
   tables: ["table1", "table2"],
   dialectOptions: {...},
+  quiet: false, // Build tables silently. Don't output percent complete.
 
   // `check` specific options
   includeViews: true, // Check models for views along with tables. Default = true

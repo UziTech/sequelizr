@@ -22,6 +22,7 @@ module.exports = () => {
 			dialect,
 			directory: false,
 			dialectOptions,
+			quiet: true,
 		});
 
 		expect(auto).toBeTruthy();
@@ -59,6 +60,7 @@ module.exports = () => {
 				dialect,
 				directory: false,
 				dialectOptions,
+				quiet: true,
 			});
 
 			expect(Object.keys(auto.tables)).toEqual(expect.arrayContaining(["my_table", "my_view"]));
@@ -78,6 +80,7 @@ module.exports = () => {
 				directory: false,
 				dialectOptions,
 				includeViews: false,
+				quiet: true,
 			});
 
 			expect(Object.keys(auto.tables)).toEqual(["my_table"]);

@@ -18,6 +18,7 @@ const checkModels = require("./check-models.js");
  * @param  {Array<string>} [options.tables] Database tables
  * @param  {Object} [options.dialectOptions] Database options
  * @param  {bool} [options.overwrite] Drop tables before create
+ * @param  {bool} [options.quiet] Don't output to stdout
  * @return {Promise<void>} Resolves on success
  */
 async function uploadModels(options = {}) {
@@ -32,6 +33,7 @@ async function uploadModels(options = {}) {
 		tables,
 		dialectOptions,
 		overwrite,
+		quiet,
 	} = options;
 
 	let files;
@@ -72,6 +74,7 @@ async function uploadModels(options = {}) {
 							tables: [table],
 							dialectOptions,
 							output: false,
+							quiet,
 						});
 					} catch (ex) {
 						error = ex;

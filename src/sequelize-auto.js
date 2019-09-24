@@ -71,6 +71,7 @@ class AutoSequelize {
 			foreignKeys: true,
 			indexes: true,
 			includeViews: true,
+			quiet: false,
 			...options,
 		};
 
@@ -243,18 +244,24 @@ class AutoSequelize {
 					if (pool.percent !== lastUpdate) {
 						lastUpdate = pool.percent;
 						if (pool.successful >= tables.length) {
-							readline.clearLine(process.stdout, 0);
-							readline.cursorTo(process.stdout, 0);
+							if (!this.options.quiet) {
+								readline.clearLine(process.stdout, 0);
+								readline.cursorTo(process.stdout, 0);
+							}
 							resolve();
 						} else {
-							const percent = pool.percent.toFixed(precision);
-							process.stdout.write(`\rbuilding... ${percent}%`);
+							if (!this.options.quiet) {
+								const percent = pool.percent.toFixed(precision);
+								process.stdout.write(`\rbuilding... ${percent}%`);
+							}
 						}
 					}
 				});
 				pool.onError((ex) => {
-					readline.clearLine(process.stdout, 0);
-					readline.cursorTo(process.stdout, 0);
+					if (!this.options.quiet) {
+						readline.clearLine(process.stdout, 0);
+						readline.cursorTo(process.stdout, 0);
+					}
 					reject(ex);
 				});
 				pool.add(tables.map((t) => async () => {
@@ -586,12 +593,16 @@ class AutoSequelize {
 		const precision = Math.max(`${tables.length}`.length - 2, 0);
 		for (let i = 0; i < tables.length; i++) {
 			const table = tables[i];
-			const percent = (i / tables.length * 100).toFixed(precision);
-			process.stdout.write(`\rgenerating... ${percent}%`);
+			if (!this.options.quiet) {
+				const percent = (i / tables.length * 100).toFixed(precision);
+				process.stdout.write(`\rgenerating... ${percent}%`);
+			}
 			this.text[table] = this.generateText(table, indent);
 		}
-		readline.clearLine(process.stdout, 0);
-		readline.cursorTo(process.stdout, 0);
+		if (!this.options.quiet) {
+			readline.clearLine(process.stdout, 0);
+			readline.cursorTo(process.stdout, 0);
+		}
 
 		await this.sequelize.close();
 
@@ -599,8 +610,10 @@ class AutoSequelize {
 			await this.write();
 		}
 		this.finishedAt = Date.now();
-		// eslint-disable-next-line no-console
-		console.log("Done", `${(this.finishedAt - this.startedAt) / 1000}s`);
+		if (!this.options.quiet) {
+			// eslint-disable-next-line no-console
+			console.log("Done", `${(this.finishedAt - this.startedAt) / 1000}s`);
+		}
 	}
 
 	async write() {
@@ -636,18 +649,24 @@ class AutoSequelize {
 					if (pool.percent !== lastUpdate) {
 						lastUpdate = pool.percent;
 						if (pool.successful >= tables.length) {
-							readline.clearLine(process.stdout, 0);
-							readline.cursorTo(process.stdout, 0);
+							if (!this.options.quiet) {
+								readline.clearLine(process.stdout, 0);
+								readline.cursorTo(process.stdout, 0);
+							}
 							resolve();
 						} else {
-							const percent = pool.percent.toFixed(precision);
-							process.stdout.write(`\rwriting... ${percent}%`);
+							if (!this.options.quiet) {
+								const percent = pool.percent.toFixed(precision);
+								process.stdout.write(`\rwriting... ${percent}%`);
+							}
 						}
 					}
 				});
 				pool.onError((ex) => {
-					readline.clearLine(process.stdout, 0);
-					readline.cursorTo(process.stdout, 0);
+					if (!this.options.quiet) {
+						readline.clearLine(process.stdout, 0);
+						readline.cursorTo(process.stdout, 0);
+					}
 					reject(ex);
 				});
 				pool.add(tables.map((t) => async () => {

@@ -14,6 +14,7 @@ const SequelizeAuto = require("./sequelize-auto.js");
  * @param  {Object} [options.dialectOptions] Database options
  * @param  {bool} [options.overwrite] Overwrite files if exist
  * @param  {bool} [options.includeViews] Include views along with tables
+ * @param  {bool} [options.quiet] Don't output to stdout
  * @return {Promise<SequelizeAuto|Object>} Resolves to SequelizeAuto on success
  */
 async function downloadModels(options = {}) {
