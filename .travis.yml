@@ -24,6 +24,10 @@ jobs:
     - stage: lint ✨
       script: npm run lint
 
+    - stage: release 🎉
+      if: branch = master AND type = push AND fork = false
+      script: npm run semantic-release
+
 cache: npm
 
 sudo: true

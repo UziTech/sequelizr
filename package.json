@@ -8,7 +8,8 @@
     "test:cover": "jest --coverage",
     "test:mysql": "cross-env DIALECT=mysql jest --verbose",
     "test:mssql": "cross-env DIALECT=mssql jest --verbose",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
@@ -35,10 +36,27 @@
     "yargs": "^14.0.0"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^3.0.4",
+    "@semantic-release/commit-analyzer": "^6.3.0",
+    "@semantic-release/git": "^7.0.16",
+    "@semantic-release/github": "^5.4.3",
+    "@semantic-release/npm": "^5.1.15",
+    "@semantic-release/release-notes-generator": "^7.3.0",
     "cross-env": "^6.0.0",
     "eslint": "^6.4.0",
     "jest-cli": "^24.9.0",
     "mysql2": "1.7.0",
+    "semantic-release": "^15.13.24",
     "tedious": "^6.4.0"
+  },
+  "release": {
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/github",
+      "@semantic-release/git"
+    ]
   }
 }
