@@ -33,8 +33,12 @@ async function uploadModels(options = {}) {
 		tables,
 		dialectOptions,
 		overwrite,
-		quiet,
 	} = options;
+
+	const opts = {};
+	if ("quiet" in options) {
+		opts.quiet = options.quiet;
+	}
 
 	let files;
 	try {
@@ -74,7 +78,8 @@ async function uploadModels(options = {}) {
 							tables: [table],
 							dialectOptions,
 							output: false,
-							quiet,
+							includeViews: true,
+							...opts,
 						});
 					} catch (ex) {
 						error = ex;
