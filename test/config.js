@@ -3,15 +3,15 @@ const {env} = process;
 switch (env.DIALECT) {
 	case "mysql": {
 		module.exports = {
-			database: env.SEQ_MYSQL_DB || env.SEQ_DB || "sequelizr_test",
-			username: env.SEQ_MYSQL_USER || env.SEQ_USER || "root",
-			password: env.SEQ_MYSQL_PW || env.SEQ_PW || null,
-			host: env.MYSQL_PORT_3306_TCP_ADDR || env.SEQ_MYSQL_HOST || env.SEQ_HOST || "127.0.0.1",
-			port: env.MYSQL_PORT_3306_TCP_PORT || env.SEQ_MYSQL_PORT || env.SEQ_PORT || 3306,
+			database: env.SEQ_DB || "sequelizr_test",
+			username: env.SEQ_USER || "sequelizr_test",
+			password: env.SEQ_PW || "sequelizr_test",
+			host: env.SEQ_HOST || "localhost",
+			port: env.SEQ_PORT || 3306,
 			dialect: "mysql",
 			pool: {
-				max: env.SEQ_MYSQL_POOL_MAX || env.SEQ_POOL_MAX || 5,
-				idle: env.SEQ_MYSQL_POOL_IDLE || env.SEQ_POOL_IDLE || 3000,
+				max: env.SEQ_POOL_MAX || 5,
+				idle: env.SEQ_POOL_IDLE || 3000,
 			},
 		};
 		break;
@@ -26,11 +26,11 @@ switch (env.DIALECT) {
 		}
 
 		module.exports = {
-			database: env.SEQ_MSSQL_DB || env.SEQ_DB || "sequelizr_test",
-			username: env.SEQ_MSSQL_USER || env.SEQ_USER || "sequelizr",
-			password: env.SEQ_MSSQL_PW || env.SEQ_PW || "nEGkLma26gXVHFUAHJxcmsrK",
-			host: env.SEQ_MSSQL_HOST || env.SEQ_HOST || "127.0.0.1",
-			port: env.SEQ_MSSQL_PORT || env.SEQ_PORT || 1433,
+			database: env.SEQ_DB || "sequelizr_test",
+			username: env.SEQ_USER || "sequelizr_test",
+			password: env.SEQ_PW || "sequelizr_test",
+			host: env.SEQ_HOST || "localhost",
+			port: env.SEQ_PORT || 1433,
 			dialect: "mssql",
 			dialectOptions: {
 				options: {
@@ -38,8 +38,8 @@ switch (env.DIALECT) {
 				},
 			},
 			pool: {
-				max: env.SEQ_MSSQL_POOL_MAX || env.SEQ_POOL_MAX || 5,
-				idle: env.SEQ_MSSQL_POOL_IDLE || env.SEQ_POOL_IDLE || 3000,
+				max: env.SEQ_POOL_MAX || 5,
+				idle: env.SEQ_POOL_IDLE || 3000,
 			},
 			...(mssqlConfig || {}),
 		};
@@ -47,10 +47,10 @@ switch (env.DIALECT) {
 	}
 	default: {
 		module.exports = {
-			username: env.SEQ_USER || "root",
-			password: env.SEQ_PW || null,
+			username: env.SEQ_USER || "sequelizr_test",
+			password: env.SEQ_PW || "sequelizr_test",
 			database: env.SEQ_DB || "sequelizr_test",
-			host: env.SEQ_HOST || "127.0.0.1",
+			host: env.SEQ_HOST || "localhost",
 			port: env.SEQ_PORT,
 			dialect: env.DIALECT,
 			pool: {
