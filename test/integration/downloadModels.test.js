@@ -31,7 +31,13 @@ describe("downloadModels", () => {
 	});
 
 	test("should get tables and views", async () => {
-		await queryInterface.createTable("my_table", {id: Sequelize.DataTypes.INTEGER});
+		await queryInterface.createTable("my_table", {
+			id: {
+	      type: Sequelize.DataTypes.INTEGER,
+				allowNull: false,
+				primaryKey: true,
+	    },
+		});
 		await sequelize.query("CREATE VIEW my_view AS ( SELECT * FROM my_table )");
 
 		const auto = await downloadModels({
@@ -50,7 +56,13 @@ describe("downloadModels", () => {
 	});
 
 	test("should get only tables", async () => {
-		await queryInterface.createTable("my_table", {id: Sequelize.DataTypes.INTEGER});
+		await queryInterface.createTable("my_table", {
+			id: {
+	      type: Sequelize.DataTypes.INTEGER,
+				allowNull: false,
+				primaryKey: true,
+	    },
+		});
 		await sequelize.query("CREATE VIEW my_view AS ( SELECT * FROM my_table )");
 
 		const auto = await downloadModels({

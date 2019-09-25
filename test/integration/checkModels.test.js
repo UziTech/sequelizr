@@ -32,7 +32,13 @@ describe("checkModels", () => {
 	});
 
 	test("should check tables and views", async () => {
-		await queryInterface.createTable("my_table", {id: Sequelize.DataTypes.INTEGER});
+		await queryInterface.createTable("my_table", {
+			id: {
+	      type: Sequelize.DataTypes.INTEGER,
+				allowNull: false,
+				primaryKey: true,
+	    },
+		});
 		await sequelize.query("CREATE VIEW my_view AS ( SELECT * FROM my_table )");
 
 		const promise = checkModels({
@@ -52,7 +58,13 @@ describe("checkModels", () => {
 	});
 
 	test("should just check tables", async () => {
-		await queryInterface.createTable("my_table", {id: Sequelize.DataTypes.INTEGER});
+		await queryInterface.createTable("my_table", {
+			id: {
+	      type: Sequelize.DataTypes.INTEGER,
+				allowNull: false,
+				primaryKey: true,
+	    },
+		});
 		await sequelize.query("CREATE VIEW my_view AS ( SELECT * FROM my_table )");
 
 		const promise = checkModels({

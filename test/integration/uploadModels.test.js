@@ -40,7 +40,6 @@ describe("uploadModels", () => {
 			dialect,
 			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
 			dialectOptions,
-			overwrite: true,
 			quiet: true,
 		});
 
