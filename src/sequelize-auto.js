@@ -57,7 +57,7 @@ class AutoSequelize {
 		this.tables = {};
 		this.indexes = {};
 		this.foreignKeys = {};
-		this.dialect = dialects[this.sequelize.options.dialect];
+		this.dialect = dialects[options.dialect];
 
 		this.options = {
 			database,
@@ -97,7 +97,7 @@ class AutoSequelize {
 
 	async buildForeignKeys(table) {
 
-		const sql = this.dialect.getForeignKeysQuery(table, this.sequelize.config.database);
+		const sql = this.dialect.getForeignKeysQuery(table, this.options.database);
 
 		const results = await this.sequelize.query(sql, {
 			type: this.sequelize.QueryTypes.SELECT,
@@ -105,7 +105,7 @@ class AutoSequelize {
 		});
 
 		for (let ref of results) {
-			if (this.sequelize.options.dialect === "sqlite") {
+			if (this.options.dialect === "sqlite") {
 				// map sqlite's PRAGMA results
 				ref = Object.keys(ref).reduce((acc, key) => {
 					switch (key) {
@@ -128,8 +128,8 @@ class AutoSequelize {
 
 			ref = {
 				source_table: table,
-				source_schema: this.sequelize.options.database,
-				target_schema: this.sequelize.options.database,
+				source_schema: this.options.database,
+				target_schema: this.options.database,
 				...ref,
 			};
 
@@ -163,14 +163,14 @@ class AutoSequelize {
 	}
 
 	async buildIndexes(table) {
-		const sql = this.dialect.getIndexesQuery(table, this.sequelize.config.database);
+		const sql = this.dialect.getIndexesQuery(table, this.options.database);
 		const results = await this.sequelize.query(sql, {
 			type: this.sequelize.QueryTypes.SELECT,
 			raw: true,
 		});
 
 		let indexes = [];
-		if (this.sequelize.options.dialect === "sqlite") {
+		if (this.options.dialect === "sqlite") {
 			indexes = results.reduce((arr, row) => {
 				const match = row.sql.match(/CREATE(\s+UNIQUE)?\s+INDEX\s+(\S+)\s+ON\s+(\S+)\s*\(([^)]+)\)/i);
 				const index = {
@@ -377,7 +377,7 @@ class AutoSequelize {
 				} else if (attr === "allowNull") {
 					text += `${indent(3)}${attr}: ${attrValue}`;
 				} else if (attr === "defaultValue") {
-					if (this.sequelize.options.dialect === "mssql" && defaultVal && defaultVal.toLowerCase() === "(newid())") {
+					if (this.options.dialect === "mssql" && defaultVal && defaultVal.toLowerCase() === "(newid())") {
 						// disable adding "default value" attribute for UUID fields if generating for MS SQL
 						defaultVal = null;
 					}
@@ -391,7 +391,7 @@ class AutoSequelize {
 					// mySql Bit fix
 					if (this.tables[table][field].type.toLowerCase() === "bit(1)") {
 						val = defaultVal === "b'1'" ? 1 : 0;
-					} else if (this.sequelize.options.dialect === "mssql" && this.tables[table][field].type.toLowerCase() === "bit") {
+					} else if (this.options.dialect === "mssql" && this.tables[table][field].type.toLowerCase() === "bit") {
 						// mssql bit fix
 						val = defaultVal === "((1))" ? 1 : 0;
 					}
@@ -618,7 +618,7 @@ class AutoSequelize {
 
 	async write() {
 
-		async function mkdirp(directory) {
+		const mkdirp = async (directory) => {
 			// eslint-disable-next-line no-param-reassign
 			directory = path.resolve(directory);
 			try {
@@ -634,7 +634,7 @@ class AutoSequelize {
 					}
 				}
 			}
-		}
+		};
 
 		await mkdirp(this.options.directory);
 

@@ -1,6 +1,6 @@
 const Sequelize = require("sequelize");
 const {downloadModels} = require("../../");
-const {resetDatabase} = require("../helpers.js");
+const {resetDatabase, dialectMap} = require("../helpers.js");
 const {
 	database,
 	username,
@@ -10,6 +10,7 @@ const {
 	dialect,
 	dialectOptions,
 } = require("../config.js");
+const dm = dialectMap(dialect);
 
 describe("downloadModels", () => {
 	let sequelize, queryInterface;
@@ -77,5 +78,46 @@ describe("downloadModels", () => {
 		});
 
 		expect(Object.keys(auto.tables)).toEqual(["my_table"]);
+	});
+
+	test("should use correct types", async () => {
+		await sequelize.query(`
+			CREATE TABLE my_table (
+				id INT ${dm.AUTO_INCREMENT} PRIMARY KEY,
+				name VARCHAR(255) NOT NULL,
+				date DATETIME DEFAULT CURRENT_TIMESTAMP
+			)
+		`);
+
+		const auto = await downloadModels({
+			database,
+			username,
+			password,
+			host,
+			port,
+			dialect,
+			directory: false,
+			dialectOptions,
+			quiet: true,
+		});
+
+		expect(auto.tables.my_table).toEqual(expect.objectContaining({
+			id: expect.objectContaining({
+				primaryKey: true,
+				autoIncrement: true,
+				defaultValue: null,
+				type: dm["INT(11)"],
+			}),
+			name: expect.objectContaining({
+				allowNull: false,
+				defaultValue: null,
+				type: "VARCHAR(255)",
+			}),
+			date: expect.objectContaining({
+				allowNull: true,
+				defaultValue: dm.CURRENT_TIMESTAMP,
+				type: "DATETIME",
+			}),
+		}));
 	});
 });

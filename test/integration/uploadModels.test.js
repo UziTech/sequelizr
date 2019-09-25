@@ -1,7 +1,7 @@
 const path = require("path");
 const Sequelize = require("sequelize");
 const {uploadModels} = require("../../");
-const {resetDatabase} = require("../helpers.js");
+const {resetDatabase, dialectMap} = require("../helpers.js");
 const {
 	database,
 	username,
@@ -11,6 +11,7 @@ const {
 	dialect,
 	dialectOptions,
 } = require("../config.js");
+const dm = dialectMap(dialect);
 
 describe("uploadModels", () => {
 	let sequelize, queryInterface;
@@ -54,10 +55,10 @@ describe("uploadModels", () => {
 			type: Sequelize.QueryTypes.SHOWTABLES,
 		})).map(table => table.tableName || table);
 
-		const myTable = await sequelize.getQueryInterface().describeTable("my_table");
+		const myTable = await queryInterface.describeTable("my_table");
 
 		expect(tables).toEqual(["my_table"]);
-		expect(myTable.id.type).toEqual(expect.stringContaining("INT"));
+		expect(myTable.id.type).toBe(dm["INT(11)"]);
 	});
 
 	test("should alter table", async () => {
@@ -82,7 +83,7 @@ describe("uploadModels", () => {
 			quiet: true,
 		});
 
-		const myTable = await sequelize.getQueryInterface().describeTable("my_table");
+		const myTable = await queryInterface.describeTable("my_table");
 
 		expect(myTable.name).toBeTruthy();
 	});
@@ -108,7 +109,7 @@ describe("uploadModels", () => {
 			quiet: true,
 		});
 
-		const myTable = await sequelize.getQueryInterface().describeTable("my_table");
+		const myTable = await queryInterface.describeTable("my_table");
 
 		expect(myTable.name).toBeTruthy();
 	});
@@ -134,7 +135,7 @@ describe("uploadModels", () => {
 			quiet: true,
 		})).rejects.toThrow(/'my_table\.name' not in db/);
 
-		const myTable = await sequelize.getQueryInterface().describeTable("my_table");
+		const myTable = await queryInterface.describeTable("my_table");
 
 		expect(myTable.name).not.toBeTruthy();
 	});
