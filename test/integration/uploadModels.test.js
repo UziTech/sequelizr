@@ -13,7 +13,7 @@ const {
 } = require("../config.js");
 
 describe("uploadModels", () => {
-	let sequelize;
+	let sequelize, queryInterface;
 
 	beforeEach(async () => {
 		sequelize = new Sequelize(database, username, password, {
@@ -23,6 +23,7 @@ describe("uploadModels", () => {
 			logging: false,
 			dialectOptions,
 		});
+		queryInterface = sequelize.getQueryInterface();
 		await resetDatabase(sequelize, dialect, database);
 	});
 
@@ -30,7 +31,7 @@ describe("uploadModels", () => {
 		await sequelize.close();
 	});
 
-	test("should upload tables", async () => {
+	test("should upload new table", async () => {
 		await uploadModels({
 			database,
 			username,
@@ -57,5 +58,85 @@ describe("uploadModels", () => {
 
 		expect(tables).toEqual(["my_table"]);
 		expect(myTable.id.type).toEqual(expect.stringContaining("INT"));
+	});
+
+	test("should alter table", async () => {
+		await queryInterface.createTable("my_table", {
+			id: {
+	      type: Sequelize.DataTypes.INTEGER,
+				allowNull: false,
+				primaryKey: true,
+	    },
+		});
+
+		await uploadModels({
+			database,
+			username,
+			password,
+			host,
+			port,
+			dialect,
+			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			dialectOptions,
+			alter: true,
+			quiet: true,
+		});
+
+		const myTable = await sequelize.getQueryInterface().describeTable("my_table");
+
+		expect(myTable.name).toBeTruthy();
+	});
+
+	test("should overwrite table", async () => {
+		await queryInterface.createTable("my_table", {
+			id: {
+	      type: Sequelize.DataTypes.INTEGER,
+				allowNull: false,
+				primaryKey: true,
+	    },
+		});
+
+		await uploadModels({
+			database,
+			username,
+			password,
+			host,
+			port,
+			dialect,
+			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			dialectOptions,
+			overwrite: true,
+			quiet: true,
+		});
+
+		const myTable = await sequelize.getQueryInterface().describeTable("my_table");
+
+		expect(myTable.name).toBeTruthy();
+	});
+
+	test("should fail when existing table", async () => {
+		await queryInterface.createTable("my_table", {
+			id: {
+	      type: Sequelize.DataTypes.INTEGER,
+				allowNull: false,
+				primaryKey: true,
+	    },
+		});
+
+		await expect(uploadModels({
+			database,
+			username,
+			password,
+			host,
+			port,
+			dialect,
+			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			dialectOptions,
+			quiet: true,
+		})).rejects.toThrow(/'my_table\.name' not in db/);
+
+		const myTable = await sequelize.getQueryInterface().describeTable("my_table");
+
+		expect(myTable.name).not.toBeTruthy();
 	});
 });
