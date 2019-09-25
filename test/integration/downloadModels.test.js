@@ -34,7 +34,6 @@ describe("downloadModels", () => {
 		await queryInterface.createTable("my_table", {
 			id: {
 	      type: Sequelize.DataTypes.INTEGER,
-				allowNull: false,
 				primaryKey: true,
 	    },
 		});
@@ -59,7 +58,6 @@ describe("downloadModels", () => {
 		await queryInterface.createTable("my_table", {
 			id: {
 	      type: Sequelize.DataTypes.INTEGER,
-				allowNull: false,
 				primaryKey: true,
 	    },
 		});

@@ -8,6 +8,7 @@
     "test:cover": "jest --coverage --runInBand",
     "test:mysql": "cross-env DIALECT=mysql npm run test",
     "test:mssql": "cross-env DIALECT=mssql npm run test",
+    "test:all-dialects": "npm run test:mysql && npm run test:mssql",
     "lint": "eslint .",
     "semantic-release": "semantic-release"
   },

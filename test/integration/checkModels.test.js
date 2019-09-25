@@ -35,7 +35,6 @@ describe("checkModels", () => {
 		await queryInterface.createTable("my_table", {
 			id: {
 	      type: Sequelize.DataTypes.INTEGER,
-				allowNull: false,
 				primaryKey: true,
 	    },
 		});
@@ -48,7 +47,7 @@ describe("checkModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/correct`),
+			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/with-views`),
 			dialectOptions,
 			output: false,
 			quiet: true,
@@ -61,7 +60,6 @@ describe("checkModels", () => {
 		await queryInterface.createTable("my_table", {
 			id: {
 	      type: Sequelize.DataTypes.INTEGER,
-				allowNull: false,
 				primaryKey: true,
 	    },
 		});
