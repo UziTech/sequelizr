@@ -4,10 +4,12 @@
   "description": "Manage Sequelize models",
   "main": "./src/index.js",
   "scripts": {
-    "test": "jest --verbose --runInBand",
-    "test:cover": "jest --coverage --runInBand",
-    "test:mysql": "cross-env DIALECT=mysql npm run test",
-    "test:mssql": "cross-env DIALECT=mssql npm run test",
+    "test": "npm run test:unit",
+    "test:unit": "jest --verbose --runInBand unit",
+    "test:cover": "jest --coverage --runInBand unit",
+    "test:integration": "jest --verbose --runInBand integration",
+    "test:mysql": "cross-env DIALECT=mysql jest --verbose --runInBand integration",
+    "test:mssql": "cross-env DIALECT=mssql jest --verbose --runInBand integration",
     "test:all-dialects": "npm run test:mysql && npm run test:mssql",
     "lint": "eslint .",
     "semantic-release": "semantic-release"

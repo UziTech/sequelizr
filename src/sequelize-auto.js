@@ -3,6 +3,7 @@ const path = require("path");
 const util = require("util");
 const readline = require("readline");
 const Sequelize = require("sequelize");
+const {QueryTypes} = Sequelize;
 const dialects = require("./dialects");
 const SqlString = require("./sql-string");
 const DefferredPool = require("./defferred-pool");
@@ -100,7 +101,7 @@ class AutoSequelize {
 		const sql = this.dialect.getForeignKeysQuery(table, this.options.database);
 
 		const results = await this.sequelize.query(sql, {
-			type: this.sequelize.QueryTypes.SELECT,
+			type: QueryTypes.SELECT,
 			raw: true,
 		});
 
@@ -165,7 +166,7 @@ class AutoSequelize {
 	async buildIndexes(table) {
 		const sql = this.dialect.getIndexesQuery(table, this.options.database);
 		const results = await this.sequelize.query(sql, {
-			type: this.sequelize.QueryTypes.SELECT,
+			type: QueryTypes.SELECT,
 			raw: true,
 		});
 
@@ -208,7 +209,7 @@ class AutoSequelize {
 			const showTablesSql = this.dialect.showTablesQuery(this.options);
 			tables = await this.sequelize.query(showTablesSql, {
 				raw: true,
-				type: this.sequelize.QueryTypes.SHOWTABLES,
+				type: QueryTypes.SHOWTABLES,
 			});
 		} else {
 			tables = await this.queryInterface.showAllTables();

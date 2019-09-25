@@ -4,23 +4,31 @@ class SequelizeMock {
 		this.username = username;
 		this.password = password;
 		this.options = options;
-	}
 
-	get getQueryInterface() {
-		return jest.fn(() => {
-			return {};
+		this.getQueryInterface = jest.fn(() => {
+			return {
+				describeTable: jest.fn(),
+				showAllTables: jest.fn(),
+			};
 		});
+
+		this.query = jest.fn();
+
+		this.close = jest.fn();
 	}
 }
+SequelizeMock.QueryTypes = {
+	SELECT: "SELECT",
+	SHOWTABLES: "SHOWTABLES",
+};
 jest.doMock("sequelize", () => SequelizeMock);
 
 const AutoSequelize = require("../../src/sequelize-auto.js");
-const dialect = process.env.DIALECT;
 
 describe("sequelize-auto", () => {
 	test("should load sequelize-auto", () => {
 		const auto = new AutoSequelize("database", "username", "password", {
-			dialect,
+			dialect: "mysql",
 			quiet: true,
 		});
 
