@@ -4,7 +4,7 @@
   "description": "Manage Sequelize models",
   "main": "./src/index.js",
   "scripts": {
-    "test": "npm run test:unit",
+    "test": "npm run test:unit && npm run test:integration",
     "test:unit": "jest --verbose --runInBand unit",
     "test:cover": "jest --coverage --runInBand unit",
     "test:integration": "jest --verbose --runInBand integration",
