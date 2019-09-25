@@ -15,41 +15,48 @@ const readFileAsync = util.promisify(fs.readFile);
 
 class AutoSequelize {
 
-	constructor(database, username, password, options = {}) {
-		this.maxDefferredQueries = 100;
-		if (options.dialect === "sqlite" && !options.storage) {
-			options.storage = database;
-		} else if (options.dialect === "mssql") {
-			const dialectOptions = options.dialectOptions || {};
-			options.dialectOptions = {
-				...dialectOptions,
-				options: {
-					requestTimeout: 0,
-					connectTimeout: 1000 * 60 * 1,
-					...dialectOptions.options,
-				},
-			};
-			const pool = options.pool || {};
-			options.pool = {
-				max: 100,
-				// 1 min
-				acquire: 1000 * 60 * 1,
-				...pool,
-			};
-		} else if (options.dialect === "mysql") {
-			this.maxDefferredQueries = 10;
-			const pool = options.pool || {};
-			options.pool = {
-				max: 10,
-				// 1 min
-				acquire: 1000 * 60 * 1,
-				...pool,
-			};
-		}
-
+	constructor(database, username, password, options) {
 		if (database instanceof Sequelize) {
 			this.sequelize = database;
+			if (typeof username === "object") {
+				// eslint-disable-next-line no-param-reassign
+				options = username;
+			}
 		} else {
+			if (!options) {
+				// eslint-disable-next-line no-param-reassign
+				options = {};
+			}
+
+			if (options.dialect === "sqlite" && !options.storage) {
+				options.storage = database;
+			} else if (options.dialect === "mssql") {
+				const dialectOptions = options.dialectOptions || {};
+				options.dialectOptions = {
+					...dialectOptions,
+					options: {
+						requestTimeout: 0,
+						connectTimeout: 1000 * 60 * 1,
+						...dialectOptions.options,
+					},
+				};
+				const pool = options.pool || {};
+				options.pool = {
+					max: 100,
+					// 1 min
+					acquire: 1000 * 60 * 1,
+					...pool,
+				};
+			} else if (options.dialect === "mysql") {
+				const pool = options.pool || {};
+				options.pool = {
+					max: 10,
+					// 1 min
+					acquire: 1000 * 60 * 1,
+					...pool,
+				};
+			}
+
 			this.sequelize = new Sequelize(database, username, password, options);
 		}
 
@@ -58,6 +65,7 @@ class AutoSequelize {
 		this.tables = {};
 		this.indexes = {};
 		this.foreignKeys = {};
+		this.maxDefferredQueries = (options.dialect === "mysql" ? 10 : 100);
 		this.dialect = dialects[options.dialect];
 
 		this.options = {
