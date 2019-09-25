@@ -1,5 +1,9 @@
 version: '{build}'
 
+branches:
+  only:
+    - master
+
 platform:
   - x64
 
