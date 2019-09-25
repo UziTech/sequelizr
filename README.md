@@ -58,7 +58,7 @@ Command Options:
   --port, -r                 Port                                                [number]
   --dialect, -l              Dialect                 [string] [choices: "mysql", "mssql"]
   --models, -m, --directory  Model Directory                      [string] [default: "."]
-  --overwrite, -o            Overwrite files if they exist.    [boolean] [default: false]
+  --overwrite, -o            Overwrite files if they exist     [boolean] [default: false]
   --quiet, -q                Build Models Silently             [boolean] [default: false]
   --config, -c               Config File                                         [string]
 
@@ -82,7 +82,8 @@ Command Options:
   --port, -r                 Port                                                [number]
   --dialect, -l              Dialect                 [string] [choices: "mysql", "mssql"]
   --models, -m, --directory  Model Directory                      [string] [default: "."]
-  --overwrite, -o            Drop tables before creating them. [boolean] [default: false]
+  --overwrite, -o            Drop tables before creating them  [boolean] [default: false]
+  --alter, -a                Alters tables to fit models       [boolean] [default: false]
   --quiet, -q                Build Models Silently             [boolean] [default: false]
   --config, -c               Config File                                         [string]
 
@@ -133,6 +134,7 @@ module.exports = {
   includeViews: true, // Download models for views along with tables. Default = true
 
   // `upload` specific options
-  overwrite: false, // Drop tables before create. Default = false
+  overwrite: false,   // Drop tables before create. Default = false
+  alter: false,       // Alters tables to fit models. Default = false
 }
 ```

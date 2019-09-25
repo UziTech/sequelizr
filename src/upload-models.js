@@ -18,6 +18,7 @@ const checkModels = require("./check-models.js");
  * @param  {Array<string>} [options.tables] Database tables
  * @param  {Object} [options.dialectOptions] Database options
  * @param  {bool} [options.overwrite] Drop tables before create
+ * @param  {bool} [options.alter] Alters existing tables to fit models
  * @param  {bool} [options.quiet] Don't output to stdout
  * @return {Promise<void>} Resolves on success
  */
@@ -33,6 +34,7 @@ async function uploadModels(options = {}) {
 		tables,
 		dialectOptions,
 		overwrite,
+		alter,
 	} = options;
 
 	const opts = {};
@@ -63,7 +65,7 @@ async function uploadModels(options = {}) {
 			const table = file.replace(/\.js$/, "");
 			if (!tables || tables.includes(table)) {
 				const model = db.import(path.resolve(directory, file));
-				await model.sync({force: overwrite});
+				await model.sync({alter, force: overwrite});
 				if (!overwrite) {
 					let error = null;
 					try {

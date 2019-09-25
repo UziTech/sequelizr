@@ -62,6 +62,13 @@ const args = {
 		default: false,
 		group: "Command Options:",
 	},
+	alter: {
+		alias: ["a"],
+		type: "boolean",
+		default: false,
+		description: "Alters existing tables to fit models",
+		group: "Command Options:",
+	},
 	quiet: {
 		alias: ["q"],
 		type: "boolean",
@@ -209,6 +216,7 @@ yargs
 			dialect,
 			models,
 			overwrite,
+			alter,
 			quiet,
 			config,
 		} = args;
@@ -224,6 +232,7 @@ yargs
 				dialect,
 				models,
 				overwrite,
+				alter,
 				quiet,
 				config,
 			})
@@ -239,6 +248,7 @@ yargs
 			dialect,
 			directory,
 			overwrite,
+			alter,
 			quiet,
 			config,
 		} = argv;
@@ -253,6 +263,7 @@ yargs
 			dialect,
 			directory,
 			overwrite,
+			alter,
 			quiet,
 			...(config ? require(config) : {}),
 		};
