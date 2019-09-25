@@ -38,7 +38,7 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, "../fixtures/models/no-views"),
+			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
 			dialectOptions,
 			overwrite: true,
 			quiet: true,
@@ -49,21 +49,14 @@ describe("uploadModels", () => {
 			includeViews: true,
 		});
 
-		const tables = await sequelize.query(showTablesQuery, {
+		const tables = (await sequelize.query(showTablesQuery, {
 			raw: true,
 			type: Sequelize.QueryTypes.SHOWTABLES,
-		});
+		})).map(table => table.tableName || table);
 
 		const myTable = await sequelize.getQueryInterface().describeTable("my_table");
 
 		expect(tables).toEqual(["my_table"]);
-		expect(myTable.id).toEqual({
-			allowNull: false,
-			autoIncrement: false,
-			comment: null,
-			defaultValue: null,
-			primaryKey: true,
-			type: "INT(11)",
-		});
+		expect(myTable.id.type).toEqual(expect.stringContaining("INT"));
 	});
 });
