@@ -24,4 +24,4 @@ before_test:
   - ps: . .\scripts\appveyor-setup.ps1
 
 test_script:
-  - 'npm run test:mssql'
+  - npm run test:mssql
