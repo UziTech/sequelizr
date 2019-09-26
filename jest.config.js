@@ -6,5 +6,5 @@ module.exports = {
 		"src/**/*.js",
 	],
 	coverageDirectory: "coverage",
-	testRegex: /\.test\.js/.source,
+	testRegex: /\.test\.js$/.source,
 };

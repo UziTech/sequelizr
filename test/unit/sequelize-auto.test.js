@@ -1,3 +1,11 @@
+const tmp = require("tmp-promise");
+tmp.setGracefulCleanup();
+const path = require("path");
+const {readdir, readFile} = require("fs");
+const {promisify} = require("util");
+const readdirAsync = promisify(readdir);
+const readFileAsync = promisify(readFile);
+
 class SequelizeMock {
 	constructor(database, username, password, options) {
 		this.database = database;
@@ -125,7 +133,7 @@ describe("sequelize-auto", () => {
 			sequelize.queryInterface.describeTable.mockReturnValueOnce(describeTable);
 			const auto = new AutoSequelize(sequelize, {
 				dialect: "mysql",
-				directory: "test",
+				directory: false,
 				foreignKeys: false,
 				indexes: false,
 				quiet: true,
@@ -134,6 +142,49 @@ describe("sequelize-auto", () => {
 			await auto.run();
 
 			expect(auto.tables.table).toBe(describeTable);
+		});
+
+		describe("writing files", () => {
+			let tempDir;
+
+			beforeEach(async () => {
+				tempDir = await tmp.dir({unsafeCleanup: true});
+			});
+
+			afterEach(async () => {
+				await tempDir.cleanup();
+			});
+
+			test("should write tables to directory", async () => {
+				const sequelize = new SequelizeMock();
+				sequelize.query.mockReturnValueOnce(["table"]);
+				const describeTable = {
+					id: {
+						primaryKey: true,
+						autoIncrement: true,
+						defaultValue: null,
+						type: "INT",
+					},
+				};
+				sequelize.queryInterface.describeTable.mockReturnValueOnce(describeTable);
+				const auto = new AutoSequelize(sequelize, {
+					dialect: "mysql",
+					directory: tempDir.path,
+					foreignKeys: false,
+					indexes: false,
+					quiet: true,
+				});
+
+				await auto.run();
+
+				const files = await readdirAsync(tempDir.path);
+
+				expect(files).toEqual(["table.js"]);
+
+				const contents = await readFileAsync(path.join(tempDir.path, files[0]), {encoding: "utf8"});
+
+				expect(contents).toMatchSnapshot();
+			});
 		});
 	});
 });

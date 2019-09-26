@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sequelize-auto run writing files should write tables to directory 1`] = `
+"module.exports = function (sequelize, DataTypes) {
+	return sequelize.define(\\"table\\", {
+		id: {
+			primaryKey: true,
+			autoIncrement: true,
+			type: DataTypes.INTEGER,
+		},
+	}, {
+		tableName: \\"table\\",
+		timestamps: false,
+	});
+};
+"
+`;
