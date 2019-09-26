@@ -80,7 +80,7 @@ describe("downloadModels", () => {
 		expect(Object.keys(auto.tables)).toEqual(["my_table"]);
 	});
 
-	test("should use correct types", async () => {
+	test("should use field info", async () => {
 		await sequelize.query(`
 			CREATE TABLE my_table (
 				id INT ${dm.AUTO_INCREMENT} PRIMARY KEY,
@@ -119,5 +119,42 @@ describe("downloadModels", () => {
 				type: "DATETIME",
 			}),
 		}));
+	});
+
+	test("should use correct types", async () => {
+		await sequelize.query(`
+			CREATE TABLE my_table (
+				id INT,
+				string VARCHAR(255),
+				date DATETIME,
+				num FLOAT,
+				${dm["dub DOUBLE"]}
+				deci DECIMAL(10,2),
+				tex TEXT
+			)
+		`);
+
+		const auto = await downloadModels({
+			database,
+			username,
+			password,
+			host,
+			port,
+			dialect,
+			directory: false,
+			dialectOptions,
+			quiet: true,
+		});
+
+		const {my_table} = auto.tables;
+		expect(my_table.id.type).toBe(dm["INT(11)"]);
+		expect(my_table.string.type).toBe("VARCHAR(255)");
+		expect(my_table.date.type).toBe("DATETIME");
+		expect(my_table.num.type).toBe("FLOAT");
+		if (dialect === "mysql") {
+			expect(my_table.dub.type).toBe("DOUBLE");
+		}
+		expect(my_table.deci.type).toBe(dm["DECIMAL(10,2)"]);
+		expect(my_table.tex.type).toBe("TEXT");
 	});
 });

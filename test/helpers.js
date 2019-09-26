@@ -11,10 +11,13 @@ module.exports = {
 	},
 
 	dialectMap(dialect) {
+		const isMysql = dialect === "mysql";
 		return {
-			"AUTO_INCREMENT": dialect === "mysql" ? "AUTO_INCREMENT" : "IDENTITY",
-			"CURRENT_TIMESTAMP": dialect === "mysql" ? "CURRENT_TIMESTAMP" : "(getdate())",
-			"INT(11)": dialect === "mysql" ? "INT(11)" : "INT",
+			"AUTO_INCREMENT": isMysql ? "AUTO_INCREMENT" : "IDENTITY",
+			"CURRENT_TIMESTAMP": isMysql ? "CURRENT_TIMESTAMP" : "(getdate())",
+			"INT(11)": isMysql ? "INT(11)" : "INT",
+			"dub DOUBLE": isMysql ? "dub DOUBLE," : "",
+			"DECIMAL(10,2)": isMysql ? "DECIMAL(10,2)" : "DECIMAL",
 		};
 	},
 };
