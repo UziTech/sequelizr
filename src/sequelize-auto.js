@@ -428,6 +428,10 @@ class AutoSequelize {
 						val = SqlString.escape(val.replace(/^"+|"+$/g, ""), null, this.options.dialect);
 					}
 
+					if (typeof val !== "string") {
+						val = `"${JSON.stringify(val)}"`;
+					}
+
 					// don't prepend N for MSSQL when building models...
 					val = val.replace(/^N/, "");
 					// use double quotes

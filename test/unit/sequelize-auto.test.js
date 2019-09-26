@@ -187,4 +187,259 @@ describe("sequelize-auto", () => {
 			});
 		});
 	});
+
+	describe("generateText", () => {
+		test("should generate correct text ", () => {
+			const sequelize = new SequelizeMock();
+			const auto = new AutoSequelize(sequelize, {
+				dialect: "mysql",
+				schema: "schema",
+			});
+
+			auto.foreignKeys.my_table = {
+				unique: {
+					isUnique: true,
+				},
+			};
+
+			auto.tables.my_table = {
+				createdAt: {
+					type: "timestamp",
+				},
+				updatedAt: {
+					type: "timestamp",
+				},
+				id: {
+					type: "int",
+				},
+				autoIncrement: {
+					autoIncrement: true,
+					type: "int",
+				},
+				primaryKey: {
+					primaryKey: true,
+					type: "int",
+				},
+				"2field": {
+					defaultValue: 2,
+					type: "int",
+				},
+				stringDefault: {
+					defaultValue: "hi",
+					type: "varchar",
+				},
+				unique: {
+					type: "int",
+				},
+				special: {
+					special: true,
+					type: "int",
+				},
+				allowNull: {
+					allowNull: true,
+					type: "int",
+				},
+				allowNullFalse: {
+					allowNull: false,
+					type: "int",
+				},
+				current_timestamp: {
+					defaultValue: "current_timestamp",
+					type: "timestamp",
+				},
+				current_date: {
+					defaultValue: "current_date",
+					type: "timestamp",
+				},
+				current_time: {
+					defaultValue: "current_time",
+					type: "timestamp",
+				},
+				localtime: {
+					defaultValue: "localtime",
+					type: "timestamp",
+				},
+				localtimestamp: {
+					defaultValue: "localtimestamp",
+					type: "timestamp",
+				},
+				otherdate: {
+					defaultValue: "1970-01-01",
+					type: "timestamp",
+				},
+				getdate: {
+					defaultValue: "(getdate())",
+					type: "datetime",
+				},
+				comment: {
+					comment: "comment",
+					type: "varchar",
+				},
+				weirdAttr: {
+					weirdAttr: {
+						string: "string",
+						num: 1,
+						bool: true,
+					},
+					type: "weird",
+				},
+				// types
+				enum: {
+					type: "ENUM('item1','item2')",
+				},
+				set: {
+					type: "SET('item1','item2')",
+				},
+				varchar: {
+					type: "VARCHAR(1)",
+				},
+				varcharbinary: {
+					type: "VARCHAR(1) BINARY",
+				},
+				string: {
+					type: "string",
+				},
+				varying: {
+					type: "varying",
+				},
+				nvarchar: {
+					type: "nvarchar",
+				},
+				xml: {
+					type: "xml",
+				},
+				nchar: {
+					type: "nchar",
+				},
+				char: {
+					type: "char(8)",
+				},
+				text: {
+					type: "text",
+				},
+				ntext: {
+					type: "ntext",
+				},
+				tinyint: {
+					type: "tinyint(1)",
+				},
+				smallint: {
+					type: "smallint(4)",
+				},
+				mediumint: {
+					type: "mediumint(8)",
+				},
+				int: {
+					type: "int(32)",
+				},
+				bigint: {
+					type: "bigint",
+				},
+				unsigned: {
+					type: "int unsigned",
+				},
+				zerofill: {
+					type: "int(10) zerofill",
+				},
+				float: {
+					type: "float(4)",
+				},
+				float4: {
+					type: "float4",
+				},
+				float8: {
+					type: "float8",
+				},
+				double: {
+					type: "double(10)",
+				},
+				numeric: {
+					type: "numeric",
+				},
+				decimal: {
+					type: "decimal(10,2)",
+				},
+				money: {
+					type: "money",
+				},
+				real: {
+					type: "real",
+				},
+				boolean: {
+					type: "boolean",
+				},
+				bit1: {
+					defaultValue: "b'1'",
+					type: "bit(1)",
+				},
+				bit0: {
+					defaultValue: "b'0'",
+					type: "bit(1)",
+				},
+				bit: {
+					type: "bit",
+				},
+				tinyblob: {
+					type: "tinyblob",
+				},
+				mediumblob: {
+					type: "mediumblob",
+				},
+				blob: {
+					type: "blob",
+				},
+				longblob: {
+					type: "longblob",
+				},
+				varbinary: {
+					type: "varbinary",
+				},
+				image: {
+					type: "image",
+				},
+				date: {
+					type: "date",
+				},
+				smalldate: {
+					type: "smalldate",
+				},
+				datetime: {
+					type: "datetime",
+				},
+				datetime2: {
+					type: "datetime2",
+				},
+				timestamp: {
+					type: "timestamp",
+				},
+				time: {
+					type: "time",
+				},
+				uuid: {
+					type: "uuid",
+				},
+				uniqueidentifier: {
+					type: "uniqueidentifier",
+				},
+				jsonb: {
+					type: "jsonb",
+				},
+				json: {
+					type: "json",
+				},
+				array: {
+					type: "array",
+				},
+				geometry: {
+					type: "geometry",
+				},
+				other: {
+					type: "other",
+				},
+			};
+			const text = auto.generateText("my_table", (level) => "  ".repeat(level));
+
+			expect(text).toMatchSnapshot();
+		});
+	});
 });
