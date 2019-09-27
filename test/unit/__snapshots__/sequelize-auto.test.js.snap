@@ -119,8 +119,17 @@ exports[`sequelize-auto generateText should generate correct text  1`] = `
     char: {
       type: DataTypes.CHAR(8),
     },
+    tinytext: {
+      type: DataTypes.TEXT(\\"tiny\\"),
+    },
+    mediumtext: {
+      type: DataTypes.TEXT(\\"medium\\"),
+    },
     text: {
       type: DataTypes.TEXT,
+    },
+    longtext: {
+      type: DataTypes.TEXT(\\"long\\"),
     },
     ntext: {
       type: DataTypes.TEXT,

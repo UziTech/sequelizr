@@ -325,8 +325,17 @@ describe("sequelize-auto", () => {
 				char: {
 					type: "char(8)",
 				},
+				tinytext: {
+					type: "tinytext",
+				},
+				mediumtext: {
+					type: "mediumtext",
+				},
 				text: {
 					type: "text",
+				},
+				longtext: {
+					type: "longtext",
 				},
 				ntext: {
 					type: "ntext",
