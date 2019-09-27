@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/UziTech/sequelizr/compare/v1.0.0...v1.0.1) (2019-09-27)
+
+
+### Bug Fixes
+
+* **types:** Fix tinytext, mediumtext, and longtext ([83788a1](https://github.com/UziTech/sequelizr/commit/83788a1))
+
 # [1.0.0](https://github.com/UziTech/sequelizr/compare/v0.2.0...v1.0.0) (2019-09-26)
 
 * Add tests
