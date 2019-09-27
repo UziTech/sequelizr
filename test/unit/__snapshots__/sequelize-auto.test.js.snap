@@ -76,6 +76,12 @@ exports[`sequelize-auto generateText should generate correct text  1`] = `
       comment: \\"comment\\",
       type: DataTypes.STRING,
     },
+    commentnull: {
+      type: DataTypes.STRING,
+    },
+    userDefined: {
+      type: DataTypes.ENUM(\\"special1\\", \\"special2\\"),
+    },
     weirdAttr: {
       weirdAttr: {\\"string\\":\\"string\\",\\"num\\":1,\\"bool\\":true},
       type: \\"weird\\",
@@ -91,6 +97,9 @@ exports[`sequelize-auto generateText should generate correct text  1`] = `
     },
     varcharbinary: {
       type: DataTypes.STRING(1).BINARY,
+    },
+    varcharmax: {
+      type: DataTypes.STRING(\\"MAX\\"),
     },
     string: {
       type: DataTypes.STRING,

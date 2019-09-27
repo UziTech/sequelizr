@@ -275,6 +275,14 @@ describe("sequelize-auto", () => {
 					comment: "comment",
 					type: "varchar",
 				},
+				commentnull: {
+					comment: null,
+					type: "varchar",
+				},
+				userDefined: {
+					type: "USER-DEFINED",
+					special: ["special1", "special2"],
+				},
 				weirdAttr: {
 					weirdAttr: {
 						string: "string",
@@ -295,6 +303,9 @@ describe("sequelize-auto", () => {
 				},
 				varcharbinary: {
 					type: "VARCHAR(1) BINARY",
+				},
+				varcharmax: {
+					type: "VARCHAR(MAX)",
 				},
 				string: {
 					type: "string",
