@@ -298,6 +298,7 @@ class AutoSequelize {
 
 		const fields = Object.keys(this.tables[table]);
 		fields.forEach((field) => {
+			const fieldValue = this.tables[table][field];
 			if (field === "createdAt") {
 				createdAt = true;
 			}
@@ -315,13 +316,13 @@ class AutoSequelize {
 			const foreignKey = this.foreignKeys[table] && this.foreignKeys[table][field] ? this.foreignKeys[table][field] : null;
 
 			if (typeof foreignKey === "object") {
-				this.tables[table][field].foreignKey = foreignKey;
+				fieldValue.foreignKey = foreignKey;
 			}
 
 			if (field === "id") {
 				// 'id' field must be a primary key
 				// this fixes view models with an id column
-				this.tables[table][field].primaryKey = true;
+				fieldValue.primaryKey = true;
 			}
 
 			// column's attributes
@@ -329,21 +330,21 @@ class AutoSequelize {
 			text += `${indent(2)}${fieldName}` + ": {\n";
 
 			// Serial key for postgres...
-			let defaultVal = this.tables[table][field].defaultValue;
+			let defaultVal = fieldValue.defaultValue;
 
 			// ENUMs for postgres...
-			if (this.tables[table][field].type === "USER-DEFINED" && !!this.tables[table][field].special) {
-				this.tables[table][field].type = `ENUM(${this.tables[table][field].special.map((f) => `"${f}"`).join(", ")})`;
+			if (fieldValue.type === "USER-DEFINED" && !!fieldValue.special) {
+				fieldValue.type = `ENUM(${fieldValue.special.map((f) => `"${f}"`).join(", ")})`;
 			}
 
-			const isUnique = this.tables[table][field].foreignKey && this.tables[table][field].foreignKey.isUnique;
+			const isUnique = fieldValue.foreignKey && fieldValue.foreignKey.isUnique;
 
 			let hasAutoIncrement = false;
 
-			const attrs = Object.keys(this.tables[table][field]);
+			const attrs = Object.keys(fieldValue);
 			attrs.forEach((attr) => {
-				const isSerialKey = this.tables[table][field].foreignKey && this.dialect.isSerialKey && this.dialect.isSerialKey(this.tables[table][field].foreignKey);
-				const attrValue = this.tables[table][field][attr];
+				const attrValue = fieldValue[attr];
+				const isSerialKey = fieldValue.foreignKey && this.dialect.isSerialKey && this.dialect.isSerialKey(fieldValue.foreignKey);
 				// We don't need the special attribute from postgresql describe table..
 				if (attr === "special") {
 					return;
@@ -378,7 +379,7 @@ class AutoSequelize {
 						return;
 					}
 				} else if (attr === "primaryKey") {
-					if (attrValue === true && (!this.tables[table][field].foreignKey || (this.tables[table][field].foreignKey && this.tables[table][field].foreignKey.isPrimaryKey))) {
+					if (attrValue === true && (!fieldValue.foreignKey || (fieldValue.foreignKey && fieldValue.foreignKey.isPrimaryKey))) {
 						text += `${indent(3)}primaryKey: true`;
 					} else {
 						return;
@@ -398,15 +399,15 @@ class AutoSequelize {
 					}
 
 					// mySql Bit fix
-					if (this.tables[table][field].type.toLowerCase() === "bit(1)") {
+					if (fieldValue.type.toLowerCase() === "bit(1)") {
 						val = defaultVal === "b'1'" ? 1 : 0;
-					} else if (this.options.dialect === "mssql" && this.tables[table][field].type.toLowerCase() === "bit") {
+					} else if (this.options.dialect === "mssql" && fieldValue.type.toLowerCase() === "bit") {
 						// mssql bit fix
 						val = defaultVal === "((1))" ? 1 : 0;
 					}
 
 					if (typeof defaultVal === "string") {
-						const fieldType = this.tables[table][field].type.toLowerCase();
+						const fieldType = fieldValue.type.toLowerCase();
 						if (defaultVal.match(/^\(?\w+\(\)\)?$/)) {
 							val = `sequelize.fn("${defaultVal.replace(/[()]/g, "")}")`;
 						} else if (fieldType.indexOf("date") === 0 || fieldType.indexOf("timestamp") === 0) {
@@ -424,18 +425,17 @@ class AutoSequelize {
 						return;
 					}
 
-					if (typeof val === "string" && !val.match(/^sequelize\.[^(]+\(.*\)$/)) {
-						val = SqlString.escape(val.replace(/^"+|"+$/g, ""), null, this.options.dialect);
+					if (typeof val === "string") {
+						if (!val.match(/^sequelize\.[^(]+\(.*\)$/)) {
+							val = SqlString.escape(val.replace(/^"+|"+$/g, ""), null, this.options.dialect);
+						}
+
+						// don't prepend N for MSSQL when building models...
+						val = val.replace(/^N/, "");
+						// use double quotes
+						val = val.replace(/^'(.*)'$/, "\"$1\"");
 					}
 
-					if (typeof val !== "string") {
-						val = `"${JSON.stringify(val)}"`;
-					}
-
-					// don't prepend N for MSSQL when building models...
-					val = val.replace(/^N/, "");
-					// use double quotes
-					val = val.replace(/^'(.*)'$/, "\"$1\"");
 					text += `${indent(3)}${attr}: ${val}`;
 
 				} else if (attr === "type") {
@@ -459,7 +459,7 @@ class AutoSequelize {
 					let val = `"${attrValue}"`;
 					let match = null;
 
-					if (_attr.match(/^(enum|set)/)) {
+					if (_attr.match(/^(?:enum|set)/)) {
 						val = `DataTypes.ENUM${length()}`;
 					} else if (_attr.match(/^varchar/)) {
 						val = `DataTypes.STRING${length()}`;
@@ -469,11 +469,11 @@ class AutoSequelize {
 						}
 					} else if (_attr.match(/^(string|varying|nvarchar|xml)/)) {
 						val = "DataTypes.STRING";
-					} else if (_attr.match(/^(n)?char/)) {
+					} else if (_attr.match(/^(?:n)?char/)) {
 						val = `DataTypes.CHAR${length()}`;
-					} else if (_attr.match(/text|ntext$/)) {
+					} else if (_attr.match(/^(?:n)?text$/)) {
 						val = "DataTypes.TEXT";
-					} else if (match = _attr.match(/^(tinyint|smallint|mediumint|int|bigint)/)) { // eslint-disable-line no-cond-assign
+					} else if (match = _attr.match(/^(?:tiny|small|medium|big)?int/)) { // eslint-disable-line no-cond-assign
 						const int = {
 							tinyint: "TINYINT",
 							smallint: "SMALLINT",
@@ -490,26 +490,26 @@ class AutoSequelize {
 						if (_attr.match(/zerofill/)) {
 							val += ".ZEROFILL";
 						}
-					} else if (_attr.match(/^(float|float4)/)) {
-						val = `DataTypes.FLOAT${length()}`;
-					} else if (_attr.match(/^(float8|double|numeric)/)) {
+					} else if (_attr.match(/^(?:float8|double|numeric)/)) {
 						val = `DataTypes.DOUBLE${length()}`;
-					} else if (_attr.match(/^decimal|money/)) {
+					} else if (_attr.match(/^float4?/)) {
+						val = `DataTypes.FLOAT${length()}`;
+					} else if (_attr.match(/^(?:decimal|money)/)) {
 						val = `DataTypes.DECIMAL${length()}`;
 					} else if (_attr.match(/^real/)) {
 						val = `DataTypes.REAL${length()}`;
-					} else if (_attr === "boolean" || _attr === "bit(1)" || _attr === "bit") {
+					} else if (_attr.match(/^(?:boolean|bit(?:\(1\))?)$/)) {
 						val = "DataTypes.BOOLEAN";
 					} else if (match = _attr.match(/^(?:(tiny|medium|long)?blob|(?:var)?binary|image)/)) { // eslint-disable-line no-cond-assign
-						const l = match[1] ? `("${match[1]}")` : "";
-						val = `DataTypes.BLOB${l}`;
-					} else if (_attr === "date") {
+						const size = match[1] ? `("${match[1]}")` : "";
+						val = `DataTypes.BLOB${size}`;
+					} else if (_attr.match(/^date$/)) {
 						val = "DataTypes.DATEONLY";
-					} else if (_attr.match(/^((small)?date|timestamp)/)) {
+					} else if (_attr.match(/^(?:(?:small)?date|timestamp)/)) {
 						val = "DataTypes.DATE";
-					} else if (_attr.match(/^(time)/)) {
+					} else if (_attr.match(/^time/)) {
 						val = "DataTypes.TIME";
-					} else if (_attr.match(/^uuid|uniqueidentifier/)) {
+					} else if (_attr.match(/^(?:uuid|uniqueidentifier)/)) {
 						val = "DataTypes.UUIDV4";
 					} else if (_attr.match(/^jsonb/)) {
 						val = "DataTypes.JSONB";

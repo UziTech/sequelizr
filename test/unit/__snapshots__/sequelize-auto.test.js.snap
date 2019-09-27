@@ -22,7 +22,7 @@ exports[`sequelize-auto generateText should generate correct text  1`] = `
       type: DataTypes.INTEGER,
     },
     \\"2field\\": {
-      defaultValue: \\"2\\",
+      defaultValue: 2,
       type: DataTypes.INTEGER,
     },
     stringDefault: {
@@ -153,7 +153,7 @@ exports[`sequelize-auto generateText should generate correct text  1`] = `
       type: DataTypes.FLOAT,
     },
     float8: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.DOUBLE,
     },
     double: {
       type: DataTypes.DOUBLE(10),
