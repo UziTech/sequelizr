@@ -471,8 +471,9 @@ class AutoSequelize {
 						val = "DataTypes.STRING";
 					} else if (_attr.match(/^(?:n)?char/)) {
 						val = `DataTypes.CHAR${length()}`;
-					} else if (_attr.match(/^(?:n)?text$/)) {
-						val = "DataTypes.TEXT";
+					} else if (match = _attr.match(/^(?:(tiny|medium|long)?text|ntext$)/)) { // eslint-disable-line no-cond-assign
+						const size = match[1] ? `("${match[1]}")` : "";
+						val = `DataTypes.TEXT${size}`;
 					} else if (match = _attr.match(/^(?:tiny|small|medium|big)?int/)) { // eslint-disable-line no-cond-assign
 						const int = {
 							tinyint: "TINYINT",
