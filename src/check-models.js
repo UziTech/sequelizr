@@ -47,6 +47,7 @@ function convertToGenericType(type) {
  * @param  {Object} [options.dialectOptions] Database options
  * @param  {bool} [options.includeViews] Include views along with tables
  * @param  {bool} [options.quiet] Don't output to stdout
+ * @param  {bool} [options.sort] Sort fields and attributes
  * @param  {bool|EventEmitter} [options.output] FALSE = Reject error string, TRUE(default) = Output errors to console, EventEmitter = emit "error" for each error
  * @return {Promise<void>} Resolves on success
  */
