@@ -76,6 +76,13 @@ const args = {
 		description: "Build Models Silently",
 		group: "Command Options:",
 	},
+	sort: {
+		alias: ["x"],
+		type: "boolean",
+		default: false,
+		description: "Sort fields and attributes",
+		group: "Command Options:",
+	},
 	config: {
 		alias: ["c"],
 		type: "string",
@@ -99,6 +106,7 @@ yargs
 			dialect,
 			models,
 			quiet,
+			sort,
 			config,
 		} = args;
 		yargs
@@ -112,6 +120,7 @@ yargs
 				dialect,
 				models,
 				quiet,
+				sort,
 				config,
 			})
 			.hide("version");
@@ -126,6 +135,7 @@ yargs
 			dialect,
 			directory,
 			quiet,
+			sort,
 			config,
 		} = argv;
 
@@ -139,6 +149,7 @@ yargs
 			dialect,
 			directory,
 			quiet,
+			sort,
 			...(config ? require(config) : {}),
 		};
 
@@ -156,6 +167,7 @@ yargs
 			models,
 			overwrite,
 			quiet,
+			sort,
 			config,
 		} = args;
 		overwrite.description = "Overwrite files if they exist.";
@@ -171,6 +183,7 @@ yargs
 				models,
 				overwrite,
 				quiet,
+				sort,
 				config,
 			})
 			.hide("version");
@@ -186,6 +199,7 @@ yargs
 			directory,
 			overwrite,
 			quiet,
+			sort,
 			config,
 		} = argv;
 
@@ -200,6 +214,7 @@ yargs
 			directory,
 			overwrite,
 			quiet,
+			sort,
 			...(config ? require(config) : {}),
 		};
 
@@ -218,6 +233,7 @@ yargs
 			overwrite,
 			alter,
 			quiet,
+			sort,
 			config,
 		} = args;
 		overwrite.description = "Drop tables before creating them.";
@@ -234,6 +250,7 @@ yargs
 				overwrite,
 				alter,
 				quiet,
+				sort,
 				config,
 			})
 			.hide("version");
@@ -250,6 +267,7 @@ yargs
 			overwrite,
 			alter,
 			quiet,
+			sort,
 			config,
 		} = argv;
 
@@ -265,6 +283,7 @@ yargs
 			overwrite,
 			alter,
 			quiet,
+			sort,
 			...(config ? require(config) : {}),
 		};
 

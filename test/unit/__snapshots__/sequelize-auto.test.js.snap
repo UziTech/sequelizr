@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`sequelize-auto generateText should generate correct text  1`] = `
+exports[`sequelize-auto generateText should generate correct text 1`] = `
 "module.exports = function (sequelize, DataTypes) {
   return sequelize.define(\\"my_table\\", {
     createdAt: {
@@ -253,6 +253,26 @@ exports[`sequelize-auto generateText should generate correct text  1`] = `
   }, {
     tableName: \\"my_table\\",
     schema: \\"schema\\",
+  });
+};
+"
+`;
+
+exports[`sequelize-auto generateText should sort fields and attributes 1`] = `
+"module.exports = function (sequelize, DataTypes) {
+  return sequelize.define(\\"my_table\\", {
+    atest: {
+      type: DataTypes.INTEGER,
+    },
+    id: {
+      autoIncrement: true,
+      primaryKey: true,
+      type: DataTypes.INTEGER,
+    },
+  }, {
+    tableName: \\"my_table\\",
+    schema: \\"schema\\",
+    timestamps: false,
   });
 };
 "

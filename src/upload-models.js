@@ -20,6 +20,7 @@ const checkModels = require("./check-models.js");
  * @param  {bool} [options.overwrite] Drop tables before create
  * @param  {bool} [options.alter] Alters existing tables to fit models
  * @param  {bool} [options.quiet] Don't output to stdout
+ * @param  {bool} [options.sort] Sort fields and attributes
  * @return {Promise<void>} Resolves on success
  */
 async function uploadModels(options = {}) {
@@ -38,8 +39,14 @@ async function uploadModels(options = {}) {
 	} = options;
 
 	const opts = {};
-	if ("quiet" in options) {
-		opts.quiet = options.quiet;
+	const copyToOpts = [
+		"quiet",
+		"sort",
+	];
+	for (const prop of copyToOpts) {
+		if (prop in options) {
+			opts[prop] = options[prop];
+		}
 	}
 
 	let files;

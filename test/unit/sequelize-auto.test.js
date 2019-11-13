@@ -189,7 +189,7 @@ describe("sequelize-auto", () => {
 	});
 
 	describe("generateText", () => {
-		test("should generate correct text ", () => {
+		test("should generate correct text", () => {
 			const sequelize = new SequelizeMock();
 			const auto = new AutoSequelize(sequelize, {
 				dialect: "mysql",
@@ -455,6 +455,28 @@ describe("sequelize-auto", () => {
 				},
 				other: {
 					type: "other",
+				},
+			};
+			const text = auto.generateText("my_table", (level) => "  ".repeat(level));
+
+			expect(text).toMatchSnapshot();
+		});
+
+		test("should sort fields and attributes", () => {
+			const sequelize = new SequelizeMock();
+			const auto = new AutoSequelize(sequelize, {
+				dialect: "mysql",
+				schema: "schema",
+				sort: true,
+			});
+
+			auto.tables.my_table = {
+				id: {
+					type: "int",
+					autoIncrement: true,
+				},
+				atest: {
+					type: "int",
 				},
 			};
 			const text = auto.generateText("my_table", (level) => "  ".repeat(level));

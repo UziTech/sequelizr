@@ -36,6 +36,7 @@ Command Options:
   --dialect, -l              Dialect                 [string] [choices: "mysql", "mssql"]
   --models, -m, --directory  Model Directory                      [string] [default: "."]
   --quiet, -q                Build Models Silently             [boolean] [default: false]
+  --sort, -x                 Sort fields and attributes        [boolean] [default: false]
   --config, -c               Config File                                         [string]
 
 Global Options:
@@ -60,6 +61,7 @@ Command Options:
   --models, -m, --directory  Model Directory                      [string] [default: "."]
   --overwrite, -o            Overwrite files if they exist     [boolean] [default: false]
   --quiet, -q                Build Models Silently             [boolean] [default: false]
+  --sort, -x                 Sort fields and attributes        [boolean] [default: false]
   --config, -c               Config File                                         [string]
 
 Global Options:
@@ -85,6 +87,7 @@ Command Options:
   --overwrite, -o            Drop tables before creating them  [boolean] [default: false]
   --alter, -a                Alters tables to fit models       [boolean] [default: false]
   --quiet, -q                Build Models Silently             [boolean] [default: false]
+  --sort, -x                 Sort fields and attributes        [boolean] [default: false]
   --config, -c               Config File                                         [string]
 
 Global Options:
@@ -122,6 +125,7 @@ module.exports = {
   tables: ["table1", "table2"],
   dialectOptions: {...},
   quiet: false, // Build tables silently. Don't output percent complete.
+  sort: false, // sort fields and attributes to be more deterministic.
 
   // `check` specific options
   includeViews: true, // Check models for views along with tables. Default = true

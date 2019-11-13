@@ -81,6 +81,7 @@ class AutoSequelize {
 			indexes: true,
 			includeViews: true,
 			quiet: false,
+			sort: false,
 			...options,
 		};
 
@@ -297,6 +298,9 @@ class AutoSequelize {
 		const {additional} = this.options;
 
 		const fields = Object.keys(this.tables[table]);
+		if (this.options.sort) {
+			fields.sort();
+		}
 		fields.forEach((field) => {
 			const fieldValue = this.tables[table][field];
 			if (field === "createdAt") {
@@ -342,6 +346,9 @@ class AutoSequelize {
 			let hasAutoIncrement = false;
 
 			const attrs = Object.keys(fieldValue);
+			if (this.options.sort) {
+				attrs.sort();
+			}
 			attrs.forEach((attr) => {
 				const attrValue = fieldValue[attr];
 				const isSerialKey = fieldValue.foreignKey && this.dialect.isSerialKey && this.dialect.isSerialKey(fieldValue.foreignKey);
