@@ -1,3 +1,11 @@
+## [1.1.2](https://github.com/UziTech/sequelizr/compare/v1.1.1...v1.1.2) (2019-11-22)
+
+
+### Bug Fixes
+
+* **deps:** update dependency yargs to ^15.0.2 ([bb1e8b4](https://github.com/UziTech/sequelizr/commit/bb1e8b47b5cb93c3214fedd51cc55798bb8c4b4a))
+* **deps:** update dependency yargs to ^15.0.2 ([#83](https://github.com/UziTech/sequelizr/issues/83)) ([0354f33](https://github.com/UziTech/sequelizr/commit/0354f330c78f2d6a83b18423af19d9c5df035aff))
+
 ## [1.1.1](https://github.com/UziTech/sequelizr/compare/v1.1.0...v1.1.1) (2019-11-17)
 
 
