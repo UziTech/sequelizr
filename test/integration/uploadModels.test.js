@@ -58,7 +58,7 @@ describe("uploadModels", () => {
 		const myTable = await queryInterface.describeTable("my_table");
 
 		expect(tables).toEqual(["my_table"]);
-		expect(myTable.id.type).toBe(dm["INT(11)"]);
+		expect(myTable.id.type).toBe("INT");
 	});
 
 	test("should alter table", async () => {
