@@ -15,7 +15,6 @@ module.exports = {
 		return {
 			"AUTO_INCREMENT": isMysql ? "AUTO_INCREMENT" : "IDENTITY",
 			"CURRENT_TIMESTAMP": isMysql ? "CURRENT_TIMESTAMP" : "(getdate())",
-			"INT(11)": isMysql ? "INT(11)" : "INT",
 			"dub DOUBLE": isMysql ? "dub DOUBLE," : "",
 			"DECIMAL(10,2)": isMysql ? "DECIMAL(10,2)" : "DECIMAL",
 		};

@@ -11,8 +11,7 @@
     "test:mysql": "cross-env DIALECT=mysql jest --verbose --runInBand integration",
     "test:mssql": "cross-env DIALECT=mssql jest --verbose --runInBand integration",
     "test:all-dialects": "npm run test:mysql && npm run test:mssql",
-    "lint": "eslint .",
-    "semantic-release": "semantic-release"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",

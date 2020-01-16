@@ -27,7 +27,7 @@ jobs:
 
     - stage: release 🎉
       if: branch = master AND type = push AND fork = false
-      script: npm run semantic-release
+      script: npx semantic-release
 
 cache: npm
 

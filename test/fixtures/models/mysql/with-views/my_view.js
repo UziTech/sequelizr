@@ -1,7 +1,7 @@
 module.exports = function (sequelize, DataTypes) {
 	return sequelize.define("my_view", {
 		id: {
-			type: DataTypes.INTEGER(11),
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			primaryKey: true,
 		},

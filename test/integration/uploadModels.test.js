@@ -1,7 +1,7 @@
 const path = require("path");
 const Sequelize = require("sequelize");
 const {uploadModels} = require("../../");
-const {resetDatabase, dialectMap} = require("../helpers.js");
+const {resetDatabase} = require("../helpers.js");
 const {
 	database,
 	username,
@@ -11,7 +11,6 @@ const {
 	dialect,
 	dialectOptions,
 } = require("../config.js");
-const dm = dialectMap(dialect);
 
 describe("uploadModels", () => {
 	let sequelize, queryInterface;
@@ -58,7 +57,7 @@ describe("uploadModels", () => {
 		const myTable = await queryInterface.describeTable("my_table");
 
 		expect(tables).toEqual(["my_table"]);
-		expect(myTable.id.type).toBe(dm["INT(11)"]);
+		expect(myTable.id.type).toBe("INT");
 	});
 
 	test("should alter table", async () => {

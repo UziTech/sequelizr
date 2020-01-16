@@ -106,7 +106,7 @@ describe("downloadModels", () => {
 				primaryKey: true,
 				autoIncrement: true,
 				defaultValue: null,
-				type: dm["INT(11)"],
+				type: "INT",
 			}),
 			name: expect.objectContaining({
 				allowNull: false,
@@ -147,7 +147,7 @@ describe("downloadModels", () => {
 		});
 
 		const {my_table} = auto.tables;
-		expect(my_table.id.type).toBe(dm["INT(11)"]);
+		expect(my_table.id.type).toBe("INT");
 		expect(my_table.string.type).toBe("VARCHAR(255)");
 		expect(my_table.date.type).toBe("DATETIME");
 		expect(my_table.num.type).toBe("FLOAT");
