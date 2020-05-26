@@ -1,7 +1,6 @@
 # sequelizr
 
-[![Build Status](https://travis-ci.com/UziTech/sequelizr.svg?branch=master)](https://travis-ci.com/UziTech/sequelizr)
-[![Build status](https://ci.appveyor.com/api/projects/status/4hedwn3wy9dtho2g/branch/master?svg=true)](https://ci.appveyor.com/project/UziTech/sequelizr/branch/master)
+[![Actions Status](https://github.com/UziTech/sequelizr/workflows/CI/badge.svg)](https://github.com/UziTech/sequelizr/actions)
 [![dependencies Status](https://david-dm.org/UziTech/sequelizr/status.svg)](https://david-dm.org/UziTech/sequelizr)
 
 Manage Sequelize models

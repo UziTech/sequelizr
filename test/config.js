@@ -17,14 +17,6 @@ switch (env.DIALECT) {
 		break;
 	}
 	case "mssql": {
-		const fs = require("fs");
-		let mssqlConfig;
-		try {
-			mssqlConfig = JSON.parse(fs.readFileSync(`${__dirname}/mssql.json`, "utf8"));
-		} catch (e) {
-			// ignore
-		}
-
 		module.exports = {
 			database: env.SEQ_DB || "sequelizr_test",
 			username: env.SEQ_USER || "sequelizr_test",
@@ -35,13 +27,13 @@ switch (env.DIALECT) {
 			dialectOptions: {
 				options: {
 					requestTimeout: 60000,
+					trustServerCertificate: true,
 				},
 			},
 			pool: {
 				max: env.SEQ_POOL_MAX || 5,
 				idle: env.SEQ_POOL_IDLE || 3000,
 			},
-			...(mssqlConfig || {}),
 		};
 		break;
 	}

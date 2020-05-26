@@ -8,8 +8,8 @@
     "test:unit": "jest --verbose unit",
     "test:cover": "jest --coverage unit",
     "test:integration": "jest --verbose --runInBand integration",
-    "test:mysql": "cross-env DIALECT=mysql jest --verbose --runInBand integration",
-    "test:mssql": "cross-env DIALECT=mssql jest --verbose --runInBand integration",
+    "test:mysql": "cross-env DIALECT=mysql npm run test:integration",
+    "test:mssql": "cross-env DIALECT=mssql npm run test:integration",
     "test:all-dialects": "npm run test:mysql && npm run test:mssql",
     "lint": "eslint ."
   },
