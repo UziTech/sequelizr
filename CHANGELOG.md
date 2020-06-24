@@ -1,3 +1,16 @@
+# [2.0.0](https://github.com/UziTech/sequelizr/compare/v1.1.11...v2.0.0) (2020-06-24)
+
+
+### Bug Fixes
+
+* remove deprecated import call ([76ff340](https://github.com/UziTech/sequelizr/commit/76ff34052eaa38ea47837ed68ed9747f54f5dc70))
+* **deps:** update dependency sequelize to v6 ([8f7db39](https://github.com/UziTech/sequelizr/commit/8f7db39aff2580a60334cd8bfa875784d2b5bc63))
+
+
+### BREAKING CHANGES
+
+* **deps:** Update Sequelize to v6
+
 ## [1.1.11](https://github.com/UziTech/sequelizr/compare/v1.1.10...v1.1.11) (2020-06-24)
 
 
