@@ -71,7 +71,7 @@ async function uploadModels(options = {}) {
 		for (const file of files) {
 			const table = file.replace(/\.js$/, "");
 			if (!tables || tables.includes(table)) {
-				const model = db.import(path.resolve(directory, file));
+				const model = require(path.resolve(directory, file))(db, Sequelize.DataTypes);
 				await model.sync({alter, force: overwrite});
 				if (!overwrite) {
 					let error = null;
