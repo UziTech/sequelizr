@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const util = require("util");
 const readFileAsync = util.promisify(fs.readFile);
+const {DataTypes} = require("sequelize");
 const downloadModels = require("./download-models.js");
 
 /**
@@ -90,7 +91,7 @@ async function checkModels(options = {}) {
 			if (text !== data) {
 				try {
 					const dbModel = auto.tables[table];
-					const model = auto.sequelize.import(file);
+					const model = require(file)(auto.sequelize, DataTypes);
 
 					const dbColumns = Object.keys(dbModel);
 					dbColumns.push("id");
