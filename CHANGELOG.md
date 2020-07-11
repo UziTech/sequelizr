@@ -1,3 +1,11 @@
+## [2.0.5](https://github.com/UziTech/sequelizr/compare/v2.0.4...v2.0.5) (2020-07-11)
+
+
+### Bug Fixes
+
+* **deps:** update dependency sequelize to ^6.3.2 ([ee9b521](https://github.com/UziTech/sequelizr/commit/ee9b521346caea153fcce2dc7d3ba377c5a71a5e))
+* **deps:** update dependency yargs to ^15.4.1 ([2e9fc61](https://github.com/UziTech/sequelizr/commit/2e9fc61b7483c9c19c8e4d15fc5a754a57f714c7))
+
 ## [2.0.4](https://github.com/UziTech/sequelizr/compare/v2.0.3...v2.0.4) (2020-07-10)
 
 
