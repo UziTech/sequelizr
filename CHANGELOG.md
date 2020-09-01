@@ -1,3 +1,10 @@
+## [2.0.8](https://github.com/UziTech/sequelizr/compare/v2.0.7...v2.0.8) (2020-09-01)
+
+
+### Bug Fixes
+
+* **deps:** update dependency sequelize to ^6.3.5 ([cd436ea](https://github.com/UziTech/sequelizr/commit/cd436eaacb79745a6bf8be73e3244d2307c8fba7))
+
 ## [2.0.7](https://github.com/UziTech/sequelizr/compare/v2.0.6...v2.0.7) (2020-08-03)
 
 
