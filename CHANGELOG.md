@@ -1,3 +1,15 @@
+# [3.0.0](https://github.com/UziTech/sequelizr/compare/v2.0.8...v3.0.0) (2020-09-09)
+
+
+### Bug Fixes
+
+* update yargs to v16 ([23c0081](https://github.com/UziTech/sequelizr/commit/23c0081db4db5cff443a54a35408ef0dcde1c0c0))
+
+
+### BREAKING CHANGES
+
+* Drop support for Node v8
+
 ## [2.0.8](https://github.com/UziTech/sequelizr/compare/v2.0.7...v2.0.8) (2020-09-01)
 
 
