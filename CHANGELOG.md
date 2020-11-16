@@ -1,3 +1,10 @@
+## [3.0.3](https://github.com/UziTech/sequelizr/compare/v3.0.2...v3.0.3) (2020-11-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency yargs to ^16.1.1 ([091cf0b](https://github.com/UziTech/sequelizr/commit/091cf0b2dfb8ec0ad9a911d04472c0a98be2489b))
+
 ## [3.0.2](https://github.com/UziTech/sequelizr/compare/v3.0.1...v3.0.2) (2020-10-16)
 
 
