@@ -44,7 +44,7 @@
     "@semantic-release/github": "^7.2.0",
     "@semantic-release/npm": "^7.0.8",
     "@semantic-release/release-notes-generator": "^9.0.1",
-    "cross-env": "^7.0.2",
+    "cross-env": "^7.0.3",
     "eslint": "^7.14.0",
     "jest-cli": "^26.6.3",
     "mysql2": "2.2.5",
