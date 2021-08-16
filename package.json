@@ -48,7 +48,7 @@
     "eslint": "^7.32.0",
     "jest-cli": "^27.0.6",
     "mysql2": "2.3.0",
-    "semantic-release": "^17.4.4",
+    "semantic-release": "^17.4.5",
     "tedious": "^11.4.0",
     "tmp-promise": "^3.0.2"
   },
