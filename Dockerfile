@@ -1,4 +1,4 @@
-FROM node:16
+FROM node:17
 
 RUN apt-get install libpq-dev
 
