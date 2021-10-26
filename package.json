@@ -50,7 +50,7 @@
     "mysql2": "2.3.2",
     "semantic-release": "^18.0.0",
     "tedious": "^13.0.4",
-    "tmp-promise": "^3.0.2"
+    "tmp-promise": "^3.0.3"
   },
   "release": {
     "plugins": [
