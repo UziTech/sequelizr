@@ -1,6 +1,6 @@
 {
   "name": "sequelizr",
-  "version": "3.0.24",
+  "version": "3.0.25",
   "description": "Manage Sequelize models",
   "main": "./src/index.js",
   "scripts": {
