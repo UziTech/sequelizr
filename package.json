@@ -46,7 +46,7 @@
     "@semantic-release/release-notes-generator": "^10.0.3",
     "cross-env": "^7.0.3",
     "eslint": "^8.6.0",
-    "jest-cli": "^27.4.5",
+    "jest-cli": "^27.4.6",
     "mysql2": "2.3.3",
     "semantic-release": "^18.0.1",
     "tedious": "^14.0.0",
