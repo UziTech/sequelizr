@@ -9,20 +9,18 @@ jobs:
 
   Unit_Tests:
     name: Unit Tests
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
-        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Install Node
-        uses: dcodeIO/setup-node-nvm@master
+        uses: actions/setup-node@v3
         with:
-          node-version: node
+          node-version: '*'
       - name: Install Dependencies
         run: npm ci
       - name: Run Tests 👩🏽‍💻
@@ -30,13 +28,12 @@ jobs:
 
   Unit_Coverage:
     name: Unit Coverage
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Install Node
-        uses: dcodeIO/setup-node-nvm@master
+        uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
       - name: Install Dependencies
@@ -46,7 +43,6 @@ jobs:
 
   MySQL_Tests:
     name: MySQL Tests
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       fail-fast: false
       matrix:
@@ -63,7 +59,7 @@ jobs:
         run: |
           sudo docker run -e MYSQL_RANDOM_ROOT_PASSWORD=true -e MYSQL_USER=sequelizr_test -e MYSQL_PASSWORD=sequelizr_test -e MYSQL_DATABASE=sequelizr_test -d -p 3306:3306 --name mysql --health-cmd 'mysqladmin ping --silent' mysql:$MYSQL_VERSION
       - name: Install Node
-        uses: dcodeIO/setup-node-nvm@master
+        uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
       - name: Install Dependencies
@@ -79,7 +75,6 @@ jobs:
 
   MSSQL_Tests:
     name: MSSQL Tests
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     strategy:
       fail-fast: false
       matrix:
@@ -97,7 +92,7 @@ jobs:
           sudo docker build --build-arg MSSQL_VERSION=$MSSQL_VERSION -t sequelizr-mssql ./scripts/mssql
           sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Password32!' -p 1433:1433 --name mssql -d sequelizr-mssql
       - name: Install Node
-        uses: dcodeIO/setup-node-nvm@master
+        uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
       - name: Install Dependencies
@@ -112,13 +107,12 @@ jobs:
         run: npm run test:mssql
 
   Lint:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Install Node
-        uses: dcodeIO/setup-node-nvm@master
+        uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
       - name: Install Dependencies
@@ -136,7 +130,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v2
       - name: Install Node
-        uses: dcodeIO/setup-node-nvm@master
+        uses: actions/setup-node@v3
         with:
           node-version: 'lts/*'
       - name: Install Dependencies
@@ -146,10 +140,3 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
-
-  Skip:
-    if: contains(github.event.head_commit.message, '[skip ci]')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Skip CI 🚫
-        run: echo skip ci
