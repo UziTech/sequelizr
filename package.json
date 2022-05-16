@@ -35,7 +35,7 @@
   "homepage": "https://github.com/UziTech/sequelizr#readme",
   "dependencies": {
     "sequelize": "^6.19.0",
-    "yargs": "^17.5.0"
+    "yargs": "^17.5.1"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
