@@ -1,3 +1,10 @@
+## [3.0.42](https://github.com/UziTech/sequelizr/compare/v3.0.41...v3.0.42) (2022-05-17)
+
+
+### Bug Fixes
+
+* **deps:** update dependency sequelize to ^6.19.1 ([c7be256](https://github.com/UziTech/sequelizr/commit/c7be2560502752da1e1b3ef4a1e3cb40861e44e7))
+
 ## [3.0.41](https://github.com/UziTech/sequelizr/compare/v3.0.40...v3.0.41) (2022-05-16)
 
 
