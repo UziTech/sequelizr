@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/UziTech/sequelizr#readme",
   "dependencies": {
-    "sequelize": "^6.20.1",
+    "sequelize": "^6.21.1",
     "yargs": "^17.5.1"
   },
   "devDependencies": {
