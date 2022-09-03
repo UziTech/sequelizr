@@ -2,7 +2,7 @@
 
 exports[`sequelize-auto generateText should generate correct text 1`] = `
 "module.exports = function (sequelize, DataTypes) {
-  return sequelize.define(\\"my_table\\", {
+  return sequelize.define("my_table", {
     createdAt: {
       type: DataTypes.DATE,
     },
@@ -21,12 +21,12 @@ exports[`sequelize-auto generateText should generate correct text 1`] = `
       primaryKey: true,
       type: DataTypes.INTEGER,
     },
-    \\"2field\\": {
+    "2field": {
       defaultValue: 2,
       type: DataTypes.INTEGER,
     },
     stringDefault: {
-      defaultValue: \\"hi\\",
+      defaultValue: "hi",
       type: DataTypes.STRING,
     },
     unique: {
@@ -45,52 +45,52 @@ exports[`sequelize-auto generateText should generate correct text 1`] = `
       type: DataTypes.INTEGER,
     },
     current_timestamp: {
-      defaultValue: sequelize.literal(\\"current_timestamp\\"),
+      defaultValue: sequelize.literal("current_timestamp"),
       type: DataTypes.DATE,
     },
     current_date: {
-      defaultValue: sequelize.literal(\\"current_date\\"),
+      defaultValue: sequelize.literal("current_date"),
       type: DataTypes.DATE,
     },
     current_time: {
-      defaultValue: sequelize.literal(\\"current_time\\"),
+      defaultValue: sequelize.literal("current_time"),
       type: DataTypes.DATE,
     },
     localtime: {
-      defaultValue: sequelize.literal(\\"localtime\\"),
+      defaultValue: sequelize.literal("localtime"),
       type: DataTypes.DATE,
     },
     localtimestamp: {
-      defaultValue: sequelize.literal(\\"localtimestamp\\"),
+      defaultValue: sequelize.literal("localtimestamp"),
       type: DataTypes.DATE,
     },
     otherdate: {
-      defaultValue: \\"1970-01-01\\",
+      defaultValue: "1970-01-01",
       type: DataTypes.DATE,
     },
     getdate: {
-      defaultValue: sequelize.fn(\\"getdate\\"),
+      defaultValue: sequelize.fn("getdate"),
       type: DataTypes.DATE,
     },
     comment: {
-      comment: \\"comment\\",
+      comment: "comment",
       type: DataTypes.STRING,
     },
     commentnull: {
       type: DataTypes.STRING,
     },
     userDefined: {
-      type: DataTypes.ENUM(\\"special1\\", \\"special2\\"),
+      type: DataTypes.ENUM("special1", "special2"),
     },
     weirdAttr: {
-      weirdAttr: {\\"string\\":\\"string\\",\\"num\\":1,\\"bool\\":true},
-      type: \\"weird\\",
+      weirdAttr: {"string":"string","num":1,"bool":true},
+      type: "weird",
     },
     enum: {
-      type: DataTypes.ENUM(\\"item1\\", \\"item2\\"),
+      type: DataTypes.ENUM("item1", "item2"),
     },
     set: {
-      type: DataTypes.ENUM(\\"item1\\", \\"item2\\"),
+      type: DataTypes.ENUM("item1", "item2"),
     },
     varchar: {
       type: DataTypes.STRING(1),
@@ -99,7 +99,7 @@ exports[`sequelize-auto generateText should generate correct text 1`] = `
       type: DataTypes.STRING(1).BINARY,
     },
     varcharmax: {
-      type: DataTypes.STRING(\\"MAX\\"),
+      type: DataTypes.STRING("MAX"),
     },
     string: {
       type: DataTypes.STRING,
@@ -120,16 +120,16 @@ exports[`sequelize-auto generateText should generate correct text 1`] = `
       type: DataTypes.CHAR(8),
     },
     tinytext: {
-      type: DataTypes.TEXT(\\"tiny\\"),
+      type: DataTypes.TEXT("tiny"),
     },
     mediumtext: {
-      type: DataTypes.TEXT(\\"medium\\"),
+      type: DataTypes.TEXT("medium"),
     },
     text: {
       type: DataTypes.TEXT,
     },
     longtext: {
-      type: DataTypes.TEXT(\\"long\\"),
+      type: DataTypes.TEXT("long"),
     },
     ntext: {
       type: DataTypes.TEXT,
@@ -183,27 +183,27 @@ exports[`sequelize-auto generateText should generate correct text 1`] = `
       type: DataTypes.BOOLEAN,
     },
     bit1: {
-      defaultValue: \\"1\\",
+      defaultValue: "1",
       type: DataTypes.BOOLEAN,
     },
     bit0: {
-      defaultValue: \\"0\\",
+      defaultValue: "0",
       type: DataTypes.BOOLEAN,
     },
     bit: {
       type: DataTypes.BOOLEAN,
     },
     tinyblob: {
-      type: DataTypes.BLOB(\\"tiny\\"),
+      type: DataTypes.BLOB("tiny"),
     },
     mediumblob: {
-      type: DataTypes.BLOB(\\"medium\\"),
+      type: DataTypes.BLOB("medium"),
     },
     blob: {
       type: DataTypes.BLOB,
     },
     longblob: {
-      type: DataTypes.BLOB(\\"long\\"),
+      type: DataTypes.BLOB("long"),
     },
     varbinary: {
       type: DataTypes.BLOB,
@@ -248,11 +248,11 @@ exports[`sequelize-auto generateText should generate correct text 1`] = `
       type: DataTypes.GEOMETRY,
     },
     other: {
-      type: \\"other\\",
+      type: "other",
     },
   }, {
-    tableName: \\"my_table\\",
-    schema: \\"schema\\",
+    tableName: "my_table",
+    schema: "schema",
   });
 };
 "
@@ -260,7 +260,7 @@ exports[`sequelize-auto generateText should generate correct text 1`] = `
 
 exports[`sequelize-auto generateText should sort fields and attributes 1`] = `
 "module.exports = function (sequelize, DataTypes) {
-  return sequelize.define(\\"my_table\\", {
+  return sequelize.define("my_table", {
     atest: {
       type: DataTypes.INTEGER,
     },
@@ -270,8 +270,8 @@ exports[`sequelize-auto generateText should sort fields and attributes 1`] = `
       type: DataTypes.INTEGER,
     },
   }, {
-    tableName: \\"my_table\\",
-    schema: \\"schema\\",
+    tableName: "my_table",
+    schema: "schema",
     timestamps: false,
   });
 };
@@ -280,14 +280,14 @@ exports[`sequelize-auto generateText should sort fields and attributes 1`] = `
 
 exports[`sequelize-auto run writing files should write tables to directory 1`] = `
 "module.exports = function (sequelize, DataTypes) {
-	return sequelize.define(\\"table\\", {
+	return sequelize.define("table", {
 		id: {
 			primaryKey: true,
 			autoIncrement: true,
 			type: DataTypes.INTEGER,
 		},
 	}, {
-		tableName: \\"table\\",
+		tableName: "table",
 		timestamps: false,
 	});
 };
