@@ -34,8 +34,10 @@
   },
   "homepage": "https://github.com/UziTech/sequelizr#readme",
   "dependencies": {
-    "sequelize": "^6.25.0",
     "yargs": "^17.6.0"
+  },
+  "peerDependencies": {
+    "sequelize": ">=6 <7"
   },
   "devDependencies": {
     "@semantic-release/changelog": "^6.0.1",
@@ -49,6 +51,7 @@
     "jest-cli": "^29.1.2",
     "mysql2": "2.3.3",
     "semantic-release": "^19.0.5",
+    "sequelize": "^6.25.0",
     "tedious": "^15.1.0",
     "tmp-promise": "^3.0.3"
   },
