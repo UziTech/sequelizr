@@ -1,7 +1,6 @@
 # sequelizr
 
 [![Actions Status](https://github.com/UziTech/sequelizr/workflows/CI/badge.svg)](https://github.com/UziTech/sequelizr/actions)
-[![dependencies Status](https://david-dm.org/UziTech/sequelizr/status.svg)](https://david-dm.org/UziTech/sequelizr)
 
 Manage Sequelize models
 
