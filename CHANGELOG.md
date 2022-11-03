@@ -1,3 +1,10 @@
+## [3.0.61](https://github.com/UziTech/sequelizr/compare/v3.0.60...v3.0.61) (2022-11-03)
+
+
+### Bug Fixes
+
+* **deps:** update dependency yargs to ^17.6.2 ([3bebbe4](https://github.com/UziTech/sequelizr/commit/3bebbe4fa99d54de2bb7df14345de704feae6ed5))
+
 ## [3.0.60](https://github.com/UziTech/sequelizr/compare/v3.0.59...v3.0.60) (2022-11-02)
 
 
