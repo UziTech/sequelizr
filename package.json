@@ -49,7 +49,7 @@
     "jest-cli": "^29.3.1",
     "mysql2": "2.3.3",
     "semantic-release": "^19.0.5",
-    "tedious": "^15.1.1",
+    "tedious": "^15.1.2",
     "tmp-promise": "^3.0.3"
   },
   "release": {
