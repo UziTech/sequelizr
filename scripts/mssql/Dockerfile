@@ -4,6 +4,7 @@ FROM mcr.microsoft.com/mssql/server:$MSSQL_VERSION
 # modified from https://github.com/microsoft/mssql-docker/tree/master/linux/preview/examples/mssql-customize
 
 # Create a config directory
+User 0
 RUN mkdir -p /usr/config
 WORKDIR /usr/config
 
