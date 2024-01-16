@@ -4,8 +4,8 @@ const yargs = require("yargs");
 const sequelizr = require("../");
 
 const args = {
-	server: {
-		alias: ["s", "host"],
+	host: {
+		alias: ["s", "server"],
 		type: "string",
 		default: "localhost",
 		description: "Server",
@@ -97,7 +97,7 @@ yargs
 	.usage("sequelizr <cmd> [opts]")
 	.command("check [opts]", "Check if models match the database tables.", () => {
 		const {
-			server,
+			host,
 			database,
 			tables,
 			username,
@@ -111,7 +111,7 @@ yargs
 		} = args;
 		yargs
 			.options({
-				server,
+				host,
 				database,
 				tables,
 				username,
@@ -126,7 +126,7 @@ yargs
 			.hide("version");
 	}, function (argv) {
 		const {
-			server,
+			host,
 			database,
 			tables,
 			username,
@@ -140,7 +140,7 @@ yargs
 		} = argv;
 
 		const options = {
-			server,
+			host,
 			database,
 			tables,
 			username,
@@ -157,7 +157,7 @@ yargs
 	})
 	.command("download [opts]", "Save tables to models.", () => {
 		const {
-			server,
+			host,
 			database,
 			tables,
 			username,
@@ -173,7 +173,7 @@ yargs
 		overwrite.description = "Overwrite files if they exist.";
 		yargs
 			.options({
-				server,
+				host,
 				database,
 				tables,
 				username,
@@ -189,7 +189,7 @@ yargs
 			.hide("version");
 	}, function (argv) {
 		const {
-			server,
+			host,
 			database,
 			tables,
 			username,
@@ -204,7 +204,7 @@ yargs
 		} = argv;
 
 		const options = {
-			server,
+			host,
 			database,
 			tables,
 			username,
@@ -222,7 +222,7 @@ yargs
 	})
 	.command("upload [opts]", "Create tables from models.", () => {
 		const {
-			server,
+			host,
 			database,
 			tables,
 			username,
@@ -239,7 +239,7 @@ yargs
 		overwrite.description = "Drop tables before creating them.";
 		yargs
 			.options({
-				server,
+				host,
 				database,
 				tables,
 				username,
@@ -256,7 +256,7 @@ yargs
 			.hide("version");
 	}, function (argv) {
 		const {
-			server,
+			host,
 			database,
 			tables,
 			username,
@@ -272,7 +272,7 @@ yargs
 		} = argv;
 
 		const options = {
-			server,
+			host,
 			database,
 			tables,
 			username,
