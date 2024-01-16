@@ -138,7 +138,7 @@ async function checkModels(options = {}) {
 				}
 				if (!isError) {
 					isError = true;
-				 	logError(`'${table}' text has changed`);
+					logError(`'${table}' text has changed`);
 				}
 			}
 		} catch (ex) {
