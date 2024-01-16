@@ -99,13 +99,13 @@ async function checkModels(options = {}) {
 					dbColumns.push("updatedAt");
 					const columns = Object.keys(model.rawAttributes);
 					const realNameColumns = columns.map(col => {
-						return 'field' in model.rawAttributes[col] ? model.rawAttributes[col].field : col; 
+						return "field" in model.rawAttributes[col] ? model.rawAttributes[col].field : col; 
 					});
                   
 					realNameColumns.forEach(col => {
 						const originalColumnName = columns[realNameColumns.indexOf(col)];
 						const type = convertToGenericType(model.rawAttributes[originalColumnName].type.toString());             
-						if(type !== 'VIRTUAL') {
+						if (type !== "VIRTUAL") {
 							if (!dbColumns.includes(col)) {
 								logError(`'${table}.${col}' not in db`);
 								isError = true;
@@ -118,7 +118,7 @@ async function checkModels(options = {}) {
 							logError(`'${table}.${col}' not in model`);
 							isError = true;
 						} else {
-							const originalColumnName = columns[realNameColumns.indexOf(col)]
+							const originalColumnName = columns[realNameColumns.indexOf(col)];
 							const type = convertToGenericType(model.rawAttributes[originalColumnName].type.toString());
 							const dbType = convertToGenericType(dbModel[col].type);
 							if (type !== dbType) {
