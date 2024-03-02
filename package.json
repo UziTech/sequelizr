@@ -47,7 +47,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "jest-cli": "^29.7.0",
-    "mysql2": "3.9.1",
+    "mysql2": "3.9.2",
     "semantic-release": "^23.0.2",
     "tedious": "^17.0.0",
     "tmp-promise": "^3.0.3"
