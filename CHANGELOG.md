@@ -1,3 +1,10 @@
+## [3.0.81](https://github.com/UziTech/sequelizr/compare/v3.0.80...v3.0.81) (2024-04-07)
+
+
+### Bug Fixes
+
+* send host for server ip ([#695](https://github.com/UziTech/sequelizr/issues/695)) ([ff85933](https://github.com/UziTech/sequelizr/commit/ff85933fd9f32da13f5c650fbeb2ea7ccf29941a))
+
 ## [3.0.80](https://github.com/UziTech/sequelizr/compare/v3.0.79...v3.0.80) (2024-02-11)
 
 
