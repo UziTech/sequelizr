@@ -74,6 +74,7 @@ describe("sequelize-auto", () => {
 				skipTables: [],
 			});
 
+			// eslint-disable-next-line no-console
 			expect(console.error).toHaveBeenCalledWith("The 'skipTables' option will be ignored because the 'tables' option is given");
 		});
 
