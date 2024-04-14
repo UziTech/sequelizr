@@ -534,7 +534,7 @@ class AutoSequelize {
 				} else {
 					try {
 						text += `${indent(3)}${attr}: ${JSON.stringify(attrValue)}`;
-					} catch (ex) {
+					} catch (ex) { // eslint-disable-line no-unused-vars
 						// skip attr
 					}
 				}
@@ -570,7 +570,7 @@ class AutoSequelize {
 					const keyName = key.match(/^\d|\W/) ? `"${key}"` : key;
 					const value = JSON.stringify(additional[key]);
 					text += `${indent(2)}${keyName}: ${value},\n`;
-				} catch (ex) {
+				} catch (ex) { // eslint-disable-line no-unused-vars
 					// eslint-disable-next-line no-console
 					console.error(`Can't add additional property '${key}'`);
 					// JSON.stringify failed, Don't add this property. Should this throw an error?

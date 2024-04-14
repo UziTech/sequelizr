@@ -11,7 +11,7 @@
     "test:mysql": "cross-env DIALECT=mysql npm run test:integration",
     "test:mssql": "cross-env DIALECT=mssql npm run test:integration",
     "test:all-dialects": "npm run test:mysql && npm run test:mssql",
-    "lint": "eslint ."
+    "lint": "eslint"
   },
   "repository": {
     "type": "git",
@@ -38,6 +38,7 @@
     "yargs": "^17.7.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.0.0",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/commit-analyzer": "^12.0.0",
     "@semantic-release/git": "^10.0.1",
@@ -45,7 +46,8 @@
     "@semantic-release/npm": "^12.0.0",
     "@semantic-release/release-notes-generator": "^13.0.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
+    "globals": "^15.0.0",
     "jest-cli": "^29.7.0",
     "mysql2": "3.9.4",
     "semantic-release": "^23.0.8",
