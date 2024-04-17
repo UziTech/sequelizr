@@ -49,7 +49,7 @@
     "eslint": "^9.0.0",
     "globals": "^15.0.0",
     "jest-cli": "^29.7.0",
-    "mysql2": "3.9.4",
+    "mysql2": "3.9.5",
     "semantic-release": "^23.0.8",
     "tedious": "^18.1.0",
     "tmp-promise": "^3.0.3"
