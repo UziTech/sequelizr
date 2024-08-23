@@ -78,7 +78,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [2017-latest, 2019-latest]
+        version: [2017-latest]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
