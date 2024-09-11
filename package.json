@@ -50,7 +50,7 @@
     "globals": "^15.9.0",
     "jest-cli": "^29.7.0",
     "mysql2": "3.11.2",
-    "semantic-release": "^24.1.0",
+    "semantic-release": "^24.1.1",
     "tedious": "^19.0.0",
     "tmp-promise": "^3.0.3"
   },
