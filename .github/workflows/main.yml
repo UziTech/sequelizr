@@ -78,7 +78,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [2017-latest]
+        version: [2017-latest, 2019-latest, 2022-latest]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -90,7 +90,7 @@ jobs:
           sudo chmod +x ./scripts/mssql/entrypoint.sh
           sudo chmod +x ./scripts/mssql/configure-db.sh
           sudo docker build --build-arg MSSQL_VERSION=$MSSQL_VERSION -t sequelizr-mssql ./scripts/mssql
-          sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Password32!' -p 1433:1433 --name mssql -d sequelizr-mssql
+          sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=ASdfgef4r54s45y32!' -e 'MSSQL_SA_PASSWORD=ASdfgef4r54s45y32!' -e 'MSSQL_PID=Developer' -e 'MSSQL_TCP_PORT=1433' -p 1433:1433 --name mssql -d sequelizr-mssql
       - name: Install Node
         uses: actions/setup-node@v4
         with:
@@ -101,7 +101,7 @@ jobs:
         env:
           SEQ_DB: sequelizr_test
           SEQ_USER: sequelizr_test
-          SEQ_PW: Sequelizr_test32!
+          SEQ_PW: ASdfgef4r54s45y32!
           SEQ_HOST: localhost
           SEQ_PORT: 1433
         run: npm run test:mssql
