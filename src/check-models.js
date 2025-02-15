@@ -98,20 +98,28 @@ async function checkModels(options = {}) {
 					dbColumns.push("createdAt");
 					dbColumns.push("updatedAt");
 					const columns = Object.keys(model.rawAttributes);
-
-					columns.forEach(col => {
-						if (!dbColumns.includes(col)) {
-							logError(`'${table}.${col}' not in db`);
-							isError = true;
+					const realNameColumns = columns.map(col => {
+						return "field" in model.rawAttributes[col] ? model.rawAttributes[col].field : col; 
+					});
+                  
+					realNameColumns.forEach(col => {
+						const originalColumnName = columns[realNameColumns.indexOf(col)];
+						const type = convertToGenericType(model.rawAttributes[originalColumnName].type.toString());             
+						if (type !== "VIRTUAL") {
+							if (!dbColumns.includes(col)) {
+								logError(`'${table}.${col}' not in db`);
+								isError = true;
+							}                         
 						}
 					});
 
 					for (const col in dbModel) {
-						if (!columns.includes(col)) {
+						if (!realNameColumns.includes(col)) {
 							logError(`'${table}.${col}' not in model`);
 							isError = true;
 						} else {
-							const type = convertToGenericType(model.rawAttributes[col].type.toString());
+							const originalColumnName = columns[realNameColumns.indexOf(col)];
+							const type = convertToGenericType(model.rawAttributes[originalColumnName].type.toString());
 							const dbType = convertToGenericType(dbModel[col].type);
 							if (type !== dbType) {
 								logError(`'${table}.${col}' types not equal '${type}' !== '${dbType}'`);
