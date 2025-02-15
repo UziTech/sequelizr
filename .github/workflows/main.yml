@@ -46,7 +46,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ['8.0']
+        version: ['8', '9']
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -78,8 +78,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [2017-latest]
-    runs-on: ubuntu-latest
+        version: [2019-CU10-ubuntu-20.04]
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -121,7 +121,7 @@ jobs:
         run: npm run lint
 
   Release:
-    needs: [Unit_Tests, Unit_Coverage, MySQL_Tests, Lint]
+    needs: [Unit_Tests, Unit_Coverage, MySQL_Tests, MSSQL_Tests, Lint]
     if: |
       github.ref == 'refs/heads/master' &&
       github.event.repository.fork == false
