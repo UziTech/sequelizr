@@ -78,7 +78,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [2019-CU10-ubuntu-20.04]
+        version: [2019-latest]
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout Code
