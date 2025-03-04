@@ -1,3 +1,11 @@
+## [3.0.86](https://github.com/UziTech/sequelizr/compare/v3.0.85...v3.0.86) (2025-03-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependency sequelize to ^6.37.6 ([#839](https://github.com/UziTech/sequelizr/issues/839)) ([32a2b93](https://github.com/UziTech/sequelizr/commit/32a2b93fc626b4ad23693cebde6d6b35d87ab281))
+* The sequelize field option is not respected ([#694](https://github.com/UziTech/sequelizr/issues/694)) ([9720dde](https://github.com/UziTech/sequelizr/commit/9720dde9901edafe7d9a6bba0d2e3cc40fad18ca))
+
 ## [3.0.85](https://github.com/UziTech/sequelizr/compare/v3.0.84...v3.0.85) (2024-11-04)
 
 
