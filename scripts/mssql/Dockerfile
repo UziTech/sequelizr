@@ -9,6 +9,7 @@ RUN apt-get update -yqq
 RUN apt-get install -y --no-install-recommends openssl
 RUN sed -i -E 's/(SECLEVEL=)1/\10/' /etc/ssl/openssl.cnf
 RUN rm -rf /var/lib/apt/lists/*
+
 RUN mkdir -p /usr/config
 WORKDIR /usr/config
 
