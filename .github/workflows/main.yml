@@ -87,6 +87,7 @@ jobs:
         env:
           MSSQL_VERSION: ${{ matrix.version }}
         run: |
+          cat /etc/ssl/openssl.conf
           sudo chmod +x ./scripts/mssql/entrypoint.sh
           sudo chmod +x ./scripts/mssql/configure-db.sh
           sudo docker build --build-arg MSSQL_VERSION=$MSSQL_VERSION -t sequelizr-mssql ./scripts/mssql
