@@ -78,19 +78,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: [2019-CU10-ubuntu-20.04]
-    runs-on: ubuntu-20.04
+        version: [2019] # [2019, 2022]
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      - name: Set up MSSQL
-        env:
-          MSSQL_VERSION: ${{ matrix.version }}
-        run: |
-          sudo chmod +x ./scripts/mssql/entrypoint.sh
-          sudo chmod +x ./scripts/mssql/configure-db.sh
-          sudo docker build --build-arg MSSQL_VERSION=$MSSQL_VERSION -t sequelizr-mssql ./scripts/mssql
-          sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Password32!' -p 1433:1433 --name mssql -d sequelizr-mssql
+      - name: Install MSSQL
+        uses: potatoqualitee/mssqlsuite@v1.8
+        with:
+          install: sqlengine, sqlclient
+          version: ${{ matrix.version }}
+          sa-password: c0MplicatedP@ssword
+          show-log: true
+      - name: Setup MSSQL
+        run: sqlcmd -S localhost -U sa -P c0MplicatedP@ssword -i ./scripts/mssql/setup.sql -C
       - name: Install Node
         uses: actions/setup-node@v4
         with:
