@@ -88,10 +88,10 @@ jobs:
         with:
           install: sqlengine, sqlclient
           version: 2019
-          sa-password: yourStrong(!)Password
+          sa-password: c0MplicatedP@ssword
           show-log: true
       - name: Run sqlcmd
-        run: sqlcmd -S localhost -U sa -P yourStrong(!)Password -d tempdb -Q "SELECT @@version;" -C
+        run: sqlcmd -S localhost -U sa -P c0MplicatedP@ssword -d tempdb -Q "SELECT @@version;" -C
       # - name: Set up MSSQL
       #   env:
       #     MSSQL_VERSION: ${{ matrix.version }}
@@ -99,7 +99,7 @@ jobs:
       #     sudo chmod +x ./scripts/mssql/entrypoint.sh
       #     sudo chmod +x ./scripts/mssql/configure-db.sh
       #     sudo docker build --build-arg MSSQL_VERSION=$MSSQL_VERSION -t sequelizr-mssql ./scripts/mssql
-      #     sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 --name mssql -d sequelizr-mssql
+      #     sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=c0MplicatedP@ssword' -p 1433:1433 --name mssql -d sequelizr-mssql
       - name: Install Node
         uses: actions/setup-node@v4
         with:
@@ -113,7 +113,7 @@ jobs:
         run: npm ci
       - name: Run Tests 👩🏽‍💻
         env:
-          SA_PASSWORD: yourStrong(!)Password
+          SA_PASSWORD: c0MplicatedP@ssword
           SEQ_DB: sequelizr_test
           SEQ_USER: sequelizr_test
           SEQ_PW: Sequelizr_test32!
