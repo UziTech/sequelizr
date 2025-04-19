@@ -90,8 +90,8 @@ jobs:
           version: 2019
           sa-password: c0MplicatedP@ssword
           show-log: true
-      - name: Run sqlcmd
-        run: sqlcmd -S localhost -U sa -P c0MplicatedP@ssword -d tempdb -Q "SELECT @@version;" -C
+      - name: Setup MSSQL
+        run: sqlcmd -S localhost -U sa -P c0MplicatedP@ssword -i ./scripts/mssql/setup.sql -C
       # - name: Set up MSSQL
       #   env:
       #     MSSQL_VERSION: ${{ matrix.version }}
