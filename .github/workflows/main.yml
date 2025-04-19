@@ -87,7 +87,7 @@ jobs:
         env:
           MSSQL_VERSION: ${{ matrix.version }}
         run: |
-          echo -e "[system_default_sect]\nCipherString = DEFAULT:@SECLEVEL=0" > /etc/ssl/openssl.conf
+          sudo echo -e "[system_default_sect]\nCipherString = DEFAULT:@SECLEVEL=0" > /etc/ssl/openssl.conf
           sudo chmod +x ./scripts/mssql/entrypoint.sh
           sudo chmod +x ./scripts/mssql/configure-db.sh
           sudo docker build --build-arg MSSQL_VERSION=$MSSQL_VERSION -t sequelizr-mssql ./scripts/mssql
