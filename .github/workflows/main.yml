@@ -90,7 +90,7 @@ jobs:
           sudo chmod +x ./scripts/mssql/entrypoint.sh
           sudo chmod +x ./scripts/mssql/configure-db.sh
           sudo docker build --build-arg MSSQL_VERSION=$MSSQL_VERSION -t sequelizr-mssql ./scripts/mssql
-          sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=Password32!' -p 1433:1433 --name mssql -d sequelizr-mssql
+          sudo docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=yourStrong(!)Password' -p 1433:1433 --name mssql -d sequelizr-mssql
       - name: Install Node
         uses: actions/setup-node@v4
         with:
