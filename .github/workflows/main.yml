@@ -99,6 +99,7 @@ jobs:
         run: npm ci
       - name: Run Tests 👩🏽‍💻
         env:
+          SA_PASSWORD: yourStrong(!)Password
           SEQ_DB: sequelizr_test
           SEQ_USER: sequelizr_test
           SEQ_PW: yourStrong(!)Password
