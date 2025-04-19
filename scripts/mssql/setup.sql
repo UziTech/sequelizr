@@ -7,7 +7,7 @@ Enter custom T-SQL here that would run after SQL Server has started up.
 CREATE DATABASE [sequelizr_test];
 GO
 
-CREATE LOGIN sequelizr_test WITH PASSWORD = 'Sequelizr_test32!';
+CREATE LOGIN sequelizr_test WITH PASSWORD = 'c0MplicatedP@ssword';
 
 ALTER SERVER ROLE sysadmin ADD MEMBER sequelizr_test;
 
