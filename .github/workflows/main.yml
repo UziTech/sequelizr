@@ -102,7 +102,7 @@ jobs:
         env:
           SEQ_DB: sequelizr_test
           SEQ_USER: sequelizr_test
-          SEQ_PW: Sequelizr_test32!
+          SEQ_PW: c0MplicatedP@ssword
           SEQ_HOST: localhost
           SEQ_PORT: 1433
         run: npm run test:mssql
