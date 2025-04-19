@@ -99,9 +99,6 @@ jobs:
         run: |
           echo "[system_default_sect]" > openssl.cnf
           echo "CipherString = DEFAULT:@SECLEVEL=0" >> openssl.cnf
-      - name: Set OPENSSL_CONF
-        run: |
-          export OPENSSL_CONF=./openssl.cnf
       - name: Install Dependencies
         run: npm ci
       - name: Run Tests 👩🏽‍💻
@@ -112,6 +109,7 @@ jobs:
           SEQ_PW: yourStrong(!)Password
           SEQ_HOST: localhost
           SEQ_PORT: 1433
+          OPENSSL_CONF: ./openssl.cnf
         run: npm run test:mssql
 
   Lint:
