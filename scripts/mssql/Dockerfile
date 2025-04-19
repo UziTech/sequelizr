@@ -5,10 +5,10 @@ FROM mcr.microsoft.com/mssql/server:$MSSQL_VERSION
 
 # Create a config directory
 USER 0
-RUN apt-get update -yqq
-RUN apt-get install -y --no-install-recommends openssl
-RUN sed -i -E 's/(SECLEVEL=)1/\10/' /etc/ssl/openssl.cnf
-RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get update -yqq \
+    && apt-get install -y --no-install-recommends openssl \
+    && sed -i -E 's/(CipherString\s*=\s*DEFAULT@SECLEVEL=)2/\11/' /etc/ssl/openssl.cnf \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/config
 WORKDIR /usr/config
