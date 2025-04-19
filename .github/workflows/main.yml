@@ -83,7 +83,7 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-      - name: install mssql
+      - name: Install MSSQL
         uses: potatoqualitee/mssqlsuite@v1.8
         with:
           install: sqlengine, sqlclient
