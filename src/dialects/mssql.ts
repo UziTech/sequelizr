@@ -1,5 +1,42 @@
-module.exports = {
+// Define interfaces for the records based on expected properties from the queries
+interface BaseRecord {
+	// Common properties can be defined here if any
+}
 
+interface ForeignKeyResultRecord extends BaseRecord {
+	constraint_type: string;
+	// source_table: string;
+	// constraint_name: string;
+	// source_column: string;
+	// target_table: string;
+	// target_column: string;
+	// is_identity: boolean | number; // SQL Server might return this as 0 or 1
+}
+
+interface PrimaryKeyResultRecord extends BaseRecord {
+	constraint_type: string;
+}
+
+interface SerialKeyResultRecord extends PrimaryKeyResultRecord {
+	is_identity: boolean | number; // Assuming is_identity comes from the foreign key query context
+}
+
+// Interface for options in showTablesQuery
+interface ShowTablesQueryOptions {
+	includeViews?: boolean;
+}
+
+// Interface for the exported dialect object
+interface MssqlDialect {
+	getForeignKeysQuery: (tableName: string, schemaName: string) => string;
+	getIndexesQuery: (tableName: string, schemaName: string) => string;
+	isForeignKey: (record: ForeignKeyResultRecord) => boolean;
+	isPrimaryKey: (record: PrimaryKeyResultRecord) => boolean;
+	isSerialKey: (record: SerialKeyResultRecord) => boolean;
+	showTablesQuery: (options?: ShowTablesQueryOptions) => string;
+}
+
+const mssqlDialect: MssqlDialect = {
 	/**
 	 * Generates an SQL query that returns all foreign keys of a table.
 	 *
@@ -7,7 +44,7 @@ module.exports = {
 	 * @param  {String} schemaName The name of the schema.
 	 * @return {String}            The generated sql query.
 	 */
-	getForeignKeysQuery: function (tableName, schemaName) { // eslint-disable-line no-unused-vars
+	getForeignKeysQuery: function (tableName: string, schemaName: string): string { // eslint-disable-line no-unused-vars
 		return `SELECT
 			ccu.table_name AS source_table,
 			ccu.constraint_name AS constraint_name,
@@ -37,7 +74,7 @@ module.exports = {
 	 * @param  {String} schemaName The name of the schema.
 	 * @return {String}            The generated sql query.
 	 */
-	getIndexesQuery: function (tableName, schemaName) { // eslint-disable-line no-unused-vars
+	getIndexesQuery: function (tableName: string, schemaName: string): string { // eslint-disable-line no-unused-vars
 		return `SELECT
 				i.name AS name,
 				i.type_desc AS type,
@@ -62,8 +99,8 @@ module.exports = {
 	 * @param {Object} record The row entry from getForeignKeysQuery
 	 * @return {Bool} return
 	 */
-	isForeignKey: function (record) {
-		return typeof record === "object" && ("constraint_type" in record) && record.constraint_type === "FOREIGN KEY";
+	isForeignKey: function (record: ForeignKeyResultRecord): boolean {
+		return typeof record === "object" && record && ("constraint_type" in record) && record.constraint_type === "FOREIGN KEY";
 	},
 
 	/**
@@ -73,8 +110,8 @@ module.exports = {
 	 * @param {Object} record The row entry from getForeignKeysQuery
 	 * @return {Bool} return
 	 */
-	isPrimaryKey: function (record) {
-		return typeof record === "object" && ("constraint_type" in record) && record.constraint_type === "PRIMARY KEY";
+	isPrimaryKey: function (record: PrimaryKeyResultRecord): boolean {
+		return typeof record === "object" && record && ("constraint_type" in record) && record.constraint_type === "PRIMARY KEY";
 	},
 
 	/**
@@ -84,22 +121,28 @@ module.exports = {
 	 * @param {Object} record The row entry from getForeignKeysQuery
 	 * @return {Bool} return
 	 */
-	isSerialKey: function (record) {
-		return typeof record === "object" && this.isPrimaryKey(record) && (("is_identity" in record) && record.is_identity);
+	isSerialKey: function (record: SerialKeyResultRecord): boolean {
+		// Assuming isPrimaryKey is a method on the same object (this context)
+		// For type safety, ensure `this` refers to MssqlDialect or pass `isPrimaryKey` as an argument if needed.
+		// However, given the original JS, `this.isPrimaryKey` would refer to `mssqlDialect.isPrimaryKey`.
+		return typeof record === "object" && record && this.isPrimaryKey(record) && (("is_identity" in record) && !!record.is_identity);
 	},
 
 	/**
 	 * Overwrites Sequelize's native method for showing all tables.
 	 * This allows showing all tables and views from the current schema
-	 * @param {String} options Options
-	 * @param {String} [options.includeViews] Include views with tables
+	 * @param {ShowTablesQueryOptions} [options] Options
+	 * @param {boolean} [options.includeViews] Include views with tables
 	 * @return {String} return
 	 */
-	showTablesQuery: function (options) {
+	showTablesQuery: function (options?: ShowTablesQueryOptions): string {
 		let query = "SELECT TABLE_NAME, TABLE_SCHEMA FROM INFORMATION_SCHEMA.TABLES";
-		if (!options.includeViews) {
+		// Add 'if (options)' to prevent error if options is undefined
+		if (options && !options.includeViews) {
 			query += " WHERE TABLE_TYPE = 'BASE TABLE'";
 		}
 		return `${query};`;
 	},
 };
+
+export default mssqlDialect;
