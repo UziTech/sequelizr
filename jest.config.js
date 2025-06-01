@@ -3,8 +3,10 @@ module.exports = {
 	clearMocks: true,
 	// collectCoverage: true,
 	collectCoverageFrom: [
-		"src/**/*.js",
+		"src/**/*.ts",
 	],
 	coverageDirectory: "coverage",
-	testRegex: /\.test\.js$/.source,
+	testRegex: /\.test\.ts$/.source,
+	preset: "ts-jest",
+	testEnvironment: "node",
 };
