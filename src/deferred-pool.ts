@@ -1,6 +1,14 @@
-const EventEmitter = require("events");
+import EventEmitter from "events";
 
-class DefferredPool extends EventEmitter {
+export default class DeferredPool extends EventEmitter {
+	max: number;
+	retry: number;
+	nextItem: number;
+	items: any[];
+	currentItems: Set<any>;
+	successfulItems: any[];
+	failedItems: any[];
+
 	constructor({max = 100, retry = 1} = {}) {
 		super();
 		this.max = max;
@@ -32,7 +40,7 @@ class DefferredPool extends EventEmitter {
 		return this.total > 0 ? this.finished / this.total * 100 : 0;
 	}
 
-	add(item, tries = 0) {
+	add(item: any, tries = 0) {
 		if (Array.isArray(item)) {
 			item.forEach(i => this.add(i, tries));
 			return;
@@ -85,13 +93,11 @@ class DefferredPool extends EventEmitter {
 		});
 	}
 
-	onUpdate(callback) {
+	onUpdate(callback: () => void) {
 		return this.on("update", callback);
 	}
 
-	onError(callback) {
+	onError(callback: (ex: any) => void) {
 		return this.on("error", callback);
 	}
 }
-
-module.exports = DefferredPool;

@@ -1,32 +1,46 @@
-const fs = require("fs");
-const path = require("path");
-const util = require("util");
-const readline = require("readline");
-const Sequelize = require("sequelize");
-const {QueryTypes} = Sequelize;
-const dialects = require("./dialects");
-const SqlString = require("./sql-string");
-const DefferredPool = require("./defferred-pool");
+import { mkdir, stat, writeFile, readFile } from "fs/promises";
+import path from "path";
+import readline from "readline";
+import { QueryTypes, Sequelize } from "sequelize";
+import dialects from "./dialects";
+import { escape as escapeSqlString } from "./sql-string";
+import DeferredPool from "./deferred-pool.js";
+import { DialectOperations, SequelizeAutoOptions, Index, DialectName, AdditionalOptions } from "./types";
 
-const mkdirAsync = util.promisify(fs.mkdir);
-const statAsync = util.promisify(fs.stat);
-const writeFileAsync = util.promisify(fs.writeFile);
-const readFileAsync = util.promisify(fs.readFile);
+export default class AutoSequelize {
+	sequelize: Sequelize;
+	queryInterface: any;
+	text: any;
+	tables: any;
+	indexes: Record<string, Index[]>;
+	foreignKeys: any;
+	maxDeferredQueries: number;
+	dialect: DialectOperations;
+	options: SequelizeAutoOptions;
+	startedAt: number|undefined;
+	finishedAt: number|undefined;
 
-class AutoSequelize {
-
-	constructor(database, username, password, options) {
-		if (database instanceof Sequelize) {
-			this.sequelize = database;
-			if (typeof username === "object") {
+	constructor(databaseOrSequelize: Sequelize, usernameOrOptions: SequelizeAutoOptions);
+	constructor(databaseOrSequelize: string, usernameOrOptions: string, password: string, options: SequelizeAutoOptions);
+	constructor(databaseOrSequelize: string | Sequelize, usernameOrOptions: string | SequelizeAutoOptions, password?: string, options?: SequelizeAutoOptions) {
+		let database: string | undefined;
+		let username: string | undefined;
+		if (databaseOrSequelize instanceof Sequelize) {
+			this.sequelize = databaseOrSequelize;
+			if (typeof usernameOrOptions === "object") {
 				// eslint-disable-next-line no-param-reassign
-				options = username;
+				options = usernameOrOptions;
 			}
+			options ??= {};
 		} else {
+			database = databaseOrSequelize;
+			username = usernameOrOptions as string;
 			if (!options) {
 				// eslint-disable-next-line no-param-reassign
 				options = {};
 			}
+
+			options.dialect ??= 'mysql';
 
 			if (options.dialect === "sqlite" && !options.storage) {
 				options.storage = database;
@@ -60,12 +74,13 @@ class AutoSequelize {
 			this.sequelize = new Sequelize(database, username, password, options);
 		}
 
+		options.dialect ??= 'mysql';
 		this.queryInterface = this.sequelize.getQueryInterface();
 		this.text = {};
 		this.tables = {};
 		this.indexes = {};
 		this.foreignKeys = {};
-		this.maxDefferredQueries = (options.dialect === "mysql" ? 10 : 100);
+		this.maxDeferredQueries = (options.dialect === "mysql" ? 10 : 100);
 		this.dialect = dialects[options.dialect];
 
 		this.options = {
@@ -105,19 +120,19 @@ class AutoSequelize {
 		}
 	}
 
-	async buildForeignKeys(table) {
+	async buildForeignKeys(table: any) {
 
-		const sql = this.dialect.getForeignKeysQuery(table, this.options.database);
+		const sql = this.dialect.getForeignKeysQuery(table, this.options.database ?? '');
 
 		const results = await this.sequelize.query(sql, {
 			type: QueryTypes.SELECT,
 			raw: true,
-		});
+		}) as Record<string, any>[];
 
 		for (let ref of results) {
 			if (this.options.dialect === "sqlite") {
 				// map sqlite's PRAGMA results
-				ref = Object.keys(ref).reduce((acc, key) => {
+				ref = Object.keys(ref).reduce((acc: any, key) => {
 					switch (key) {
 						case "from":
 							acc["source_column"] = ref[key];
@@ -172,20 +187,20 @@ class AutoSequelize {
 		}
 	}
 
-	async buildIndexes(table) {
-		const sql = this.dialect.getIndexesQuery(table, this.options.database);
+	async buildIndexes(table: any) {
+		const sql = this.dialect.getIndexesQuery(table, this.options.database ?? '');
 		const results = await this.sequelize.query(sql, {
 			type: QueryTypes.SELECT,
 			raw: true,
-		});
+		}) as Record<string, any>[];
 
-		let indexes = [];
+		let indexes: Index[] = [];
 		if (this.options.dialect === "sqlite") {
-			indexes = results.reduce((arr, row) => {
+			indexes = results.reduce((arr: Index[], row) => {
 				const match = row.sql.match(/CREATE(\s+UNIQUE)?\s+INDEX\s+(\S+)\s+ON\s+(\S+)\s*\(([^)]+)\)/i);
-				const index = {
+				const index: Index = {
 					name: row.name,
-					fields: match[3].split(",").map(f => f.trim()),
+					fields: match[3].split(",").map((f: string) => f.trim()),
 				};
 				arr.push(index);
 				return arr;
@@ -208,14 +223,14 @@ class AutoSequelize {
 		this.indexes[table] = indexes;
 	}
 
-	async buildTable(table) {
+	async buildTable(table: any) {
 		this.tables[table] = await this.queryInterface.describeTable(table, this.options.schema);
 	}
 
 	async build() {
 		let tables = [];
-		if ((this.options.dialect === "postgres" && this.options.schema) || ["mysql", "mssql"].includes(this.options.dialect)) {
-			const showTablesSql = this.dialect.showTablesQuery(this.options);
+		if ((this.options.dialect === "postgres" && this.options.schema) || ["mysql", "mssql"].includes(this.options.dialect ?? '')) {
+			const showTablesSql = this.dialect.showTablesQuery!(this.options);
 			tables = await this.sequelize.query(showTablesSql, {
 				raw: true,
 				type: QueryTypes.SHOWTABLES,
@@ -224,7 +239,7 @@ class AutoSequelize {
 			tables = await this.queryInterface.showAllTables();
 		}
 
-		tables = tables.reduce((acc, i) => {
+		tables = tables.reduce((acc: string[], i: any) => {
 			if (i.tableName) {
 				return acc.concat(i.tableName);
 			}
@@ -233,23 +248,23 @@ class AutoSequelize {
 
 		if (this.options.tables) {
 			if (this.options.tables instanceof RegExp) {
-				tables = tables.filter(tn => this.options.tables.test(tn));
+				tables = tables.filter((tn: string) => (this.options.tables as RegExp).test(tn));
 			} else {
-				tables = tables.filter(tn => this.options.tables.includes(tn.toLowerCase()));
+				tables = tables.filter((tn: string) => (this.options.tables as string[]).includes(tn.toLowerCase()));
 			}
 		} else if (this.options.skipTables) {
 			if (this.options.skipTables instanceof RegExp) {
-				tables = tables.filter(tn => !this.options.skipTables.test(tn));
+				tables = tables.filter((tn: string) => !(this.options.skipTables as RegExp).test(tn));
 			} else {
-				tables = tables.filter(tn => !this.options.skipTables.includes(tn.toLowerCase()));
+				tables = tables.filter((tn: string) => !(this.options.skipTables as string[]).includes(tn.toLowerCase()));
 			}
 		}
 
 		if (tables.length > 0) {
-			await new Promise((resolve, reject) => {
-				let lastUpdate = null;
+			await new Promise<void>((resolve, reject) => {
+				let lastUpdate: number|undefined;
 				const precision = Math.max(`${tables.length}`.length - 2, 0);
-				const pool = new DefferredPool({max: this.maxDefferredQueries});
+				const pool = new DeferredPool({max: this.maxDeferredQueries});
 				pool.onUpdate(() => {
 					if (pool.percent !== lastUpdate) {
 						lastUpdate = pool.percent;
@@ -267,14 +282,14 @@ class AutoSequelize {
 						}
 					}
 				});
-				pool.onError((ex) => {
+				pool.onError((ex: Error) => {
 					if (!this.options.quiet) {
 						readline.clearLine(process.stdout, 0);
 						readline.cursorTo(process.stdout, 0);
 					}
 					reject(ex);
 				});
-				pool.add(tables.map((t) => async () => {
+				pool.add(tables.map((t: any) => async () => {
 					if (this.options.foreignKeys) {
 						await this.buildForeignKeys(t);
 					}
@@ -287,7 +302,7 @@ class AutoSequelize {
 		}
 	}
 
-	generateText(table, indent) {
+	generateText(table : string, indent: any) {
 		let text = "";
 
 		text += "module.exports = function (sequelize, DataTypes) {\n";
@@ -338,7 +353,7 @@ class AutoSequelize {
 
 			// ENUMs for postgres...
 			if (fieldValue.type === "USER-DEFINED" && !!fieldValue.special) {
-				fieldValue.type = `ENUM(${fieldValue.special.map((f) => `"${f}"`).join(", ")})`;
+				fieldValue.type = `ENUM(${fieldValue.special.map((f: string) => `"${f}"`).join(", ")})`;
 			}
 
 			const isUnique = fieldValue.foreignKey && fieldValue.foreignKey.isUnique;
@@ -434,7 +449,7 @@ class AutoSequelize {
 
 					if (typeof val === "string") {
 						if (!val.match(/^sequelize\.[^(]+\(.*\)$/)) {
-							val = SqlString.escape(val.replace(/^"+|"+$/g, ""), null, this.options.dialect);
+							val = escapeSqlString(val.replace(/^"+|"+$/g, ""), null, this.options.dialect ?? '');
 						}
 
 						// don't prepend N for MSSQL when building models...
@@ -453,7 +468,7 @@ class AutoSequelize {
 							return "";
 						}
 
-						const lengths = l[1].split(",").map(n => {
+						const lengths = l[1].split(",").map((n: string) => {
 							const len = n.trim().replace(/^'(.*)'$/, "\"$1\"").replace(/\\'/g, "'");
 							if (len.match(/[^-.\d]/) && len.match(/^[^"]/)) {
 								return `"${len}"`;
@@ -489,7 +504,7 @@ class AutoSequelize {
 							int: "INTEGER",
 							bigint: "BIGINT",
 						};
-						val = `DataTypes.${int[match[0]]}${length()}`;
+						val = `DataTypes.${int[match[0] as keyof typeof int]}${length()}`;
 
 						if (_attr.match(/unsigned/)) {
 							val += ".UNSIGNED";
@@ -568,7 +583,7 @@ class AutoSequelize {
 			for (const key in additional) {
 				try {
 					const keyName = key.match(/^\d|\W/) ? `"${key}"` : key;
-					const value = JSON.stringify(additional[key]);
+					const value = JSON.stringify(additional[key as keyof AdditionalOptions]);
 					text += `${indent(2)}${keyName}: ${value},\n`;
 				} catch (ex) { // eslint-disable-line no-unused-vars
 					// eslint-disable-next-line no-console
@@ -605,10 +620,10 @@ class AutoSequelize {
 		await this.build();
 
 		let spaces = "";
-		for (let x = 0; x < this.options.indentation; ++x) {
+		for (let x = 0; x < (this.options.indentation ?? 1); ++x) {
 			spaces += (this.options.spaces === true ? " " : "\t");
 		}
-		const indent = (level) => spaces.repeat(level);
+		const indent = (level: number) => spaces.repeat(level);
 
 		const tables = Object.keys(this.tables);
 		const precision = Math.max(`${tables.length}`.length - 2, 0);
@@ -639,33 +654,33 @@ class AutoSequelize {
 
 	async write() {
 
-		const mkdirp = async (directory) => {
+		const mkdirp = async (directory: string) => {
 			// eslint-disable-next-line no-param-reassign
 			directory = path.resolve(directory);
 			try {
-				await mkdirAsync(directory);
-			} catch (err) {
-				if (err.code === "ENOENT") {
+				await mkdir(directory);
+			} catch (ex: any) {
+				if (ex.code === "ENOENT") {
 					await mkdirp(path.dirname(directory));
 					await mkdirp(directory);
 				} else {
-					const stats = await statAsync(directory);
+					const stats = await stat(directory);
 					if (!stats.isDirectory()) {
-						throw err;
+						throw ex;
 					}
 				}
 			}
 		};
 
-		await mkdirp(this.options.directory);
+		await mkdirp(this.options.directory ?? '');
 
 		const tables = Object.keys(this.text);
 
 		if (tables.length > 0) {
-			await new Promise((resolve, reject) => {
-				let lastUpdate = null;
+			await new Promise<void>((resolve, reject) => {
+				let lastUpdate: number | null = null;
 				const precision = Math.max(`${tables.length}`.length - 2, 0);
-				const pool = new DefferredPool({retry: 0});
+				const pool = new DeferredPool({retry: 0});
 				pool.onUpdate(() => {
 					if (pool.percent !== lastUpdate) {
 						lastUpdate = pool.percent;
@@ -683,7 +698,7 @@ class AutoSequelize {
 						}
 					}
 				});
-				pool.onError((ex) => {
+				pool.onError((ex: Error) => {
 					if (!this.options.quiet) {
 						readline.clearLine(process.stdout, 0);
 						readline.cursorTo(process.stdout, 0);
@@ -697,14 +712,14 @@ class AutoSequelize {
 		}
 	}
 
-	async writeTable(table, text) {
-		const file = path.resolve(path.join(this.options.directory, `${table}.js`));
+	async writeTable(table: string, text: string) {
+		const file = path.resolve(path.join(this.options.directory ?? '', `${table}.js`));
 		const flag = this.options.overwrite ? "w" : "wx";
 		try {
-			await writeFileAsync(file, text, {flag, encoding: "utf8"});
-		} catch (err) {
+			await writeFile(file, text, {flag, encoding: "utf8"});
+		} catch (err: any) {
 			if (err.code === "EEXIST") {
-				const data = await readFileAsync(file, {encoding: "utf8"});
+				const data = await readFile(file, {encoding: "utf8"});
 				if (data !== text) {
 					throw new Error(`${table} changed but already exists`);
 				}
@@ -714,5 +729,3 @@ class AutoSequelize {
 		}
 	}
 }
-
-module.exports = AutoSequelize;

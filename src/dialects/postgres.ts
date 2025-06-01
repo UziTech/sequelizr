@@ -1,4 +1,4 @@
-import type { DialectOperations } from "./types";
+import type { DialectOperations } from "../types";
 
 export default {
 
@@ -75,7 +75,7 @@ export default {
 	 * results is an actual serial/auto increment key
 	 */
 	isSerialKey(record) {
-		return typeof record === "object" && this.isPrimaryKey(record) && (("extra" in record) &&
+		return typeof record === "object" && this.isPrimaryKey!(record) && (("extra" in record) &&
 					 record.extra.startsWith("nextval")
 				&& record.extra.includes("_seq")
 				&& record.extra.includes("::regclass"));

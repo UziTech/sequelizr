@@ -1,16 +1,14 @@
-const path = require("path");
-const fs = require("fs");
-const util = require("util");
-const readFileAsync = util.promisify(fs.readFile);
-const {DataTypes} = require("sequelize");
-const downloadModels = require("./download-models.js");
+import path from "path";
+import fs from "fs";
+const {readFile: readFileAsync} = fs.promises;
+import { DataTypes, BaseError } from "sequelize";
+import downloadModels from "./download-models.js";
+import type { CheckModelsOptions } from "./types";
 
 /**
  * Convert type string to generic type
- * @param  {string} type Type string
- * @return {string} Generic type string
  */
-function convertToGenericType(type) {
+function convertToGenericType(type: string) {
 	const genericType = type.replace(/\(\d+\)$/, "");
 	switch (genericType) {
 		case "DATETIME2":
@@ -36,36 +34,21 @@ function convertToGenericType(type) {
 
 /**
  * Check if models match database tables
- * @param  {Object} [options={}] Options
- * @param  {string} [options.database] Database name
- * @param  {string} [options.username] Datbase username
- * @param  {string} [options.password] Database password
- * @param  {string} [options.host] Database host
- * @param  {int} [options.port] Database port
- * @param  {string} [options.dialect] Database dialect ("mysql"|"mssql")
- * @param  {string} [options.directory] Model directory
- * @param  {Array<string>} [options.tables] Database tables
- * @param  {Object} [options.dialectOptions] Database options
- * @param  {bool} [options.includeViews] Include views along with tables
- * @param  {bool} [options.quiet] Don't output to stdout
- * @param  {bool} [options.sort] Sort fields and attributes
- * @param  {bool|EventEmitter} [options.output] FALSE = Reject error string, TRUE(default) = Output errors to console, EventEmitter = emit "error" for each error
- * @return {Promise<void>} Resolves on success
  */
-async function checkModels(options = {}) {
+export default async function checkModels(options = {} as CheckModelsOptions) {
 	const {directory, ...opts} = options;
 	const output = options.output || options.output !== false;
 	delete opts.output;
 
 	const auto = await downloadModels({
 		...opts,
-		directory: false,
+		directory: null,
 	});
 
 
 	let log = "";
 
-	function logError(msg) {
+	function logError(msg: string) {
 		if (typeof output === "object" && "emit" in output) {
 			if (msg.trim()) {
 				output.emit("error", msg);
@@ -82,7 +65,7 @@ async function checkModels(options = {}) {
 	let isError = false;
 
 	for (const table in auto.tables) {
-		const file = path.resolve(directory, `${table}.js`);
+		const file = path.resolve(directory ?? '', `${table}.js`);
 
 		try {
 			const text = auto.text[table];
@@ -99,17 +82,17 @@ async function checkModels(options = {}) {
 					dbColumns.push("updatedAt");
 					const columns = Object.keys(model.rawAttributes);
 					const realNameColumns = columns.map(col => {
-						return "field" in model.rawAttributes[col] ? model.rawAttributes[col].field : col; 
+						return "field" in model.rawAttributes[col] ? model.rawAttributes[col].field : col;
 					});
-                  
+
 					realNameColumns.forEach(col => {
 						const originalColumnName = columns[realNameColumns.indexOf(col)];
-						const type = convertToGenericType(model.rawAttributes[originalColumnName].type.toString());             
+						const type = convertToGenericType(model.rawAttributes[originalColumnName].type.toString());
 						if (type !== "VIRTUAL") {
 							if (!dbColumns.includes(col)) {
 								logError(`'${table}.${col}' not in db`);
 								isError = true;
-							}                         
+							}
 						}
 					});
 
@@ -128,7 +111,7 @@ async function checkModels(options = {}) {
 						}
 					}
 
-				} catch (ex) {
+				} catch (ex: any) {
 					isError = true;
 					if (ex.message.match(/^Cannot find module/)) {
 						logError(`No model for '${table}'`);
@@ -141,7 +124,7 @@ async function checkModels(options = {}) {
 					logError(`'${table}' text has changed`);
 				}
 			}
-		} catch (ex) {
+		} catch (ex: any) {
 			isError = true;
 			if (ex.code === "ENOENT") {
 				logError(`No model for '${table}'`);
@@ -158,5 +141,3 @@ async function checkModels(options = {}) {
 		}
 	}
 }
-
-module.exports = checkModels;
