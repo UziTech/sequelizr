@@ -1,13 +1,10 @@
-module.exports = {
+import type { DialectOperations } from "./types";
 
-	/**
-	 * Generates an SQL query that returns all foreign keys of a table.
-	 *
-	 * @param  {String} tableName  The name of the table.
-	 * @param  {String} schemaName The name of the schema.
-	 * @return {String}            The generated sql query.
-	 */
-	getForeignKeysQuery: function (tableName, schemaName) { // eslint-disable-line no-unused-vars
+/**
+ * Generates an SQL query that returns all foreign keys of a table.
+ */
+export default {
+	getForeignKeysQuery(tableName) { // eslint-disable-line no-unused-vars
 		return `SELECT
 			ccu.table_name AS source_table,
 			ccu.constraint_name AS constraint_name,
@@ -32,12 +29,8 @@ module.exports = {
 
 	/**
 	 * Generates an SQL query that returns all indexes of a table.
-	 *
-	 * @param  {String} tableName  The name of the table.
-	 * @param  {String} schemaName The name of the schema.
-	 * @return {String}            The generated sql query.
 	 */
-	getIndexesQuery: function (tableName, schemaName) { // eslint-disable-line no-unused-vars
+	getIndexesQuery(tableName) { // eslint-disable-line no-unused-vars
 		return `SELECT
 				i.name AS name,
 				i.type_desc AS type,
@@ -58,48 +51,36 @@ module.exports = {
 	/**
 	 * Determines if record entry from the getForeignKeysQuery
 	 * results is an actual foreign key
-	 *
-	 * @param {Object} record The row entry from getForeignKeysQuery
-	 * @return {Bool} return
 	 */
-	isForeignKey: function (record) {
+	isForeignKey(record) {
 		return typeof record === "object" && ("constraint_type" in record) && record.constraint_type === "FOREIGN KEY";
 	},
 
 	/**
 	 * Determines if record entry from the getForeignKeysQuery
 	 * results is an actual primary key
-	 *
-	 * @param {Object} record The row entry from getForeignKeysQuery
-	 * @return {Bool} return
 	 */
-	isPrimaryKey: function (record) {
+	isPrimaryKey(record) {
 		return typeof record === "object" && ("constraint_type" in record) && record.constraint_type === "PRIMARY KEY";
 	},
 
 	/**
 	 * Determines if record entry from the getForeignKeysQuery
 	 * results is an actual serial/auto increment key
-	 *
-	 * @param {Object} record The row entry from getForeignKeysQuery
-	 * @return {Bool} return
 	 */
-	isSerialKey: function (record) {
-		return typeof record === "object" && this.isPrimaryKey(record) && (("is_identity" in record) && record.is_identity);
+	isSerialKey(record) {
+		return typeof record === "object" && this.isPrimaryKey!(record) && (("is_identity" in record) && record.is_identity);
 	},
 
 	/**
 	 * Overwrites Sequelize's native method for showing all tables.
 	 * This allows showing all tables and views from the current schema
-	 * @param {String} options Options
-	 * @param {String} [options.includeViews] Include views with tables
-	 * @return {String} return
 	 */
-	showTablesQuery: function (options) {
+	showTablesQuery(options) {
 		let query = "SELECT TABLE_NAME, TABLE_SCHEMA FROM INFORMATION_SCHEMA.TABLES";
 		if (!options.includeViews) {
 			query += " WHERE TABLE_TYPE = 'BASE TABLE'";
 		}
 		return `${query};`;
 	},
-};
+} as DialectOperations;
