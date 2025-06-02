@@ -36,8 +36,8 @@ export async function uploadModels(options: UploadModelsOptions = {}) {
 	let files;
 	try {
 		files = await readdir(directory ?? '');
-	} catch (ex: any) {
-		if (ex.code === "ENOENT") {
+	} catch (ex) {
+		if (ex instanceof Error && 'code' in ex && (ex as NodeJS.ErrnoException).code === "ENOENT") {
 			throw new Error(`No models for '${host}.${database}'`);
 		}
 		throw new Error(`Cannot sync '${host}.${database}' models`);
@@ -60,7 +60,7 @@ export async function uploadModels(options: UploadModelsOptions = {}) {
 				const model = modelFactory(db, DataTypes);
 				await model.sync({alter, force: overwrite});
 				if (!overwrite) {
-					let error = null;
+					let error: Error | string | null = null;
 					try {
 						await checkModels({
 							database,
@@ -75,11 +75,11 @@ export async function uploadModels(options: UploadModelsOptions = {}) {
 							output: false,
 							...opts,
 						});
-					} catch (ex: any) {
-						error = ex;
+					} catch (ex) {
+						error = ex instanceof Error ? ex : String(ex);
 					}
 					if (error) {
-						throw new Error(`Cannot sync '${host}.${database}.${table}' model\n         ${error.message.trim()}`);
+						throw new Error(`Cannot sync '${host}.${database}.${table}' model\n         ${(error instanceof Error ? error.message : error).trim()}`);
 					}
 				}
 			}

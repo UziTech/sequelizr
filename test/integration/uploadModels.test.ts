@@ -3,6 +3,7 @@ import {Sequelize, QueryInterface, QueryTypes, DataTypes} from "sequelize";
 import {uploadModels} from "../../src/index";
 import {resetDatabase} from "../helpers";
 import {getConfig} from "../config";
+import { UnknownObject } from "../../src/types";
 
 const {
 	database,
@@ -47,7 +48,7 @@ describe("uploadModels", () => {
 			quiet: true,
 		});
 
-		const showTablesQuery = require(`../../src/dialects/${dialect}.js`).showTablesQuery({
+		const showTablesQuery = (await import(`../../src/dialects/${dialect}`)).showTablesQuery({
 			database,
 			includeViews: true,
 		});
@@ -55,7 +56,7 @@ describe("uploadModels", () => {
 		const tables = (await sequelize.query(showTablesQuery, {
 			raw: true,
 			type: QueryTypes.SHOWTABLES,
-		})).map((table: any) => table.tableName || table);
+		})).map((table: string | UnknownObject) => (typeof table === "object" && "tableName" in table ? table.tableName : table) as string);
 
 		const myTable = await queryInterface.describeTable("my_table");
 

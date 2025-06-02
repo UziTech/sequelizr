@@ -1,7 +1,7 @@
 import { dir, setGracefulCleanup, DirectoryResult } from "tmp-promise";
 import {join} from "path";
 import {readdir, readFile} from "fs/promises";
-import { Sequelize, QueryTypes } from "sequelize";
+import { Sequelize, QueryTypes, Options as SequelizeOptions } from "sequelize";
 
 setGracefulCleanup();
 
@@ -9,14 +9,17 @@ class SequelizeMock {
 	database?: string;
 	username?: string;
 	password?: string;
-	options: any;
-	queryInterface: any;
-	getQueryInterface: any;
-	query: any;
-	close: any;
-	static QueryTypes: any;
+	options?: SequelizeOptions;
+	queryInterface: {
+		describeTable: jest.Mock;
+		showAllTables: jest.Mock;
+	};
+	getQueryInterface: jest.Mock;
+	query: jest.Mock;
+	close: jest.Mock;
+	static QueryTypes: object;
 
-	constructor(database?: string, username?: string, password?: string, options?: any) {
+	constructor(database?: string, username?: string, password?: string, options?: SequelizeOptions) {
 		this.database = database;
 		this.username = username;
 		this.password = password;
@@ -83,7 +86,6 @@ describe("sequelize-auto", () => {
 				skipTables: [],
 			});
 
-			// eslint-disable-next-line no-console
 			expect(console.error).toHaveBeenCalledWith("The 'skipTables' option will be ignored because the 'tables' option is given");
 		});
 

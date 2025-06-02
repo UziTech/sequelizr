@@ -1,9 +1,8 @@
-import path from "path";
-import fs from "fs";
-const {readFile: readFileAsync} = fs.promises;
-import { DataTypes, BaseError } from "sequelize";
+import {resolve} from "path";
+import {readFile} from "fs/promises";
+import { DataTypes } from "sequelize";
 import {downloadModels} from "./download-models.js";
-import type { CheckModelsOptions } from "./types.js";
+import type { CheckModelsOptions, UnknownObject } from "./types.js";
 
 /**
  * Convert type string to generic type
@@ -54,7 +53,6 @@ export async function checkModels(options: CheckModelsOptions = {}) {
 				output.emit("error", msg);
 			}
 		} else if (output) {
-			// eslint-disable-next-line no-console
 			console.error(msg);
 		} else {
 			log += msg;
@@ -65,16 +63,16 @@ export async function checkModels(options: CheckModelsOptions = {}) {
 	let isError = false;
 
 	for (const table in auto.tables) {
-		const file = path.resolve(directory ?? '', `${table}.js`);
+		const file = resolve(directory ?? '', `${table}.js`);
 
 		try {
 			const text = auto.text[table];
-			const data = await readFileAsync(file, {encoding: "utf8"});
+			const data = await readFile(file, {encoding: "utf8"});
 
 			if (text !== data) {
 				try {
 					const dbModel = auto.tables[table];
-					const model = require(file)(auto.sequelize, DataTypes);
+					const model = (await import(file))(auto.sequelize, DataTypes);
 
 					const dbColumns = Object.keys(dbModel);
 					dbColumns.push("id");
@@ -103,7 +101,7 @@ export async function checkModels(options: CheckModelsOptions = {}) {
 						} else {
 							const originalColumnName = columns[realNameColumns.indexOf(col)];
 							const type = convertToGenericType(model.rawAttributes[originalColumnName].type.toString());
-							const dbType = convertToGenericType(dbModel[col].type);
+							const dbType = convertToGenericType((dbModel[col] as UnknownObject).type as string);
 							if (type !== dbType) {
 								logError(`'${table}.${col}' types not equal '${type}' !== '${dbType}'`);
 								isError = true;
@@ -111,12 +109,13 @@ export async function checkModels(options: CheckModelsOptions = {}) {
 						}
 					}
 
-				} catch (ex: any) {
+				} catch (ex) {
+					const err = ex instanceof Error ? ex : new Error(String(ex));
 					isError = true;
-					if (ex.message.match(/^Cannot find module/)) {
+					if (err.message.match(/^Cannot find module/)) {
 						logError(`No model for '${table}'`);
 					} else {
-						logError(`'${table}' Error: ${ex.message}`);
+						logError(`'${table}' Error: ${err.message}`);
 					}
 				}
 				if (!isError) {
@@ -124,12 +123,12 @@ export async function checkModels(options: CheckModelsOptions = {}) {
 					logError(`'${table}' text has changed`);
 				}
 			}
-		} catch (ex: any) {
+		} catch (ex) {
 			isError = true;
-			if (ex.code === "ENOENT") {
+			if (ex instanceof Error && 'code' in ex && (ex as NodeJS.ErrnoException).code === "ENOENT") {
 				logError(`No model for '${table}'`);
 			} else {
-				logError(`'${table}' Error: ${ex.message}`);
+				logError(`'${table}' Error: ${ex instanceof Error ? ex.message : String(ex)}`);
 			}
 		}
 	}

@@ -59,7 +59,7 @@ export default {
 	 * results is a unique key
 	 */
 	isUnique(record) {
-		return typeof record === "object" && ("column_key" in record) && record.column_key.toUpperCase() === "UNI";
+		return typeof record === "object" && ("column_key" in record) && typeof record.column_key === "string" && record.column_key.toUpperCase() === "UNI";
 	},
 
 	/**

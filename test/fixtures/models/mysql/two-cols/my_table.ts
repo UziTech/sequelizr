@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function (sequelize: Sequelize, DataTypes: any) {
 	return sequelize.define("my_table", {
 		id: {

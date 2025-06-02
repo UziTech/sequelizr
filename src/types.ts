@@ -2,10 +2,10 @@ import type { EventEmitter } from "events";
 import type { Options as SequelizeOptions } from "sequelize";
 
 export interface AdditionalOptions {
-  timestamps?: any,
-  createdAt?: any,
-  updatedAt?: any,
-  deletedAt?: any,
+  timestamps?: string | boolean,
+  createdAt?: string | boolean,
+  updatedAt?: string | boolean,
+  deletedAt?: string | boolean,
 }
 
 export interface SequelizeAutoOptions extends SequelizeOptions {
@@ -24,11 +24,9 @@ export interface SequelizeAutoOptions extends SequelizeOptions {
   output?: boolean | EventEmitter;
 }
 
-export interface DownloadModelsOptions extends SequelizeAutoOptions {
-}
+export type DownloadModelsOptions = SequelizeAutoOptions
 
-export interface CheckModelsOptions extends SequelizeAutoOptions {
-}
+export type CheckModelsOptions = SequelizeAutoOptions
 
 export interface UploadModelsOptions extends SequelizeAutoOptions {
   alter?: boolean;
@@ -43,11 +41,21 @@ export interface ShowTablesOptions {
 	includeViews?: boolean;
 }
 
+export interface Row {
+  sql: string;
+  name: string;
+  type: string;
+  field: string;
+}
+
 export interface Index {
   name: string;
   type?: string;
   fields: string[];
 }
+
+export type UnknownObject = {[key: string]: unknown};
+
 
 /**
  * Defines the common structure for dialect-specific operations.
@@ -55,9 +63,9 @@ export interface Index {
 export interface DialectOperations {
 	getForeignKeysQuery: (tableName: string, schemaName: string) => string;
 	getIndexesQuery: (tableName: string, schemaName: string) => string;
-	isPrimaryKey?: (record: any) => boolean;
-	isForeignKey?: (record: any) => boolean;
-	isUnique?: (record: any) => boolean;
-	isSerialKey?: (record: any) => boolean;
+	isPrimaryKey?: (record: UnknownObject) => boolean;
+	isForeignKey?: (record: UnknownObject) => boolean;
+	isUnique?: (record: UnknownObject) => boolean;
+	isSerialKey?: (record: UnknownObject) => boolean;
 	showTablesQuery?: (options: ShowTablesOptions) => string;
 }

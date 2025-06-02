@@ -1,5 +1,7 @@
 import {promisify} from "util";
 import {exec} from "child_process";
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
 
 const execAsync = promisify(exec);
 

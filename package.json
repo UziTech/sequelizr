@@ -13,7 +13,7 @@
     "test:mysql": "cross-env DIALECT=mysql npm run test:integration",
     "test:mssql": "cross-env DIALECT=mssql npm run test:integration",
     "test:all-dialects": "npm run test:mysql && npm run test:mssql",
-    "lint": "eslint"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
@@ -60,7 +60,8 @@
     "tedious": "^19.0.0",
     "tmp-promise": "^3.0.3",
     "ts-jest": "^29.3.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.33.0"
   },
   "release": {
     "plugins": [

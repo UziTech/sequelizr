@@ -4,10 +4,10 @@ export class DeferredPool extends EventEmitter {
 	max: number;
 	retry: number;
 	nextItem: number;
-	items: any[];
-	currentItems: Set<any>;
-	successfulItems: any[];
-	failedItems: any[];
+	items: {item: unknown, tries: number}[];
+	currentItems: Set<unknown>;
+	successfulItems: unknown[];
+	failedItems: unknown[];
 
 	constructor({max = 100, retry = 1} = {}) {
 		super();
@@ -40,7 +40,7 @@ export class DeferredPool extends EventEmitter {
 		return this.total > 0 ? this.finished / this.total * 100 : 0;
 	}
 
-	add(item: any, tries = 0) {
+	add(item: unknown, tries = 0) {
 		if (Array.isArray(item)) {
 			item.forEach(i => this.add(i, tries));
 			return;
@@ -71,7 +71,7 @@ export class DeferredPool extends EventEmitter {
 		}
 
 		const {item, tries} = this.items[this.nextItem];
-		let itemFunc = item;
+		let itemFunc = item as () => unknown;
 		if (typeof item !== "function") {
 			itemFunc = () => item;
 		}
@@ -97,7 +97,7 @@ export class DeferredPool extends EventEmitter {
 		return this.on("update", callback);
 	}
 
-	onError(callback: (ex: any) => void) {
+	onError(callback: (ex: Error) => void) {
 		return this.on("error", callback);
 	}
 }

@@ -40,14 +40,17 @@ export function escape(val: unknown, timeZone: string | null, dialect: string, f
   }
 
   if (val instanceof Date) {
-    val = (DataTypes as any)[dialect].DATE.prototype.stringify(val, {
+    // @ts-expect-error Datatypes is not typed with dialect
+    val = DataTypes[dialect].DATE.prototype.stringify(val, {
       timezone: timeZone
     });
   }
 
   if (Buffer.isBuffer(val)) {
-    if ((DataTypes as any)[dialect].BLOB) {
-      return (DataTypes as any)[dialect].BLOB.prototype.stringify(val);
+    // @ts-expect-error Datatypes is not typed with dialect
+    if (DataTypes[dialect].BLOB) {
+    // @ts-expect-error Datatypes is not typed with dialect
+      return DataTypes[dialect].BLOB.prototype.stringify(val);
     }
 
     return DataTypes.BLOB.prototype.stringify(val, undefined); // TODO: Remove unknown

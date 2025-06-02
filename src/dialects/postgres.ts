@@ -5,7 +5,7 @@ export default {
 	/**
 	 * Generates an SQL query that returns all foreign keys of a table.
 	 */
-	getForeignKeysQuery(tableName, schemaName) { // eslint-disable-line no-unused-vars
+	getForeignKeysQuery(tableName) {
 		return `SELECT
 			o.conname AS constraint_name,
 			(SELECT nspname FROM pg_namespace WHERE oid=m.relnamespace) AS source_schema,
@@ -28,7 +28,7 @@ export default {
 	/**
 	 * Generates an SQL query that returns all indexes of a table.
 	 */
-	getIndexesQuery(tableName, schemaName) { // eslint-disable-line no-unused-vars
+	getIndexesQuery(tableName) {
 		return `select
 				i.relname as name,
 				a.attname as field
@@ -75,10 +75,10 @@ export default {
 	 * results is an actual serial/auto increment key
 	 */
 	isSerialKey(record) {
-		return typeof record === "object" && this.isPrimaryKey!(record) && (("extra" in record) &&
-					 record.extra.startsWith("nextval")
+		return typeof record === "object" && this.isPrimaryKey!(record) && ("extra" in record) && typeof record.extra === "string"
+				&& record.extra.startsWith("nextval")
 				&& record.extra.includes("_seq")
-				&& record.extra.includes("::regclass"));
+				&& record.extra.includes("::regclass");
 	},
 
 	/**

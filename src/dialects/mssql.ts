@@ -4,7 +4,7 @@ import type { DialectOperations } from "../types.js";
  * Generates an SQL query that returns all foreign keys of a table.
  */
 export default {
-	getForeignKeysQuery(tableName) { // eslint-disable-line no-unused-vars
+	getForeignKeysQuery(tableName) {
 		return `SELECT
 			ccu.table_name AS source_table,
 			ccu.constraint_name AS constraint_name,
@@ -30,7 +30,7 @@ export default {
 	/**
 	 * Generates an SQL query that returns all indexes of a table.
 	 */
-	getIndexesQuery(tableName) { // eslint-disable-line no-unused-vars
+	getIndexesQuery(tableName) {
 		return `SELECT
 				i.name AS name,
 				i.type_desc AS type,
