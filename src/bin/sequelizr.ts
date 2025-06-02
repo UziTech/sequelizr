@@ -154,7 +154,7 @@ yargs(hideBin(process.argv))
 			directory,
 			quiet,
 			sort,
-			...(config ? import(config as string) : {}),
+			...(config ? require(config as string) : {}),
 		};
 
 		checkModels(options);
