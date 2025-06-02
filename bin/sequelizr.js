@@ -92,7 +92,7 @@ const args = {
 	},
 };
 
-yargs
+yargs()
 	.scriptName("sequelizr")
 	.usage("sequelizr <cmd> [opts]")
 	.command("check [opts]", "Check if models match the database tables.", () => {
@@ -109,7 +109,7 @@ yargs
 			sort,
 			config,
 		} = args;
-		yargs
+		yargs()
 			.options({
 				host,
 				database,
@@ -171,7 +171,7 @@ yargs
 			config,
 		} = args;
 		overwrite.description = "Overwrite files if they exist.";
-		yargs
+		yargs()
 			.options({
 				host,
 				database,
@@ -237,7 +237,7 @@ yargs
 			config,
 		} = args;
 		overwrite.description = "Drop tables before creating them.";
-		yargs
+		yargs()
 			.options({
 				host,
 				database,
@@ -294,5 +294,5 @@ yargs
 	.group(["help", "version"], "Global Options:")
 	.example("sequelizr <cmd> --help", "Show args for a command.")
 	.showHidden(false)
-	.wrap(yargs.terminalWidth())
+	.wrap(yargs().terminalWidth())
 	.parse();

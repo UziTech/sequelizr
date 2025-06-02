@@ -1,6 +1,6 @@
-import EventEmitter from "events";
+import {EventEmitter} from "events";
 
-export default class DeferredPool extends EventEmitter {
+export class DeferredPool extends EventEmitter {
 	max: number;
 	retry: number;
 	nextItem: number;

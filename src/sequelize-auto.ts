@@ -1,13 +1,13 @@
 import { mkdir, stat, writeFile, readFile } from "fs/promises";
-import path from "path";
-import readline from "readline";
+import {resolve, dirname, join} from "path";
+import {clearLine, cursorTo} from "readline";
 import { QueryTypes, Sequelize } from "sequelize";
 import dialects from "./dialects";
 import { escape as escapeSqlString } from "./sql-string";
-import DeferredPool from "./deferred-pool";
-import { DialectOperations, SequelizeAutoOptions, Index, DialectName, AdditionalOptions } from "./types";
+import {DeferredPool} from "./deferred-pool";
+import { DialectOperations, SequelizeAutoOptions, Index, AdditionalOptions } from "./types";
 
-export default class AutoSequelize {
+export class AutoSequelize {
 	sequelize: Sequelize;
 	queryInterface: any;
 	text: any;
@@ -269,8 +269,8 @@ export default class AutoSequelize {
 						lastUpdate = pool.percent;
 						if (pool.successful >= tables.length) {
 							if (!this.options.quiet) {
-								readline.clearLine(process.stdout, 0);
-								readline.cursorTo(process.stdout, 0);
+								clearLine(process.stdout, 0);
+								cursorTo(process.stdout, 0);
 							}
 							resolve();
 						} else {
@@ -283,8 +283,8 @@ export default class AutoSequelize {
 				});
 				pool.onError((ex: Error) => {
 					if (!this.options.quiet) {
-						readline.clearLine(process.stdout, 0);
-						readline.cursorTo(process.stdout, 0);
+						clearLine(process.stdout, 0);
+						cursorTo(process.stdout, 0);
 					}
 					reject(ex);
 				});
@@ -635,8 +635,8 @@ export default class AutoSequelize {
 			this.text[table] = this.generateText(table, indent);
 		}
 		if (!this.options.quiet) {
-			readline.clearLine(process.stdout, 0);
-			readline.cursorTo(process.stdout, 0);
+			clearLine(process.stdout, 0);
+			cursorTo(process.stdout, 0);
 		}
 
 		await this.sequelize.close();
@@ -655,12 +655,12 @@ export default class AutoSequelize {
 
 		const mkdirp = async (directory: string) => {
 			// eslint-disable-next-line no-param-reassign
-			directory = path.resolve(directory);
+			directory = resolve(directory);
 			try {
 				await mkdir(directory);
 			} catch (ex: any) {
 				if (ex.code === "ENOENT") {
-					await mkdirp(path.dirname(directory));
+					await mkdirp(dirname(directory));
 					await mkdirp(directory);
 				} else {
 					const stats = await stat(directory);
@@ -685,8 +685,8 @@ export default class AutoSequelize {
 						lastUpdate = pool.percent;
 						if (pool.successful >= tables.length) {
 							if (!this.options.quiet) {
-								readline.clearLine(process.stdout, 0);
-								readline.cursorTo(process.stdout, 0);
+								clearLine(process.stdout, 0);
+								cursorTo(process.stdout, 0);
 							}
 							resolve();
 						} else {
@@ -699,8 +699,8 @@ export default class AutoSequelize {
 				});
 				pool.onError((ex: Error) => {
 					if (!this.options.quiet) {
-						readline.clearLine(process.stdout, 0);
-						readline.cursorTo(process.stdout, 0);
+						clearLine(process.stdout, 0);
+						cursorTo(process.stdout, 0);
 					}
 					reject(ex);
 				});
@@ -712,7 +712,7 @@ export default class AutoSequelize {
 	}
 
 	async writeTable(table: string, text: string) {
-		const file = path.resolve(path.join(this.options.directory ?? '', `${table}.js`));
+		const file = resolve(join(this.options.directory ?? '', `${table}.js`));
 		const flag = this.options.overwrite ? "w" : "wx";
 		try {
 			await writeFile(file, text, {flag, encoding: "utf8"});

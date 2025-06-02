@@ -1,6 +1,7 @@
 import { dir, setGracefulCleanup, DirectoryResult } from "tmp-promise";
 import {join} from "path";
 import {readdir, readFile} from "fs/promises";
+import { Sequelize } from "sequelize";
 
 setGracefulCleanup();
 
@@ -38,12 +39,12 @@ SequelizeMock.QueryTypes = {
 };
 jest.doMock("sequelize", () => SequelizeMock);
 
-const AutoSequelize = require("../../src/sequelize-auto.js");
+import {AutoSequelize} from "../../src/sequelize-auto";
 
 describe("sequelize-auto", () => {
 	describe("constructor", () => {
 		test("should load sequelize-auto", () => {
-			const auto = new AutoSequelize();
+			const auto = new AutoSequelize("database", "username", "password");
 
 			expect(auto).toBeTruthy();
 		});
@@ -66,7 +67,7 @@ describe("sequelize-auto", () => {
 
 		test("should allow passing sequelize instance", () => {
 			const sequelize = new SequelizeMock();
-			const auto = new AutoSequelize(sequelize, {
+			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
 				quiet: true,
 			});
@@ -140,9 +141,8 @@ describe("sequelize-auto", () => {
 				},
 			};
 			sequelize.queryInterface.describeTable.mockReturnValueOnce(describeTable);
-			const auto = new AutoSequelize(sequelize, {
+			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
-				directory: false,
 				foreignKeys: false,
 				indexes: false,
 				quiet: true,
@@ -176,7 +176,7 @@ describe("sequelize-auto", () => {
 					},
 				};
 				sequelize.queryInterface.describeTable.mockReturnValueOnce(describeTable);
-				const auto = new AutoSequelize(sequelize, {
+				const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 					dialect: "mysql",
 					directory: tempDir.path,
 					foreignKeys: false,
@@ -200,7 +200,7 @@ describe("sequelize-auto", () => {
 	describe("generateText", () => {
 		test("should generate correct text", () => {
 			const sequelize = new SequelizeMock();
-			const auto = new AutoSequelize(sequelize, {
+			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
 				schema: "schema",
 			});
@@ -473,7 +473,7 @@ describe("sequelize-auto", () => {
 
 		test("should sort fields and attributes", () => {
 			const sequelize = new SequelizeMock();
-			const auto = new AutoSequelize(sequelize, {
+			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
 				schema: "schema",
 				sort: true,

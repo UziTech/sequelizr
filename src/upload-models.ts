@@ -1,14 +1,13 @@
 import { Sequelize, DataTypes } from "sequelize";
-import path from "path";
-import fs from "fs";
-const {readdir: readdirAsync} = fs.promises;
-import checkModels from "./check-models";
+import {resolve} from "path";
+import {readdir} from "fs/promises";
+import {checkModels} from "./check-models";
 import type { UploadModelsOptions } from "./types";
 
 /**
  * Sync models with database
  */
-export default async function uploadModels(options: UploadModelsOptions = {}) {
+export async function uploadModels(options: UploadModelsOptions = {}) {
 	const {
 		database,
 		username,
@@ -36,7 +35,7 @@ export default async function uploadModels(options: UploadModelsOptions = {}) {
 
 	let files;
 	try {
-		files = await readdirAsync(directory ?? '');
+		files = await readdir(directory ?? '');
 	} catch (ex: any) {
 		if (ex.code === "ENOENT") {
 			throw new Error(`No models for '${host}.${database}'`);
@@ -56,7 +55,7 @@ export default async function uploadModels(options: UploadModelsOptions = {}) {
 		for (const file of files) {
 			const table = file.replace(/\.js$/, "");
 			if (!tables || (tables instanceof RegExp && tables.test(table)) || (Array.isArray(tables) && tables.includes(table))) {
-				const modelPath = path.resolve(directory ?? '', file);
+				const modelPath = resolve(directory ?? '', file);
 				const {default: modelFactory} = await import(`file://${modelPath}`);
 				const model = modelFactory(db, DataTypes);
 				await model.sync({alter, force: overwrite});

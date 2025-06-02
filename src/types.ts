@@ -1,9 +1,6 @@
 import type { EventEmitter } from "events";
 import type { Options as SequelizeOptions } from "sequelize";
 
-
-export type DialectName = "sqlite" | "mysql" | "mariadb" | "postgres" | "mssql";
-
 export interface AdditionalOptions {
   timestamps?: any,
   createdAt?: any,
@@ -16,8 +13,8 @@ export interface SequelizeAutoOptions extends SequelizeOptions {
   spaces?: boolean;
   additional?: AdditionalOptions;
   indentation?: number;
-  tables?: RegExp | string[] | null;
-  skipTables?: RegExp | string[] | null;
+  tables?: RegExp | string | string[] | null;
+  skipTables?: RegExp | string | string[] | null;
   foreignKeys?: boolean;
   indexes?: boolean;
   includeViews?: boolean;
