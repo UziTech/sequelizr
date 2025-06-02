@@ -1,4 +1,4 @@
-import type { DialectOperations } from "../types";
+import type { DialectOperations } from "../types.js";
 
 /**
  * Generates an SQL query that returns all foreign keys of a table.

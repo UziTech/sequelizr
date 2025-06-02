@@ -3,6 +3,7 @@
   "version": "3.0.87",
   "description": "Manage Sequelize models",
   "main": "./dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "tsc",
     "test": "npm run test:unit && npm run test:integration",
@@ -18,7 +19,7 @@
     "type": "git",
     "url": "git+https://github.com/UziTech/sequelizr.git"
   },
-  "bin": "./bin/sequelizr.js",
+  "bin": "./dist/bin/sequelizr.js",
   "keywords": [
     "sequelize",
     "model",

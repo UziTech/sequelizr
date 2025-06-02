@@ -2,10 +2,10 @@ import { mkdir, stat, writeFile, readFile } from "fs/promises";
 import {resolve, dirname, join} from "path";
 import {clearLine, cursorTo} from "readline";
 import { QueryTypes, Sequelize } from "sequelize";
-import dialects from "./dialects";
-import { escape as escapeSqlString } from "./sql-string";
-import {DeferredPool} from "./deferred-pool";
-import { DialectOperations, SequelizeAutoOptions, Index, AdditionalOptions } from "./types";
+import dialects from "./dialects/index.js";
+import { escape as escapeSqlString } from "./sql-string.js";
+import {DeferredPool} from "./deferred-pool.js";
+import { DialectOperations, SequelizeAutoOptions, Index, AdditionalOptions } from "./types.js";
 
 export class AutoSequelize {
 	sequelize: Sequelize;
@@ -25,7 +25,7 @@ export class AutoSequelize {
 	constructor(databaseOrSequelize: string | Sequelize, usernameOrOptions: string | SequelizeAutoOptions, password?: string, options?: SequelizeAutoOptions) {
 		let database: string | undefined;
 		let username: string | undefined;
-		if (databaseOrSequelize instanceof Sequelize) {
+		if (typeof databaseOrSequelize === "object") {
 			this.sequelize = databaseOrSequelize;
 			if (typeof usernameOrOptions === "object") {
 				// eslint-disable-next-line no-param-reassign

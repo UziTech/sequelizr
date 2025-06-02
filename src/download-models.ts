@@ -1,5 +1,5 @@
-import {AutoSequelize} from "./sequelize-auto";
-import type { DownloadModelsOptions } from "./types";
+import {AutoSequelize} from "./sequelize-auto.js";
+import type { DownloadModelsOptions } from "./types.js";
 
 /**
  * Create models from database tables

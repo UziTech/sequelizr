@@ -1,3 +1,3 @@
-export {downloadModels} from "./download-models";
-export {uploadModels} from "./upload-models";
-export {checkModels} from "./check-models";
+export {downloadModels} from "./download-models.js";
+export {uploadModels} from "./upload-models.js";
+export {checkModels} from "./check-models.js";

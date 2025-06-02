@@ -1,8 +1,8 @@
 import { Sequelize, DataTypes } from "sequelize";
 import {resolve} from "path";
 import {readdir} from "fs/promises";
-import {checkModels} from "./check-models";
-import type { UploadModelsOptions } from "./types";
+import {checkModels} from "./check-models.js";
+import type { UploadModelsOptions } from "./types.js";
 
 /**
  * Sync models with database

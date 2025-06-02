@@ -2,8 +2,8 @@ import path from "path";
 import fs from "fs";
 const {readFile: readFileAsync} = fs.promises;
 import { DataTypes, BaseError } from "sequelize";
-import {downloadModels} from "./download-models";
-import type { CheckModelsOptions } from "./types";
+import {downloadModels} from "./download-models.js";
+import type { CheckModelsOptions } from "./types.js";
 
 /**
  * Convert type string to generic type

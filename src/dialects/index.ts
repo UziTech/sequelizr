@@ -1,8 +1,8 @@
-import mysqlDialect from "./mysql";
-import postgresDialect from "./postgres";
-import mssqlDialect from "./mssql";
-import sqliteDialect from "./sqlite";
-import type { DialectOperations } from "../types";
+import mysqlDialect from "./mysql.js";
+import postgresDialect from "./postgres.js";
+import mssqlDialect from "./mssql.js";
+import sqliteDialect from "./sqlite.js";
+import type { DialectOperations } from "../types.js";
 import type { Dialect } from "sequelize";
 
 export default {

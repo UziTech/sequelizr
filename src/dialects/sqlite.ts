@@ -1,4 +1,4 @@
-import type { DialectOperations } from "../types";
+import type { DialectOperations } from "../types.js";
 
 export default {
 

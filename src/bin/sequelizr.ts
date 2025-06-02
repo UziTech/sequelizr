@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 
-import yargs from "yargs";
-import * as sequelizr from "../";
+import yargs, {Options} from "yargs";
+import { hideBin } from 'yargs/helpers'
+import {checkModels, downloadModels, uploadModels} from "../index.js";
+import { createRequire } from "node:module";
+import { CheckModelsOptions, DownloadModelsOptions, UploadModelsOptions } from "../types.js";
+const require = createRequire(import.meta.url);
 
 const args = {
 	host: {
@@ -90,12 +94,12 @@ const args = {
 		description: "Config File",
 		group: "Command Options:",
 	},
-};
+} as {[key: string]: Options};
 
-yargs()
+yargs(hideBin(process.argv))
 	.scriptName("sequelizr")
 	.usage("sequelizr <cmd> [opts]")
-	.command("check [opts]", "Check if models match the database tables.", () => {
+	.command("check [opts]", "Check if models match the database tables.", (yargs) => {
 		const {
 			host,
 			database,
@@ -109,7 +113,7 @@ yargs()
 			sort,
 			config,
 		} = args;
-		yargs()
+		yargs
 			.options({
 				host,
 				database,
@@ -139,7 +143,7 @@ yargs()
 			config,
 		} = argv;
 
-		const options = {
+		const options: CheckModelsOptions = {
 			host,
 			database,
 			tables,
@@ -150,10 +154,10 @@ yargs()
 			directory,
 			quiet,
 			sort,
-			...(config ? require(config) : {}),
+			...(config ? import(config as string) : {}),
 		};
 
-		sequelizr.checkModels(options);
+		checkModels(options);
 	})
 	.command("download [opts]", "Save tables to models.", () => {
 		const {
@@ -203,7 +207,7 @@ yargs()
 			config,
 		} = argv;
 
-		const options = {
+		const options: DownloadModelsOptions = {
 			host,
 			database,
 			tables,
@@ -215,10 +219,10 @@ yargs()
 			overwrite,
 			quiet,
 			sort,
-			...(config ? require(config) : {}),
+			...(config ? require(config as string) : {}),
 		};
 
-		sequelizr.downloadModels(options);
+		downloadModels(options);
 	})
 	.command("upload [opts]", "Create tables from models.", () => {
 		const {
@@ -271,7 +275,7 @@ yargs()
 			config,
 		} = argv;
 
-		const options = {
+		const options: UploadModelsOptions = {
 			host,
 			database,
 			tables,
@@ -284,10 +288,10 @@ yargs()
 			alter,
 			quiet,
 			sort,
-			...(config ? require(config) : {}),
+			...(config ? require(config as string) : {}),
 		};
 
-		sequelizr.uploadModels(options);
+		uploadModels(options);
 	})
 	.alias("help", "h")
 	.alias("version", "v")
