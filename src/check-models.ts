@@ -35,7 +35,7 @@ function convertToGenericType(type: string) {
  * Check if models match database tables
  */
 export async function checkModels(options: CheckModelsOptions = {}) {
-	const {directory, ...opts} = options;
+	const {directory, extension, ...opts} = options;
 	const output = options.output || options.output !== false;
 	delete opts.output;
 
@@ -63,7 +63,7 @@ export async function checkModels(options: CheckModelsOptions = {}) {
 	let isError = false;
 
 	for (const table in auto.tables) {
-		const file = resolve(directory ?? '', `${table}.js`);
+		const file = resolve(directory ?? '', `${table}.${extension ? extension.replace(/^\./, "") : 'js'}`);
 
 		try {
 			const text = auto.text[table];

@@ -2,14 +2,15 @@ import type { EventEmitter } from "events";
 import type { Options as SequelizeOptions } from "sequelize";
 
 export interface AdditionalOptions {
-  timestamps?: string | boolean,
-  createdAt?: string | boolean,
-  updatedAt?: string | boolean,
-  deletedAt?: string | boolean,
+  timestamps?: boolean;
+  createdAt?: string | boolean;
+  updatedAt?: string | boolean;
+  deletedAt?: string | boolean;
 }
 
 export interface SequelizeAutoOptions extends SequelizeOptions {
   directory?: string;
+  extension?: string;
   spaces?: boolean;
   additional?: AdditionalOptions;
   indentation?: number;

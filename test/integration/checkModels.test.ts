@@ -52,6 +52,7 @@ describe("checkModels", () => {
 			dialect,
 			directory: resolve(__dirname, `../fixtures/models/${dialect}/with-views`),
 			dialectOptions,
+			extension: 'mjs',
 			output: false,
 			quiet: true,
 		});
@@ -77,6 +78,7 @@ describe("checkModels", () => {
 			dialect,
 			directory: resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
 			dialectOptions,
+			extension: 'mjs',
 			output: false,
 			includeViews: false,
 			quiet: true,

@@ -86,6 +86,7 @@ export class AutoSequelize {
 			spaces: false,
 			indentation: 1,
 			directory: "./models",
+			extension: "js",
 			additional: {},
 			overwrite: false,
 			tables: null,
@@ -699,7 +700,7 @@ export class AutoSequelize {
 	}
 
 	async writeTable(table: string, text: string) {
-		const file = resolve(join(this.options.directory ?? '', `${table}.js`));
+		const file = resolve(join(this.options.directory ?? '', `${table}.${this.options.extension ? this.options.extension.replace(/^\./, "") : 'js'}`));
 		const flag = this.options.overwrite ? "w" : "wx";
 		try {
 			await writeFile(file, text, {flag, encoding: "utf8"});

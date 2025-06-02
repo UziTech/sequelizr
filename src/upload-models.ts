@@ -20,6 +20,7 @@ export async function uploadModels(options: UploadModelsOptions = {}) {
 		dialectOptions,
 		overwrite,
 		alter,
+		extension,
 	} = options;
 
 	const opts: UploadModelsOptions = {};
@@ -53,7 +54,7 @@ export async function uploadModels(options: UploadModelsOptions = {}) {
 
 	try {
 		for (const file of files) {
-			const table = file.replace(/\.js$/, "");
+			const table = file.replace(new RegExp(`\\.${extension}$`), "");
 			if (!tables || (tables instanceof RegExp && tables.test(table)) || (Array.isArray(tables) && tables.includes(table))) {
 				const modelPath = resolve(directory ?? '', file);
 				const {default: modelFactory} = await import(`file://${modelPath}`);
@@ -70,6 +71,7 @@ export async function uploadModels(options: UploadModelsOptions = {}) {
 							port,
 							dialect,
 							directory,
+							extension,
 							tables: [table],
 							dialectOptions,
 							output: false,
