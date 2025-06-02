@@ -12,8 +12,7 @@ export interface AdditionalOptions {
 }
 
 export interface SequelizeAutoOptions extends SequelizeOptions {
-  dialect?: DialectName;
-  directory?: string | null;
+  directory?: string;
   spaces?: boolean;
   additional?: AdditionalOptions;
   indentation?: number;
@@ -21,7 +20,6 @@ export interface SequelizeAutoOptions extends SequelizeOptions {
   skipTables?: RegExp | string[] | null;
   foreignKeys?: boolean;
   indexes?: boolean;
-  dialectOptions?: any;
   includeViews?: boolean;
   overwrite?: boolean;
   quiet?: boolean;
@@ -30,17 +28,12 @@ export interface SequelizeAutoOptions extends SequelizeOptions {
 }
 
 export interface DownloadModelsOptions extends SequelizeAutoOptions {
-  database?: string;
-  username?: string;
-  password?: string;
-  host?: string;
 }
 
-export interface CheckModelsOptions extends DownloadModelsOptions {
-
+export interface CheckModelsOptions extends SequelizeAutoOptions {
 }
 
-export interface UploadModelsOptions extends DownloadModelsOptions {
+export interface UploadModelsOptions extends SequelizeAutoOptions {
   alter?: boolean;
 }
 

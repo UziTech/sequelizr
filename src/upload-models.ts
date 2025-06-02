@@ -8,7 +8,7 @@ import type { UploadModelsOptions } from "./types";
 /**
  * Sync models with database
  */
-export default async function uploadModels(options = {} as UploadModelsOptions) {
+export default async function uploadModels(options: UploadModelsOptions = {}) {
 	const {
 		database,
 		username,
@@ -23,20 +23,20 @@ export default async function uploadModels(options = {} as UploadModelsOptions) 
 		alter,
 	} = options;
 
-	const opts = {} as UploadModelsOptions;
+	const opts: UploadModelsOptions = {};
 	const copyToOpts = [
 		"quiet",
 		"sort",
-	];
+	] as const;
 	for (const prop of copyToOpts) {
 		if (prop in options) {
-			opts[prop as keyof UploadModelsOptions] = options[prop as keyof UploadModelsOptions];
+			opts[prop] = options[prop];
 		}
 	}
 
 	let files;
 	try {
-		files = await readdirAsync(directory!);
+		files = await readdirAsync(directory ?? '');
 	} catch (ex: any) {
 		if (ex.code === "ENOENT") {
 			throw new Error(`No models for '${host}.${database}'`);
@@ -56,7 +56,7 @@ export default async function uploadModels(options = {} as UploadModelsOptions) 
 		for (const file of files) {
 			const table = file.replace(/\.js$/, "");
 			if (!tables || (tables instanceof RegExp && tables.test(table)) || (Array.isArray(tables) && tables.includes(table))) {
-				const modelPath = path.resolve(directory!, file);
+				const modelPath = path.resolve(directory ?? '', file);
 				const {default: modelFactory} = await import(`file://${modelPath}`);
 				const model = modelFactory(db, DataTypes);
 				await model.sync({alter, force: overwrite});
@@ -74,7 +74,6 @@ export default async function uploadModels(options = {} as UploadModelsOptions) 
 							tables: [table],
 							dialectOptions,
 							output: false,
-							includeViews: true,
 							...opts,
 						});
 					} catch (ex: any) {

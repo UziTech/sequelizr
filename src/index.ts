@@ -1,6 +1,6 @@
-import downloadModels from "./download-models.js";
-import uploadModels from "./upload-models.js";
-import checkModels from "./check-models.js";
+import downloadModels from "./download-models";
+import uploadModels from "./upload-models";
+import checkModels from "./check-models";
 
 export default {
 	downloadModels,

@@ -2,7 +2,7 @@ import path from "path";
 import fs from "fs";
 const {readFile: readFileAsync} = fs.promises;
 import { DataTypes, BaseError } from "sequelize";
-import downloadModels from "./download-models.js";
+import downloadModels from "./download-models";
 import type { CheckModelsOptions } from "./types";
 
 /**
@@ -35,14 +35,14 @@ function convertToGenericType(type: string) {
 /**
  * Check if models match database tables
  */
-export default async function checkModels(options = {} as CheckModelsOptions) {
+export default async function checkModels(options: CheckModelsOptions = {}) {
 	const {directory, ...opts} = options;
 	const output = options.output || options.output !== false;
 	delete opts.output;
 
 	const auto = await downloadModels({
 		...opts,
-		directory: null,
+		directory: undefined,
 	});
 
 

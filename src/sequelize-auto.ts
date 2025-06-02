@@ -4,7 +4,7 @@ import readline from "readline";
 import { QueryTypes, Sequelize } from "sequelize";
 import dialects from "./dialects";
 import { escape as escapeSqlString } from "./sql-string";
-import DeferredPool from "./deferred-pool.js";
+import DeferredPool from "./deferred-pool";
 import { DialectOperations, SequelizeAutoOptions, Index, DialectName, AdditionalOptions } from "./types";
 
 export default class AutoSequelize {
@@ -21,7 +21,7 @@ export default class AutoSequelize {
 	finishedAt: number|undefined;
 
 	constructor(databaseOrSequelize: Sequelize, usernameOrOptions: SequelizeAutoOptions);
-	constructor(databaseOrSequelize: string, usernameOrOptions: string, password: string, options: SequelizeAutoOptions);
+	constructor(databaseOrSequelize: string, usernameOrOptions: string, password?: string, options?: SequelizeAutoOptions);
 	constructor(databaseOrSequelize: string | Sequelize, usernameOrOptions: string | SequelizeAutoOptions, password?: string, options?: SequelizeAutoOptions) {
 		let database: string | undefined;
 		let username: string | undefined;
@@ -45,7 +45,7 @@ export default class AutoSequelize {
 			if (options.dialect === "sqlite" && !options.storage) {
 				options.storage = database;
 			} else if (options.dialect === "mssql") {
-				const dialectOptions = options.dialectOptions || {};
+				const dialectOptions: any = options.dialectOptions || {};
 				options.dialectOptions = {
 					...dialectOptions,
 					options: {
@@ -94,7 +94,6 @@ export default class AutoSequelize {
 			skipTables: null,
 			foreignKeys: true,
 			indexes: true,
-			includeViews: true,
 			quiet: false,
 			sort: false,
 			...options,
