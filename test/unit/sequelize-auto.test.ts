@@ -131,7 +131,7 @@ describe("sequelize-auto", () => {
 	});
 
 	describe("run", () => {
-		test.only("should build tables", async () => {
+		test("should build tables", async () => {
 			const sequelize = new SequelizeMock();
 			sequelize.query.mockReturnValueOnce(["table"]);
 			const describeTable = {
