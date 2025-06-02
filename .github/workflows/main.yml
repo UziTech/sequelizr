@@ -77,7 +77,6 @@ jobs:
           SEQ_PW: sequelizr_test
           SEQ_HOST: localhost
           SEQ_PORT: 3306
-          NODE_OPTIONS: --experimental-vm-modules
         run: npm run test:mysql
 
   MSSQL_Tests:
@@ -114,7 +113,6 @@ jobs:
           SEQ_PW: c0MplicatedP@ssword
           SEQ_HOST: localhost
           SEQ_PORT: 1433
-          NODE_OPTIONS: --experimental-vm-modules
         run: npm run test:mssql
 
   Lint:
