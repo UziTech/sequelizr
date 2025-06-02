@@ -1,4 +1,4 @@
-import { Dialect, Sequelize } from "sequelize";
+import {Dialect, Sequelize} from "sequelize";
 
 export async function resetDatabase(sequelize: Sequelize, dialect: Dialect, database: string) {
 	if (dialect === "mssql") {

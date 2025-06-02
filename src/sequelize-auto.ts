@@ -1,27 +1,39 @@
-import { mkdir, stat, writeFile, readFile } from "fs/promises";
-import { resolve, dirname, join } from "path";
-import { clearLine, cursorTo } from "readline";
-import { QueryInterface, QueryTypes, Sequelize } from "sequelize";
+import {mkdir, stat, writeFile, readFile} from "fs/promises";
+import {resolve, dirname, join} from "path";
+import {clearLine, cursorTo} from "readline";
+import {QueryInterface, QueryTypes, Sequelize} from "sequelize";
 import dialects from "./dialects/index.js";
-import { escape as escapeSqlString } from "./sql-string.js";
-import { DeferredPool } from "./deferred-pool.js";
-import { DialectOperations, SequelizeAutoOptions, Index, AdditionalOptions, Row, UnknownObject } from "./types.js";
+import {escape as escapeSqlString} from "./sql-string.js";
+import {DeferredPool} from "./deferred-pool.js";
+import {DialectOperations, SequelizeAutoOptions, Index, AdditionalOptions, Row, UnknownObject} from "./types.js";
 
 export class AutoSequelize {
 	sequelize: Sequelize;
+
 	queryInterface: QueryInterface;
+
 	text: {[key: string]: string};
+
 	tables: {[key: string]: UnknownObject};
+
 	indexes: {[key: string]: Index[]};
+
 	foreignKeys: {[key: string]: {[key: string]: UnknownObject}};
+
 	maxDeferredQueries: number;
+
 	dialect: DialectOperations;
+
 	options: SequelizeAutoOptions;
+
 	startedAt: number = 0;
+
 	finishedAt: number = 0;
 
 	constructor(databaseOrSequelize: Sequelize, usernameOrOptions: SequelizeAutoOptions);
+
 	constructor(databaseOrSequelize: string, usernameOrOptions: string, password?: string, options?: SequelizeAutoOptions);
+
 	constructor(databaseOrSequelize: string | Sequelize, usernameOrOptions: string | SequelizeAutoOptions, password?: string, options?: SequelizeAutoOptions) {
 		let database: string | undefined;
 		let username: string | undefined;
@@ -38,7 +50,7 @@ export class AutoSequelize {
 				options = {};
 			}
 
-			options.dialect ??= 'mysql';
+			options.dialect ??= "mysql";
 
 			if (options.dialect === "sqlite" && !options.storage) {
 				options.storage = database;
@@ -72,7 +84,7 @@ export class AutoSequelize {
 			this.sequelize = new Sequelize(database, username, password, options);
 		}
 
-		options.dialect ??= 'mysql';
+		options.dialect ??= "mysql";
 		this.queryInterface = this.sequelize.getQueryInterface();
 		this.text = {};
 		this.tables = {};
@@ -119,7 +131,7 @@ export class AutoSequelize {
 
 	async buildForeignKeys(table: string) {
 
-		const sql = this.dialect.getForeignKeysQuery(table, this.options.database ?? '');
+		const sql = this.dialect.getForeignKeysQuery(table, this.options.database ?? "");
 
 		const results = await this.sequelize.query(sql, {
 			type: QueryTypes.SELECT,
@@ -177,7 +189,7 @@ export class AutoSequelize {
 	}
 
 	async buildIndexes(table: string) {
-		const sql = this.dialect.getIndexesQuery(table, this.options.database ?? '');
+		const sql = this.dialect.getIndexesQuery(table, this.options.database ?? "");
 		const results = await this.sequelize.query(sql, {
 			type: QueryTypes.SELECT,
 			raw: true,
@@ -220,7 +232,7 @@ export class AutoSequelize {
 
 	async build() {
 		let tables: string[] = [];
-		if ((this.options.dialect === "postgres" && this.options.schema) || ["mysql", "mssql"].includes(this.options.dialect ?? '')) {
+		if ((this.options.dialect === "postgres" && this.options.schema) || ["mysql", "mssql"].includes(this.options.dialect ?? "")) {
 			const showTablesSql = this.dialect.showTablesQuery!(this.options);
 			tables = await this.sequelize.query(showTablesSql, {
 				raw: true,
@@ -252,7 +264,7 @@ export class AutoSequelize {
 		}
 
 		if (tables.length > 0) {
-			await new Promise<void>((resolve, reject) => {
+			await new Promise<void>((pResolve, reject) => {
 				let lastUpdate: number|undefined;
 				const precision = Math.max(`${tables.length}`.length - 2, 0);
 				const pool = new DeferredPool({max: this.maxDeferredQueries});
@@ -264,7 +276,7 @@ export class AutoSequelize {
 								clearLine(process.stdout, 0);
 								cursorTo(process.stdout, 0);
 							}
-							resolve();
+							pResolve();
 						} else {
 							if (!this.options.quiet) {
 								const percent = pool.percent.toFixed(precision);
@@ -440,7 +452,7 @@ export class AutoSequelize {
 
 					if (typeof val === "string") {
 						if (!val.match(/^sequelize\.[^(]+\(.*\)$/)) {
-							val = escapeSqlString(val.replace(/^"+|"+$/g, ""), null, this.options.dialect ?? 'mysql');
+							val = escapeSqlString(val.replace(/^"+|"+$/g, ""), null, this.options.dialect ?? "mysql");
 						}
 
 						// don't prepend N for MSSQL when building models...
@@ -659,12 +671,12 @@ export class AutoSequelize {
 			}
 		};
 
-		await mkdirp(this.options.directory ?? '');
+		await mkdirp(this.options.directory ?? "");
 
 		const tables = Object.keys(this.text);
 
 		if (tables.length > 0) {
-			await new Promise<void>((resolve, reject) => {
+			await new Promise<void>((pResolve, reject) => {
 				let lastUpdate: number | null = null;
 				const precision = Math.max(`${tables.length}`.length - 2, 0);
 				const pool = new DeferredPool({retry: 0});
@@ -676,7 +688,7 @@ export class AutoSequelize {
 								clearLine(process.stdout, 0);
 								cursorTo(process.stdout, 0);
 							}
-							resolve();
+							pResolve();
 						} else {
 							if (!this.options.quiet) {
 								const percent = pool.percent.toFixed(precision);
@@ -700,7 +712,7 @@ export class AutoSequelize {
 	}
 
 	async writeTable(table: string, text: string) {
-		const file = resolve(join(this.options.directory ?? '', `${table}.${this.options.extension ? this.options.extension.replace(/^\./, "") : 'js'}`));
+		const file = resolve(join(this.options.directory ?? "", `${table}.${this.options.extension ? this.options.extension.replace(/^\./, "") : "js"}`));
 		const flag = this.options.overwrite ? "w" : "wx";
 		try {
 			await writeFile(file, text, {flag, encoding: "utf8"});

@@ -2,11 +2,17 @@ import {EventEmitter} from "events";
 
 export class DeferredPool extends EventEmitter {
 	max: number;
+
 	retry: number;
+
 	nextItem: number;
+
 	items: {item: unknown, tries: number}[];
+
 	currentItems: Set<unknown>;
+
 	successfulItems: unknown[];
+
 	failedItems: unknown[];
 
 	constructor({max = 100, retry = 1} = {}) {

@@ -1,5 +1,5 @@
-import type { EventEmitter } from "events";
-import type { Options as SequelizeOptions } from "sequelize";
+import type {EventEmitter} from "events";
+import type {Options as SequelizeOptions} from "sequelize";
 
 export interface AdditionalOptions {
   timestamps?: boolean;

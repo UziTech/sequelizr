@@ -1,4 +1,4 @@
-export default function (sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
 	return sequelize.define("my_table", {
 		id: {
 			type: DataTypes.INTEGER,

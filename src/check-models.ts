@@ -1,8 +1,8 @@
 import {resolve} from "path";
 import {readFile} from "fs/promises";
-import { DataTypes } from "sequelize";
+import {DataTypes} from "sequelize";
 import {downloadModels} from "./download-models.js";
-import type { CheckModelsOptions, UnknownObject } from "./types.js";
+import type {CheckModelsOptions, UnknownObject} from "./types.js";
 
 /**
  * Convert type string to generic type
@@ -63,7 +63,7 @@ export async function checkModels(options: CheckModelsOptions = {}) {
 	let isError = false;
 
 	for (const table in auto.tables) {
-		const file = resolve(directory ?? '', `${table}.${extension ? extension.replace(/^\./, "") : 'js'}`);
+		const file = resolve(directory ?? "", `${table}.${extension ? extension.replace(/^\./, "") : "js"}`);
 
 		try {
 			const text = auto.text[table];
@@ -72,7 +72,7 @@ export async function checkModels(options: CheckModelsOptions = {}) {
 			if (text !== data) {
 				try {
 					const dbModel = auto.tables[table];
-					const {default: modelFunc} = await import (file);
+					const {default: modelFunc} = await import(file);
 					const model = modelFunc(auto.sequelize, DataTypes);
 
 					const dbColumns = Object.keys(dbModel);
@@ -126,7 +126,7 @@ export async function checkModels(options: CheckModelsOptions = {}) {
 			}
 		} catch (ex) {
 			isError = true;
-			if (ex instanceof Error && 'code' in ex && (ex as NodeJS.ErrnoException).code === "ENOENT") {
+			if (ex instanceof Error && "code" in ex && (ex as NodeJS.ErrnoException).code === "ENOENT") {
 				logError(`No model for '${table}'`);
 			} else {
 				logError(`'${table}' Error: ${ex instanceof Error ? ex.message : String(ex)}`);

@@ -2,7 +2,7 @@ import {Sequelize, QueryInterface, DataTypes} from "sequelize";
 import {downloadModels} from "../../src/index";
 import {resetDatabase, dialectMap} from "../helpers";
 import {getConfig} from "../config";
-import { UnknownObject } from "../../src/types";
+import {UnknownObject} from "../../src/types";
 
 const {
 	database,
@@ -16,7 +16,7 @@ const {
 const dm = dialectMap(dialect);
 
 describe("downloadModels", () => {
-	let sequelize: Sequelize
+	let sequelize: Sequelize;
 	let queryInterface: QueryInterface;
 
 	beforeEach(async () => {

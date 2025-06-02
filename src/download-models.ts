@@ -1,5 +1,5 @@
 import {AutoSequelize} from "./sequelize-auto.js";
-import type { DownloadModelsOptions } from "./types.js";
+import type {DownloadModelsOptions} from "./types.js";
 
 /**
  * Create models from database tables
@@ -12,7 +12,7 @@ export async function downloadModels(options: DownloadModelsOptions = {}) {
 		...opts
 	} = options;
 
-	const auto = new AutoSequelize(database ?? '', username ?? '', password, {
+	const auto = new AutoSequelize(database ?? "", username ?? "", password, {
 		...opts,
 		logging: false,
 	});

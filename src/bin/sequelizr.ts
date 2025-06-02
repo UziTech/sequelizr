@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 import yargs, {Options} from "yargs";
-import { hideBin } from 'yargs/helpers'
+import {hideBin} from "yargs/helpers";
 import {checkModels, downloadModels, uploadModels} from "../index.js";
-import { createRequire } from "node:module";
-import { CheckModelsOptions, DownloadModelsOptions, UploadModelsOptions } from "../types.js";
+import {createRequire} from "node:module";
+import {CheckModelsOptions, DownloadModelsOptions, UploadModelsOptions} from "../types.js";
 const require = createRequire(import.meta.url);
 
 const args = {
@@ -99,7 +99,7 @@ const args = {
 yargs(hideBin(process.argv))
 	.scriptName("sequelizr")
 	.usage("sequelizr <cmd> [opts]")
-	.command("check [opts]", "Check if models match the database tables.", (yargs) => {
+	.command("check [opts]", "Check if models match the database tables.", (y) => {
 		const {
 			host,
 			database,
@@ -113,7 +113,7 @@ yargs(hideBin(process.argv))
 			sort,
 			config,
 		} = args;
-		yargs
+		y
 			.options({
 				host,
 				database,

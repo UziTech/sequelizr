@@ -3,7 +3,7 @@ import {Sequelize, QueryInterface, QueryTypes, DataTypes} from "sequelize";
 import {uploadModels} from "../../src/index";
 import {resetDatabase} from "../helpers";
 import {getConfig} from "../config";
-import { UnknownObject } from "../../src/types";
+import {UnknownObject} from "../../src/types";
 
 const {
 	database,
@@ -16,7 +16,7 @@ const {
 } = getConfig();
 
 describe("uploadModels", () => {
-	let sequelize: Sequelize
+	let sequelize: Sequelize;
 	let queryInterface: QueryInterface;
 
 	beforeEach(async () => {
