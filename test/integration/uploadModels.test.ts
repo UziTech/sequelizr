@@ -49,12 +49,12 @@ describe("uploadModels", () => {
 			quiet: true,
 		});
 
-		const showTablesQuery = (await import(`../../src/dialects/${dialect}`)).showTablesQuery({
+		const {showTablesQuery} = await import(`../../dist/dialects/${dialect}.js`);
+
+		const tables = (await sequelize.query(showTablesQuery({
 			database,
 			includeViews: true,
-		});
-
-		const tables = (await sequelize.query(showTablesQuery, {
+		}), {
 			raw: true,
 			type: QueryTypes.SHOWTABLES,
 		})).map((table: string | UnknownObject) => (typeof table === "object" && "tableName" in table ? table.tableName : table) as string);
