@@ -1,4 +1,6 @@
-module.exports = function (sequelize, DataTypes) {
+import { Sequelize } from "sequelize";
+
+export default function (sequelize: Sequelize, DataTypes: any) {
 	return sequelize.define("my_view", {
 		id: {
 			type: DataTypes.INTEGER,

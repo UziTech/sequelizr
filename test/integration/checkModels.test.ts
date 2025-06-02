@@ -1,7 +1,9 @@
-const path = require("path");
-const Sequelize = require("sequelize");
-const {checkModels} = require("../../");
-const {resetDatabase} = require("../helpers.js");
+import path from "path";
+import {Sequelize, QueryInterface, DataTypes} from "sequelize";
+import {checkModels} from "../../";
+import {resetDatabase} from "../helpers";
+import {getConfig} from "../config";
+
 const {
 	database,
 	username,
@@ -10,10 +12,10 @@ const {
 	port,
 	dialect,
 	dialectOptions,
-} = require("../config.js");
+} = getConfig();
 
 describe("checkModels", () => {
-	let sequelize, queryInterface;
+	let sequelize: Sequelize, queryInterface: QueryInterface;
 
 	beforeEach(async () => {
 		sequelize = new Sequelize(database, username, password, {
@@ -34,7 +36,7 @@ describe("checkModels", () => {
 	test("should check tables and views", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				primaryKey: true,
 	    },
 		});
@@ -53,13 +55,13 @@ describe("checkModels", () => {
 			quiet: true,
 		});
 
-		await expect(promise).resolves.toBe();
+		await expect(promise).resolves.toBeUndefined();
 	});
 
 	test("should just check tables", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				primaryKey: true,
 	    },
 		});
@@ -79,6 +81,6 @@ describe("checkModels", () => {
 			quiet: true,
 		});
 
-		await expect(promise).resolves.toBe();
+		await expect(promise).resolves.toBeUndefined();
 	});
 });

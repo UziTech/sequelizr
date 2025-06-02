@@ -1,7 +1,9 @@
-const path = require("path");
-const Sequelize = require("sequelize");
-const {uploadModels} = require("../../");
-const {resetDatabase} = require("../helpers.js");
+import path from "path";
+import {Sequelize, QueryInterface, QueryTypes, DataTypes} from "sequelize";
+import {uploadModels} from "../../";
+import {resetDatabase} from "../helpers";
+import {getConfig} from "../config";
+
 const {
 	database,
 	username,
@@ -10,10 +12,10 @@ const {
 	port,
 	dialect,
 	dialectOptions,
-} = require("../config.js");
+} = getConfig();
 
 describe("uploadModels", () => {
-	let sequelize, queryInterface;
+	let sequelize: Sequelize, queryInterface: QueryInterface;
 
 	beforeEach(async () => {
 		sequelize = new Sequelize(database, username, password, {
@@ -51,8 +53,8 @@ describe("uploadModels", () => {
 
 		const tables = (await sequelize.query(showTablesQuery, {
 			raw: true,
-			type: Sequelize.QueryTypes.SHOWTABLES,
-		})).map(table => table.tableName || table);
+			type: QueryTypes.SHOWTABLES,
+		})).map((table: any) => table.tableName || table);
 
 		const myTable = await queryInterface.describeTable("my_table");
 
@@ -63,7 +65,7 @@ describe("uploadModels", () => {
 	test("should alter table", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				allowNull: false,
 				primaryKey: true,
 	    },
@@ -90,7 +92,7 @@ describe("uploadModels", () => {
 	test("should overwrite table", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				primaryKey: true,
 	    },
 		});
@@ -116,7 +118,7 @@ describe("uploadModels", () => {
 	test("should fail when existing table", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				allowNull: false,
 				primaryKey: true,
 	    },

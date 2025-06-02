@@ -4,6 +4,7 @@
   "description": "Manage Sequelize models",
   "main": "./src/index.js",
   "scripts": {
+    "build": "tsc",
     "test": "npm run test:unit && npm run test:integration",
     "test:unit": "jest --verbose unit",
     "test:cover": "jest --coverage unit",

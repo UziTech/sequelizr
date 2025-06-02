@@ -1,4 +1,6 @@
-module.exports = function (sequelize, DataTypes) {
+import { Sequelize } from "sequelize";
+
+export default function (sequelize: Sequelize, DataTypes: any) {
 	return sequelize.define("my_table", {
 		id: {
 			type: DataTypes.INTEGER,
@@ -6,8 +8,8 @@ module.exports = function (sequelize, DataTypes) {
 			primaryKey: true,
 		},
 		name: {
-			type: DataTypes.STRING(255),
-			allowNull: true,
+			type: DataTypes.STRING,
+			allowNull: false,
 		},
 	}, {
 		tableName: "my_table",

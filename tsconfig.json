@@ -3,6 +3,8 @@
     "target": "ES2024",
     "module": "NodeNext",
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "outDir": "lib",
+    "sourceMap": true,
   }
 }

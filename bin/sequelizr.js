@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-const yargs = require("yargs");
-const sequelizr = require("../");
+import yargs from "yargs";
+import * as sequelizr from "../";
 
 const args = {
 	host: {

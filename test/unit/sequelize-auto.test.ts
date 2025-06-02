@@ -1,13 +1,21 @@
-const tmp = require("tmp-promise");
-tmp.setGracefulCleanup();
-const path = require("path");
-const {readdir, readFile} = require("fs");
-const {promisify} = require("util");
-const readdirAsync = promisify(readdir);
-const readFileAsync = promisify(readFile);
+import { dir, setGracefulCleanup, DirectoryResult } from "tmp-promise";
+import {join} from "path";
+import {readdir, readFile} from "fs/promises";
+
+setGracefulCleanup();
 
 class SequelizeMock {
-	constructor(database, username, password, options) {
+	database?: string;
+	username?: string;
+	password?: string;
+	options: any;
+	queryInterface: any;
+	getQueryInterface: any;
+	query: any;
+	close: any;
+	static QueryTypes: any;
+
+	constructor(database?: string, username?: string, password?: string, options?: any) {
 		this.database = database;
 		this.username = username;
 		this.password = password;
@@ -146,10 +154,10 @@ describe("sequelize-auto", () => {
 		});
 
 		describe("writing files", () => {
-			let tempDir;
+			let tempDir: DirectoryResult;
 
 			beforeEach(async () => {
-				tempDir = await tmp.dir({unsafeCleanup: true});
+				tempDir = await dir({unsafeCleanup: true});
 			});
 
 			afterEach(async () => {
@@ -178,11 +186,11 @@ describe("sequelize-auto", () => {
 
 				await auto.run();
 
-				const files = await readdirAsync(tempDir.path);
+				const files = await readdir(tempDir.path);
 
 				expect(files).toEqual(["table.js"]);
 
-				const contents = await readFileAsync(path.join(tempDir.path, files[0]), {encoding: "utf8"});
+				const contents = await readFile(join(tempDir.path, files[0]), {encoding: "utf8"});
 
 				expect(contents).toMatchSnapshot();
 			});
@@ -458,7 +466,7 @@ describe("sequelize-auto", () => {
 					type: "other",
 				},
 			};
-			const text = auto.generateText("my_table", (level) => "  ".repeat(level));
+			const text = auto.generateText("my_table", (level: number) => "  ".repeat(level));
 
 			expect(text).toMatchSnapshot();
 		});
@@ -480,7 +488,7 @@ describe("sequelize-auto", () => {
 					type: "int",
 				},
 			};
-			const text = auto.generateText("my_table", (level) => "  ".repeat(level));
+			const text = auto.generateText("my_table", (level: number) => "  ".repeat(level));
 
 			expect(text).toMatchSnapshot();
 		});

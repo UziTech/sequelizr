@@ -1,6 +1,8 @@
-const Sequelize = require("sequelize");
-const {downloadModels} = require("../../");
-const {resetDatabase, dialectMap} = require("../helpers.js");
+import {Sequelize, QueryInterface, DataTypes} from "sequelize";
+import {downloadModels} from "../../";
+import {resetDatabase, dialectMap} from "../helpers";
+import {getConfig} from "../config";
+
 const {
 	database,
 	username,
@@ -9,11 +11,11 @@ const {
 	port,
 	dialect,
 	dialectOptions,
-} = require("../config.js");
+} = getConfig();
 const dm = dialectMap(dialect);
 
 describe("downloadModels", () => {
-	let sequelize, queryInterface;
+	let sequelize: Sequelize, queryInterface: QueryInterface;
 
 	beforeEach(async () => {
 		sequelize = new Sequelize(database, username, password, {
@@ -34,7 +36,7 @@ describe("downloadModels", () => {
 	test("should get tables and views", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				primaryKey: true,
 	    },
 		});
@@ -47,7 +49,6 @@ describe("downloadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: false,
 			dialectOptions,
 			quiet: true,
 		});
@@ -58,7 +59,7 @@ describe("downloadModels", () => {
 	test("should get only tables", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				primaryKey: true,
 	    },
 		});
@@ -71,7 +72,6 @@ describe("downloadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: false,
 			dialectOptions,
 			includeViews: false,
 			quiet: true,
@@ -96,7 +96,6 @@ describe("downloadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: false,
 			dialectOptions,
 			quiet: true,
 		});
@@ -141,7 +140,6 @@ describe("downloadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: false,
 			dialectOptions,
 			quiet: true,
 		});

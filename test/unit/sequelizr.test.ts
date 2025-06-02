@@ -1,8 +1,10 @@
-const util = require("util");
-const exec = util.promisify(require("child_process").exec);
+import {promisify} from "util";
+import {exec} from "child_process";
 
-function sequelizr(argsString) {
-	return exec(`node ../../bin/sequelizr.js ${argsString}`, {cwd: __dirname});
+const execAsync = promisify(exec);
+
+function sequelizr(argsString: string) {
+	return execAsync(`node ../../bin/sequelizr.js ${argsString}`, {cwd: __dirname});
 }
 
 const {version} = require("../../package.json");
