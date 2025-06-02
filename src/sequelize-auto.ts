@@ -439,7 +439,7 @@ export class AutoSequelize {
 
 					if (typeof val === "string") {
 						if (!val.match(/^sequelize\.[^(]+\(.*\)$/)) {
-							val = escapeSqlString(val.replace(/^"+|"+$/g, ""), null, this.options.dialect ?? '');
+							val = escapeSqlString(val.replace(/^"+|"+$/g, ""), null, this.options.dialect ?? 'mysql');
 						}
 
 						// don't prepend N for MSSQL when building models...
