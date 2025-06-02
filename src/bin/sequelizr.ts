@@ -99,7 +99,7 @@ const args = {
 yargs(hideBin(process.argv))
 	.scriptName("sequelizr")
 	.usage("sequelizr <cmd> [opts]")
-	.command("check [opts]", "Check if models match the database tables.", (y) => {
+	.command("check [opts]", "Check if models match the database tables.", (cmd) => {
 		const {
 			host,
 			database,
@@ -113,7 +113,8 @@ yargs(hideBin(process.argv))
 			sort,
 			config,
 		} = args;
-		y
+
+		cmd
 			.options({
 				host,
 				database,
@@ -159,7 +160,7 @@ yargs(hideBin(process.argv))
 
 		checkModels(options);
 	})
-	.command("download [opts]", "Save tables to models.", () => {
+	.command("download [opts]", "Save tables to models.", (cmd) => {
 		const {
 			host,
 			database,
@@ -175,7 +176,8 @@ yargs(hideBin(process.argv))
 			config,
 		} = args;
 		overwrite.description = "Overwrite files if they exist.";
-		yargs()
+
+		cmd
 			.options({
 				host,
 				database,
@@ -224,7 +226,7 @@ yargs(hideBin(process.argv))
 
 		downloadModels(options);
 	})
-	.command("upload [opts]", "Create tables from models.", () => {
+	.command("upload [opts]", "Create tables from models.", (cmd) => {
 		const {
 			host,
 			database,
@@ -241,7 +243,8 @@ yargs(hideBin(process.argv))
 			config,
 		} = args;
 		overwrite.description = "Drop tables before creating them.";
-		yargs()
+
+		cmd
 			.options({
 				host,
 				database,

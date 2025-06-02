@@ -13,7 +13,8 @@
     "test:mysql": "cross-env DIALECT=mysql npm run test:integration",
     "test:mssql": "cross-env DIALECT=mssql npm run test:integration",
     "test:all-dialects": "npm run test:mysql && npm run test:mssql",
-    "lint": "eslint ."
+    "lint": "eslint",
+    "format": "eslint --fix"
   },
   "repository": {
     "type": "git",
@@ -37,7 +38,7 @@
   "homepage": "https://github.com/UziTech/sequelizr#readme",
   "dependencies": {
     "sequelize": "^6.37.7",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
