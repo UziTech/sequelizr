@@ -9,11 +9,7 @@ export default {
 	testRegex: /\.test\.ts$/.source,
 	preset: "ts-jest",
 	testEnvironment: "node",
-	transform: {
-		"\\.[jt]sx?$": ["ts-jest", {useESM: true}],
-	},
 	moduleNameMapper: {
-		"(.+)\\.js": "$1",
+		"^(.+)\\.js$": "$1",
 	},
-	extensionsToTreatAsEsm: [".ts"],
 };

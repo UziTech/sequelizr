@@ -1,7 +1,7 @@
 import { dir, setGracefulCleanup, DirectoryResult } from "tmp-promise";
 import {join} from "path";
 import {readdir, readFile} from "fs/promises";
-import { Sequelize } from "sequelize";
+import { Sequelize, QueryTypes } from "sequelize";
 
 setGracefulCleanup();
 
@@ -37,7 +37,7 @@ SequelizeMock.QueryTypes = {
 	SELECT: "SELECT",
 	SHOWTABLES: "SHOWTABLES",
 };
-jest.doMock("sequelize", () => SequelizeMock);
+jest.doMock("sequelize", () => ({Sequelize: SequelizeMock, QueryTypes}));
 
 import {AutoSequelize} from "../../src/sequelize-auto";
 
