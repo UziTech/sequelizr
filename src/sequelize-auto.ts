@@ -105,6 +105,7 @@ export class AutoSequelize {
 			skipTables: null,
 			foreignKeys: true,
 			indexes: true,
+			includeViews: true,
 			quiet: false,
 			sort: false,
 			...options,
