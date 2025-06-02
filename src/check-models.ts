@@ -72,7 +72,8 @@ export async function checkModels(options: CheckModelsOptions = {}) {
 			if (text !== data) {
 				try {
 					const dbModel = auto.tables[table];
-					const model = (await import(`file://${file}`))(auto.sequelize, DataTypes);
+					const {default: modelFunc} = await import (file);
+					const model = modelFunc(auto.sequelize, DataTypes);
 
 					const dbColumns = Object.keys(dbModel);
 					dbColumns.push("id");

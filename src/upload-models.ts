@@ -57,7 +57,7 @@ export async function uploadModels(options: UploadModelsOptions = {}) {
 			const table = file.replace(new RegExp(`\\.${extension}$`), "");
 			if (!tables || (tables instanceof RegExp && tables.test(table)) || (Array.isArray(tables) && tables.includes(table))) {
 				const modelPath = resolve(directory ?? '', file);
-				const {default: modelFactory} = await import(`file://${modelPath}`);
+				const {default: modelFactory} = await import(modelPath);
 				const model = modelFactory(db, DataTypes);
 				await model.sync({alter, force: overwrite});
 				if (!overwrite) {
