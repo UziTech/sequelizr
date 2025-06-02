@@ -4,6 +4,7 @@ import {uploadModels} from "../../src/index";
 import {resetDatabase} from "../helpers";
 import {getConfig} from "../config";
 import {UnknownObject} from "../../src/types";
+import dialects from "../../src/dialects";
 
 const {
 	database,
@@ -49,9 +50,9 @@ describe("uploadModels", () => {
 			quiet: true,
 		});
 
-		const {showTablesQuery} = await import(`../../dist/dialects/${dialect}.js`);
+		const {showTablesQuery} = dialects[dialect];
 
-		const tables = (await sequelize.query(showTablesQuery({
+		const tables = (await sequelize.query(showTablesQuery!({
 			database,
 			includeViews: true,
 		}), {
