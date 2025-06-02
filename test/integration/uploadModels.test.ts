@@ -44,6 +44,7 @@ describe("uploadModels", () => {
 			port,
 			dialect,
 			directory: resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
+			extension: "cjs",
 			dialectOptions,
 			quiet: true,
 		});
@@ -81,6 +82,7 @@ describe("uploadModels", () => {
 			port,
 			dialect,
 			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			extension: "cjs",
 			dialectOptions,
 			alter: true,
 			quiet: true,
@@ -107,6 +109,7 @@ describe("uploadModels", () => {
 			port,
 			dialect,
 			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			extension: "cjs",
 			dialectOptions,
 			overwrite: true,
 			quiet: true,
@@ -134,6 +137,7 @@ describe("uploadModels", () => {
 			port,
 			dialect,
 			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			extension: "cjs",
 			dialectOptions,
 			quiet: true,
 		})).rejects.toThrow(/'my_table\.name' not in db/);
