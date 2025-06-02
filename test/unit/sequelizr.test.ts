@@ -4,7 +4,7 @@ import {exec} from "child_process";
 const execAsync = promisify(exec);
 
 function sequelizr(argsString: string) {
-	return execAsync(`node ../../bin/sequelizr.js ${argsString}`, {cwd: __dirname});
+	return execAsync(`node ../../dist/bin/sequelizr.js ${argsString}`, {cwd: __dirname});
 }
 
 const {version} = require("../../package.json");

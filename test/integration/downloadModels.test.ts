@@ -15,7 +15,8 @@ const {
 const dm = dialectMap(dialect);
 
 describe("downloadModels", () => {
-	let sequelize: Sequelize, queryInterface: QueryInterface;
+	let sequelize: Sequelize
+	let queryInterface: QueryInterface;
 
 	beforeEach(async () => {
 		sequelize = new Sequelize(database, username, password, {

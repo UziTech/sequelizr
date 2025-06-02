@@ -1,6 +1,6 @@
 import { Dialect } from "sequelize";
 
-export function getConfig(dialect?: Dialect) {
+export function getConfig() {
 	const {env} = process;
 	const seqDb = env.SEQ_DB;
 	const seqUser = env.SEQ_USER;
@@ -11,7 +11,7 @@ export function getConfig(dialect?: Dialect) {
 	const seqPoolIdle = env.SEQ_POOL_IDLE ? parseInt(env.SEQ_POOL_IDLE) : undefined;
 
 
-	switch (dialect ?? env.DIALECT) {
+	switch (env.DIALECT) {
 		case "mysql": {
 			return {
 				database: seqDb || "sequelizr_test",
@@ -55,7 +55,7 @@ export function getConfig(dialect?: Dialect) {
 				database: seqDb || "sequelizr_test",
 				host: seqHost || "localhost",
 				port: seqPort,
-				dialect: dialect ?? env.DIALECT as Dialect,
+				dialect: env.DIALECT as Dialect,
 				pool: {
 					max: seqPoolMax || 5,
 					idle: seqPoolIdle || 30000,

@@ -1,4 +1,4 @@
-import path from "path";
+import {resolve} from "path";
 import {Sequelize, QueryInterface, QueryTypes, DataTypes} from "sequelize";
 import {uploadModels} from "../../src/index";
 import {resetDatabase} from "../helpers";
@@ -15,7 +15,8 @@ const {
 } = getConfig();
 
 describe("uploadModels", () => {
-	let sequelize: Sequelize, queryInterface: QueryInterface;
+	let sequelize: Sequelize
+	let queryInterface: QueryInterface;
 
 	beforeEach(async () => {
 		sequelize = new Sequelize(database, username, password, {
@@ -41,7 +42,7 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
 			dialectOptions,
 			quiet: true,
 		});
@@ -78,7 +79,7 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
 			dialectOptions,
 			alter: true,
 			quiet: true,
@@ -104,7 +105,7 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
 			dialectOptions,
 			overwrite: true,
 			quiet: true,
@@ -131,7 +132,7 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
 			dialectOptions,
 			quiet: true,
 		})).rejects.toThrow(/'my_table\.name' not in db/);

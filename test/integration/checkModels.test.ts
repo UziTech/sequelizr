@@ -1,4 +1,4 @@
-import path from "path";
+import {resolve} from "path";
 import {Sequelize, QueryInterface, DataTypes} from "sequelize";
 import {checkModels} from "../../src/index";
 import {resetDatabase} from "../helpers";
@@ -15,7 +15,8 @@ const {
 } = getConfig();
 
 describe("checkModels", () => {
-	let sequelize: Sequelize, queryInterface: QueryInterface;
+	let sequelize: Sequelize;
+	let queryInterface: QueryInterface;
 
 	beforeEach(async () => {
 		sequelize = new Sequelize(database, username, password, {
@@ -33,7 +34,7 @@ describe("checkModels", () => {
 		await sequelize.close();
 	});
 
-	test("should check tables and views", async () => {
+	test.only("should check tables and views", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
 	      type: DataTypes.INTEGER,
@@ -49,7 +50,7 @@ describe("checkModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/with-views`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/with-views`),
 			dialectOptions,
 			output: false,
 			quiet: true,
@@ -74,7 +75,7 @@ describe("checkModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
 			dialectOptions,
 			output: false,
 			includeViews: false,
