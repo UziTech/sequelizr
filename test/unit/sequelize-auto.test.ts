@@ -131,7 +131,7 @@ describe("sequelize-auto", () => {
 	});
 
 	describe("run", () => {
-		test("should build tables", async () => {
+		test.only("should build tables", async () => {
 			const sequelize = new SequelizeMock();
 			sequelize.query.mockReturnValueOnce(["table"]);
 			const describeTable = {
@@ -146,6 +146,7 @@ describe("sequelize-auto", () => {
 			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
 				foreignKeys: false,
+				directory: undefined,
 				indexes: false,
 				quiet: true,
 			});

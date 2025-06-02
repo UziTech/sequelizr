@@ -53,6 +53,7 @@ describe("downloadModels", () => {
 			dialect,
 			dialectOptions,
 			quiet: true,
+			directory: undefined,
 		});
 
 		expect(Object.keys(auto.tables)).toEqual(expect.arrayContaining(["my_table", "my_view"]));
@@ -77,6 +78,7 @@ describe("downloadModels", () => {
 			dialectOptions,
 			includeViews: false,
 			quiet: true,
+			directory: undefined,
 		});
 
 		expect(Object.keys(auto.tables)).toEqual(["my_table"]);
@@ -100,6 +102,7 @@ describe("downloadModels", () => {
 			dialect,
 			dialectOptions,
 			quiet: true,
+			directory: undefined,
 		});
 
 		expect(auto.tables.my_table).toEqual(expect.objectContaining({
@@ -144,6 +147,7 @@ describe("downloadModels", () => {
 			dialect,
 			dialectOptions,
 			quiet: true,
+			directory: undefined,
 		});
 
 		const {my_table} = auto.tables;

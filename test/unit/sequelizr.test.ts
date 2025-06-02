@@ -1,14 +1,12 @@
 import {promisify} from "util";
 import {exec} from "child_process";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
 
 const execAsync = promisify(exec);
 
 function sequelizr(argsString: string) {
 	return execAsync(`node ../../dist/bin/sequelizr.js ${argsString}`, {cwd: __dirname});
 }
-
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const {version} = require("../../package.json");
 
 describe("sequelizr", () => {

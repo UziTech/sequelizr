@@ -630,7 +630,7 @@ export class AutoSequelize {
 		}
 
 		await this.sequelize.close();
-
+console.log(this.options)
 		if (this.options.directory) {
 			await this.write();
 		}
