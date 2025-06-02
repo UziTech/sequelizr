@@ -1,5 +1,5 @@
 import {Sequelize, QueryInterface, DataTypes} from "sequelize";
-import {downloadModels} from "../../";
+import {downloadModels} from "../../src/index";
 import {resetDatabase, dialectMap} from "../helpers";
 import {getConfig} from "../config";
 

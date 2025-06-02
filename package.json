@@ -2,7 +2,7 @@
   "name": "sequelizr",
   "version": "3.0.87",
   "description": "Manage Sequelize models",
-  "main": "./src/index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "tsc",
     "test": "npm run test:unit && npm run test:integration",

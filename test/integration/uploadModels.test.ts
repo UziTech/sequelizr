@@ -1,6 +1,6 @@
 import path from "path";
 import {Sequelize, QueryInterface, QueryTypes, DataTypes} from "sequelize";
-import {uploadModels} from "../../";
+import {uploadModels} from "../../src/index";
 import {resetDatabase} from "../helpers";
 import {getConfig} from "../config";
 
