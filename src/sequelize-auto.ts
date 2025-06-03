@@ -312,7 +312,8 @@ export class AutoSequelize {
 	generateText(table: string, indent: (level: number) => string) {
 		let text = "";
 
-		text += "export default function (sequelize, DataTypes) {\n";
+		// TODO: maybe update to ESM?
+		text += "module.exports = function (sequelize, DataTypes) {\n";
 		text += `${indent(1)}return sequelize.define("${table}", {\n`;
 
 		let createdAt = false;
