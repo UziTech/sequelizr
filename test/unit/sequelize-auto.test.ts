@@ -1,6 +1,6 @@
 import {dir, setGracefulCleanup, DirectoryResult} from "tmp-promise";
-import {join} from "path";
-import {readdir, readFile} from "fs/promises";
+import {join} from "node:path";
+import {readdir, readFile} from "node:fs/promises";
 import {Sequelize, QueryTypes, Options as SequelizeOptions} from "sequelize";
 
 setGracefulCleanup();
@@ -94,7 +94,7 @@ describe("sequelize-auto", () => {
 				skipTables: [],
 			});
 
-			 
+
 			expect(console.error).toHaveBeenCalledWith("The 'skipTables' option will be ignored because the 'tables' option is given");
 		});
 

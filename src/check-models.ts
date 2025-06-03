@@ -1,5 +1,5 @@
-import {resolve} from "path";
-import {readFile} from "fs/promises";
+import {resolve} from "node:path";
+import {readFile} from "node:fs/promises";
 import {DataTypes} from "sequelize";
 import {downloadModels} from "./download-models.js";
 import type {CheckModelsOptions, UnknownObject} from "./types.js";

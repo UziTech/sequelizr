@@ -69,7 +69,7 @@ export default {
 	 * results is an actual serial/auto increment key
 	 */
 	isSerialKey(record) {
-		return typeof record === "object" && this.isPrimaryKey!(record) && (("is_identity" in record) && record.is_identity);
+		return typeof record === "object" && this.isPrimaryKey && this.isPrimaryKey(record) && (("is_identity" in record) && record.is_identity);
 	},
 
 	/**

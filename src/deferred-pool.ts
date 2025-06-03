@@ -1,4 +1,4 @@
-import {EventEmitter} from "events";
+import {EventEmitter} from "node:events";
 
 export class DeferredPool extends EventEmitter {
 	max: number;

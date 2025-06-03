@@ -1,6 +1,6 @@
-import {mkdir, stat, writeFile, readFile} from "fs/promises";
-import {resolve, dirname, join} from "path";
-import {clearLine, cursorTo} from "readline";
+import {mkdir, stat, writeFile, readFile} from "node:fs/promises";
+import {resolve, dirname, join} from "node:path";
+import {clearLine, cursorTo} from "node:readline";
 import {QueryInterface, QueryTypes, Sequelize} from "sequelize";
 import dialects from "./dialects/index.js";
 import {escape as escapeSqlString} from "./sql-string.js";
@@ -234,7 +234,10 @@ export class AutoSequelize {
 	async build() {
 		let tables: string[] = [];
 		if ((this.options.dialect === "postgres" && this.options.schema) || ["mysql", "mssql"].includes(this.options.dialect ?? "")) {
-			const showTablesSql = this.dialect.showTablesQuery!(this.options);
+			if (!this.dialect.showTablesQuery) {
+				throw new Error(`showTablesQuery not available for dialect '${this.options.dialect}'`);
+			}
+			const showTablesSql = this.dialect.showTablesQuery(this.options);
 			tables = await this.sequelize.query(showTablesSql, {
 				raw: true,
 				type: QueryTypes.SHOWTABLES,
@@ -309,7 +312,7 @@ export class AutoSequelize {
 	generateText(table: string, indent: (level: number) => string) {
 		let text = "";
 
-		text += "module.exports = function (sequelize, DataTypes) {\n";
+		text += "export default function (sequelize, DataTypes) {\n";
 		text += `${indent(1)}return sequelize.define("${table}", {\n`;
 
 		let createdAt = false;

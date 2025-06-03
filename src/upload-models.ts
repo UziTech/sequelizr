@@ -1,6 +1,6 @@
 import {Sequelize, DataTypes} from "sequelize";
-import {resolve} from "path";
-import {readdir} from "fs/promises";
+import {resolve} from "node:path";
+import {readdir} from "node:fs/promises";
 import {checkModels} from "./check-models.js";
 import type {UploadModelsOptions} from "./types.js";
 

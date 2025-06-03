@@ -5,6 +5,7 @@ import {hideBin} from "yargs/helpers";
 import {checkModels, downloadModels, uploadModels} from "../index.js";
 import {createRequire} from "node:module";
 import {CheckModelsOptions, DownloadModelsOptions, UploadModelsOptions} from "../types.js";
+
 const require = createRequire(import.meta.url);
 
 const args = {

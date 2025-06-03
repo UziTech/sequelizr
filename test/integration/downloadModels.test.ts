@@ -13,7 +13,7 @@ const {
 	dialect,
 	dialectOptions,
 } = getConfig();
-const dm = dialectMap(dialect);
+const dm = dialectMap(dialect!);
 
 describe("downloadModels", () => {
 	let sequelize: Sequelize;

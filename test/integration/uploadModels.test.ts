@@ -1,4 +1,4 @@
-import {resolve} from "path";
+import {resolve} from "node:path";
 import {Sequelize, QueryInterface, QueryTypes, DataTypes} from "sequelize";
 import {uploadModels} from "../../src/index";
 import {resetDatabase} from "../helpers";
