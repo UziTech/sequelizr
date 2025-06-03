@@ -1,3 +1,15 @@
+# [4.0.0](https://github.com/UziTech/sequelizr/compare/v3.0.87...v4.0.0) (2025-06-03)
+
+
+### Features
+
+* convert to typescript ([#864](https://github.com/UziTech/sequelizr/issues/864)) ([8876cb1](https://github.com/UziTech/sequelizr/commit/8876cb19eb4fcc9687af9c5bdbeacca0d9f74956))
+
+
+### BREAKING CHANGES
+
+* convert to typescript and change to named exports
+
 ## [3.0.87](https://github.com/UziTech/sequelizr/compare/v3.0.86...v3.0.87) (2025-03-29)
 
 
