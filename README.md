@@ -120,6 +120,7 @@ module.exports = {
   port: 1433,
   dialect: "mssql",
   directory: "C:\\models\\database",
+  extension: "js", // The extension of the model files. Change to "cjs" if needed.
   tables: ["table1", "table2"],
   dialectOptions: {...},
   quiet: false, // Build tables silently. Don't output percent complete.
