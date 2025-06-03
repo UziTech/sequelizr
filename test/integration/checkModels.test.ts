@@ -34,7 +34,7 @@ describe("checkModels", () => {
 		await sequelize.close();
 	});
 
-	test.only("should check tables and views", async () => {
+	test("should check tables and views", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
 	      type: DataTypes.INTEGER,
