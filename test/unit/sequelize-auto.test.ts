@@ -1,13 +1,33 @@
-const tmp = require("tmp-promise");
-tmp.setGracefulCleanup();
-const path = require("path");
-const {readdir, readFile} = require("fs");
-const {promisify} = require("util");
-const readdirAsync = promisify(readdir);
-const readFileAsync = promisify(readFile);
+import {dir, setGracefulCleanup, DirectoryResult} from "tmp-promise";
+import {join} from "node:path";
+import {readdir, readFile} from "node:fs/promises";
+import {Sequelize, QueryTypes, Options as SequelizeOptions} from "sequelize";
+
+setGracefulCleanup();
 
 class SequelizeMock {
-	constructor(database, username, password, options) {
+	database?: string;
+
+	username?: string;
+
+	password?: string;
+
+	options?: SequelizeOptions;
+
+	queryInterface: {
+		describeTable: jest.Mock;
+		showAllTables: jest.Mock;
+	};
+
+	getQueryInterface: jest.Mock;
+
+	query: jest.Mock;
+
+	close: jest.Mock;
+
+	static QueryTypes: object;
+
+	constructor(database?: string, username?: string, password?: string, options?: SequelizeOptions) {
 		this.database = database;
 		this.username = username;
 		this.password = password;
@@ -28,14 +48,14 @@ SequelizeMock.QueryTypes = {
 	SELECT: "SELECT",
 	SHOWTABLES: "SHOWTABLES",
 };
-jest.doMock("sequelize", () => SequelizeMock);
+jest.doMock("sequelize", () => ({Sequelize: SequelizeMock, QueryTypes}));
 
-const AutoSequelize = require("../../src/sequelize-auto.js");
+import {AutoSequelize} from "../../src/sequelize-auto";
 
 describe("sequelize-auto", () => {
 	describe("constructor", () => {
 		test("should load sequelize-auto", () => {
-			const auto = new AutoSequelize();
+			const auto = new AutoSequelize("database", "username", "password");
 
 			expect(auto).toBeTruthy();
 		});
@@ -58,7 +78,7 @@ describe("sequelize-auto", () => {
 
 		test("should allow passing sequelize instance", () => {
 			const sequelize = new SequelizeMock();
-			const auto = new AutoSequelize(sequelize, {
+			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
 				quiet: true,
 			});
@@ -74,7 +94,7 @@ describe("sequelize-auto", () => {
 				skipTables: [],
 			});
 
-			// eslint-disable-next-line no-console
+
 			expect(console.error).toHaveBeenCalledWith("The 'skipTables' option will be ignored because the 'tables' option is given");
 		});
 
@@ -132,10 +152,10 @@ describe("sequelize-auto", () => {
 				},
 			};
 			sequelize.queryInterface.describeTable.mockReturnValueOnce(describeTable);
-			const auto = new AutoSequelize(sequelize, {
+			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
-				directory: false,
 				foreignKeys: false,
+				directory: undefined,
 				indexes: false,
 				quiet: true,
 			});
@@ -146,10 +166,10 @@ describe("sequelize-auto", () => {
 		});
 
 		describe("writing files", () => {
-			let tempDir;
+			let tempDir: DirectoryResult;
 
 			beforeEach(async () => {
-				tempDir = await tmp.dir({unsafeCleanup: true});
+				tempDir = await dir({unsafeCleanup: true});
 			});
 
 			afterEach(async () => {
@@ -168,7 +188,7 @@ describe("sequelize-auto", () => {
 					},
 				};
 				sequelize.queryInterface.describeTable.mockReturnValueOnce(describeTable);
-				const auto = new AutoSequelize(sequelize, {
+				const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 					dialect: "mysql",
 					directory: tempDir.path,
 					foreignKeys: false,
@@ -178,11 +198,11 @@ describe("sequelize-auto", () => {
 
 				await auto.run();
 
-				const files = await readdirAsync(tempDir.path);
+				const files = await readdir(tempDir.path);
 
 				expect(files).toEqual(["table.js"]);
 
-				const contents = await readFileAsync(path.join(tempDir.path, files[0]), {encoding: "utf8"});
+				const contents = await readFile(join(tempDir.path, files[0]), {encoding: "utf8"});
 
 				expect(contents).toMatchSnapshot();
 			});
@@ -192,7 +212,7 @@ describe("sequelize-auto", () => {
 	describe("generateText", () => {
 		test("should generate correct text", () => {
 			const sequelize = new SequelizeMock();
-			const auto = new AutoSequelize(sequelize, {
+			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
 				schema: "schema",
 			});
@@ -458,14 +478,14 @@ describe("sequelize-auto", () => {
 					type: "other",
 				},
 			};
-			const text = auto.generateText("my_table", (level) => "  ".repeat(level));
+			const text = auto.generateText("my_table", (level: number) => "  ".repeat(level));
 
 			expect(text).toMatchSnapshot();
 		});
 
 		test("should sort fields and attributes", () => {
 			const sequelize = new SequelizeMock();
-			const auto = new AutoSequelize(sequelize, {
+			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
 				schema: "schema",
 				sort: true,
@@ -480,7 +500,7 @@ describe("sequelize-auto", () => {
 					type: "int",
 				},
 			};
-			const text = auto.generateText("my_table", (level) => "  ".repeat(level));
+			const text = auto.generateText("my_table", (level: number) => "  ".repeat(level));
 
 			expect(text).toMatchSnapshot();
 		});

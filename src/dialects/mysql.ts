@@ -1,13 +1,11 @@
-module.exports = {
+import type {DialectOperations} from "../types.js";
+
+export default {
 
 	/**
 	 * Generates an SQL query that returns all foreign keys of a table.
-	 *
-	 * @param  {String} tableName  The name of the table.
-	 * @param  {String} schemaName The name of the schema.
-	 * @return {String}            The generated sql query.
 	 */
-	getForeignKeysQuery: function (tableName, schemaName) {
+	getForeignKeysQuery(tableName, schemaName) {
 		return `SELECT
 				K.CONSTRAINT_NAME as constraint_name
 			, K.CONSTRAINT_SCHEMA as source_schema
@@ -30,12 +28,8 @@ module.exports = {
 
 	/**
 	 * Generates an SQL query that returns all indexes without keys of a table.
-	 *
-	 * @param  {String} tableName  The name of the table.
-	 * @param  {String} schemaName The name of the schema.
-	 * @return {String}            The generated sql query.
 	 */
-	getIndexesQuery: function (tableName, schemaName) {
+	getIndexesQuery(tableName, schemaName) {
 		return `SELECT
 				s.index_name AS name,
 				s.column_name AS field,
@@ -55,58 +49,42 @@ module.exports = {
 	/**
 	 * Determines if record entry from the getForeignKeysQuery
 	 * results is an actual foreign key
-	 *
-	 * @param {Object} record The row entry from getForeignKeysQuery
-	 * @return {Bool} return
 	 */
-	isForeignKey: function (record) {
+	isForeignKey(record) {
 		return typeof record === "object" && ("extra" in record) && record.extra !== "auto_increment";
 	},
 
 	/**
 	 * Determines if record entry from the getForeignKeysQuery
 	 * results is a unique key
-	 *
-	 * @param {Object} record The row entry from getForeignKeysQuery
-	 * @return {Bool} return
 	 */
-	isUnique: function (record) {
-		return typeof record === "object" && ("column_key" in record) && record.column_key.toUpperCase() === "UNI";
+	isUnique(record) {
+		return typeof record === "object" && ("column_key" in record) && typeof record.column_key === "string" && record.column_key.toUpperCase() === "UNI";
 	},
 
 	/**
 	 * Determines if record entry from the getForeignKeysQuery
 	 * results is an actual primary key
-	 *
-	 * @param {Object} record The row entry from getForeignKeysQuery
-	 * @return {Bool} return
 	 */
-	isPrimaryKey: function (record) {
+	isPrimaryKey(record) {
 		return typeof record === "object" && ("constraint_name" in record) && record.constraint_name === "PRIMARY";
 	},
 
 	/**
 	 * Determines if record entry from the getForeignKeysQuery
 	 * results is an actual serial/auto increment key
-	 *
-	 * @param {Object} record The row entry from getForeignKeysQuery
-	 * @return {Bool} return
 	 */
-	isSerialKey: function (record) {
+	isSerialKey(record) {
 		return typeof record === "object" && ("extra" in record) && record.extra === "auto_increment";
 	},
 
 	/**
 	 * Overwrites Sequelize's native method for showing all tables.
 	 * This allows showing all tables and views from the current schema
-	 * @param {String} options Options
-	 * @param {String} [options.database] The database to list all tables from
-	 * @param {String} [options.includeViews] Include views with tables
-	 * @return {String} return
 	 */
-	showTablesQuery: function (options) {
+	showTablesQuery(options) {
 		let query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES";
-		const wheres = [];
+		const wheres: string[] = [];
 		if (!options.includeViews) {
 			wheres.push("TABLE_TYPE = 'BASE TABLE'");
 		}
@@ -121,4 +99,4 @@ module.exports = {
 		}
 		return `${query};`;
 	},
-};
+} as DialectOperations;

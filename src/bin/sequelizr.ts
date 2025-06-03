@@ -1,7 +1,12 @@
 #!/usr/bin/env node
 
-const yargs = require("yargs");
-const sequelizr = require("../");
+import yargs, {Options} from "yargs";
+import {hideBin} from "yargs/helpers";
+import {checkModels, downloadModels, uploadModels} from "../index.js";
+import {createRequire} from "node:module";
+import {CheckModelsOptions, DownloadModelsOptions, UploadModelsOptions} from "../types.js";
+
+const require = createRequire(import.meta.url);
 
 const args = {
 	host: {
@@ -90,12 +95,12 @@ const args = {
 		description: "Config File",
 		group: "Command Options:",
 	},
-};
+} as {[key: string]: Options};
 
-yargs
+yargs(hideBin(process.argv))
 	.scriptName("sequelizr")
 	.usage("sequelizr <cmd> [opts]")
-	.command("check [opts]", "Check if models match the database tables.", () => {
+	.command("check [opts]", "Check if models match the database tables.", (cmd) => {
 		const {
 			host,
 			database,
@@ -109,7 +114,8 @@ yargs
 			sort,
 			config,
 		} = args;
-		yargs
+
+		cmd
 			.options({
 				host,
 				database,
@@ -139,7 +145,7 @@ yargs
 			config,
 		} = argv;
 
-		const options = {
+		const options: CheckModelsOptions = {
 			host,
 			database,
 			tables,
@@ -150,12 +156,12 @@ yargs
 			directory,
 			quiet,
 			sort,
-			...(config ? require(config) : {}),
+			...(config ? require(config as string) : {}),
 		};
 
-		sequelizr.checkModels(options);
+		checkModels(options);
 	})
-	.command("download [opts]", "Save tables to models.", () => {
+	.command("download [opts]", "Save tables to models.", (cmd) => {
 		const {
 			host,
 			database,
@@ -171,7 +177,8 @@ yargs
 			config,
 		} = args;
 		overwrite.description = "Overwrite files if they exist.";
-		yargs
+
+		cmd
 			.options({
 				host,
 				database,
@@ -203,7 +210,7 @@ yargs
 			config,
 		} = argv;
 
-		const options = {
+		const options: DownloadModelsOptions = {
 			host,
 			database,
 			tables,
@@ -215,12 +222,12 @@ yargs
 			overwrite,
 			quiet,
 			sort,
-			...(config ? require(config) : {}),
+			...(config ? require(config as string) : {}),
 		};
 
-		sequelizr.downloadModels(options);
+		downloadModels(options);
 	})
-	.command("upload [opts]", "Create tables from models.", () => {
+	.command("upload [opts]", "Create tables from models.", (cmd) => {
 		const {
 			host,
 			database,
@@ -237,7 +244,8 @@ yargs
 			config,
 		} = args;
 		overwrite.description = "Drop tables before creating them.";
-		yargs
+
+		cmd
 			.options({
 				host,
 				database,
@@ -271,7 +279,7 @@ yargs
 			config,
 		} = argv;
 
-		const options = {
+		const options: UploadModelsOptions = {
 			host,
 			database,
 			tables,
@@ -284,15 +292,15 @@ yargs
 			alter,
 			quiet,
 			sort,
-			...(config ? require(config) : {}),
+			...(config ? require(config as string) : {}),
 		};
 
-		sequelizr.uploadModels(options);
+		uploadModels(options);
 	})
 	.alias("help", "h")
 	.alias("version", "v")
 	.group(["help", "version"], "Global Options:")
 	.example("sequelizr <cmd> --help", "Show args for a command.")
 	.showHidden(false)
-	.wrap(yargs.terminalWidth())
+	.wrap(yargs().terminalWidth())
 	.parse();

@@ -1,10 +1,15 @@
-module.exports = {
+export default {
 	restoreMocks: true,
 	clearMocks: true,
 	// collectCoverage: true,
 	collectCoverageFrom: [
-		"src/**/*.js",
+		"src/**/*.ts",
 	],
 	coverageDirectory: "coverage",
-	testRegex: /\.test\.js$/.source,
+	testRegex: /\.test\.ts$/.source,
+	preset: "ts-jest",
+	testEnvironment: "node",
+	moduleNameMapper: {
+		"^(.+)\\.js$": "$1",
+	},
 };

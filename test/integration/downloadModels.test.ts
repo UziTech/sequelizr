@@ -1,6 +1,9 @@
-const Sequelize = require("sequelize");
-const {downloadModels} = require("../../");
-const {resetDatabase, dialectMap} = require("../helpers.js");
+import {Sequelize, QueryInterface, DataTypes} from "sequelize";
+import {downloadModels} from "../../src/index";
+import {resetDatabase, dialectMap} from "../helpers";
+import {getConfig} from "../config";
+import {UnknownObject} from "../../src/types";
+
 const {
 	database,
 	username,
@@ -9,11 +12,12 @@ const {
 	port,
 	dialect,
 	dialectOptions,
-} = require("../config.js");
+} = getConfig();
 const dm = dialectMap(dialect);
 
 describe("downloadModels", () => {
-	let sequelize, queryInterface;
+	let sequelize: Sequelize;
+	let queryInterface: QueryInterface;
 
 	beforeEach(async () => {
 		sequelize = new Sequelize(database, username, password, {
@@ -34,7 +38,7 @@ describe("downloadModels", () => {
 	test("should get tables and views", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				primaryKey: true,
 	    },
 		});
@@ -47,9 +51,9 @@ describe("downloadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: false,
 			dialectOptions,
 			quiet: true,
+			directory: undefined,
 		});
 
 		expect(Object.keys(auto.tables)).toEqual(expect.arrayContaining(["my_table", "my_view"]));
@@ -58,7 +62,7 @@ describe("downloadModels", () => {
 	test("should get only tables", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				primaryKey: true,
 	    },
 		});
@@ -71,10 +75,10 @@ describe("downloadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: false,
 			dialectOptions,
 			includeViews: false,
 			quiet: true,
+			directory: undefined,
 		});
 
 		expect(Object.keys(auto.tables)).toEqual(["my_table"]);
@@ -96,9 +100,9 @@ describe("downloadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: false,
 			dialectOptions,
 			quiet: true,
+			directory: undefined,
 		});
 
 		expect(auto.tables.my_table).toEqual(expect.objectContaining({
@@ -141,20 +145,20 @@ describe("downloadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: false,
 			dialectOptions,
 			quiet: true,
+			directory: undefined,
 		});
 
 		const {my_table} = auto.tables;
-		expect(my_table.id.type).toBe("INT");
-		expect(my_table.string.type).toBe("VARCHAR(255)");
-		expect(my_table.date.type).toBe("DATETIME");
-		expect(my_table.num.type).toBe("FLOAT");
+		expect((my_table.id as UnknownObject).type).toBe("INT");
+		expect((my_table.string as UnknownObject).type).toBe("VARCHAR(255)");
+		expect((my_table.date as UnknownObject).type).toBe("DATETIME");
+		expect((my_table.num as UnknownObject).type).toBe("FLOAT");
 		if (dialect === "mysql") {
-			expect(my_table.dub.type).toBe("DOUBLE");
+			expect((my_table.dub as UnknownObject).type).toBe("DOUBLE");
 		}
-		expect(my_table.deci.type).toBe(dm["DECIMAL(10,2)"]);
-		expect(my_table.tex.type).toBe("TEXT");
+		expect((my_table.deci as UnknownObject).type).toBe(dm["DECIMAL(10,2)"]);
+		expect((my_table.tex as UnknownObject).type).toBe("TEXT");
 	});
 });

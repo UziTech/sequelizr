@@ -1,10 +1,12 @@
-const util = require("util");
-const exec = util.promisify(require("child_process").exec);
+import {exec} from "node:child_process";
+import {promisify} from "node:util";
 
-function sequelizr(argsString) {
-	return exec(`node ../../bin/sequelizr.js ${argsString}`, {cwd: __dirname});
+const execAsync = promisify(exec);
+
+function sequelizr(argsString: string) {
+	return execAsync(`node ../../dist/bin/sequelizr.js ${argsString}`, {cwd: __dirname});
 }
-
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const {version} = require("../../package.json");
 
 describe("sequelizr", () => {

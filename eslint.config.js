@@ -1,12 +1,14 @@
-const js = require("@eslint/js");
-const globals = require("globals");
+import eslint from "@eslint/js";
+import tseslint from "typescript-eslint";
+import globals from "globals";
 
-module.exports = [
-	js.configs.recommended,
+export default tseslint.config(
+	eslint.configs.recommended,
+	tseslint.configs.recommended,
 	{
 		languageOptions: {
 			globals: {
-				...globals.es2015,
+				...globals.es2024,
 				...globals.node,
 				...globals.jest,
 			},
@@ -24,40 +26,16 @@ module.exports = [
 			"default-case": 2,
 			"dot-location": [2, "property"],
 			"eqeqeq": 2,
-			"no-console": 1,
 			"no-else-return": 1,
 			"no-eval": 2,
 			"no-multi-spaces": 1,
-			"no-param-reassign": 2,
 			"no-unused-expressions": 1,
-			"no-unused-vars": 2,
 			"no-warning-comments": 1,
 			"no-with": 2,
 			"require-await": 2,
 			"strict": 1,
 
-			"no-restricted-globals": [
-				"error",
-				{
-					"name": "fit",
-					"message": "Do not commit focused tests.",
-				},
-				{
-					"name": "xit",
-					"message": "Why is this skipped?.",
-				},
-				{
-					"name": "fdescribe",
-					"message": "Do not commit focused tests.",
-				},
-				{
-					"name": "xdescribe",
-					"message": "Why is this skipped?",
-				},
-			],
 			"no-shadow": 1,
-			"no-undef": 2,
-			"no-undefined": 2,
 			"no-sync": 1,
 
 			"array-bracket-spacing": 2,
@@ -101,4 +79,9 @@ module.exports = [
 			"template-curly-spacing": 2,
 		},
 	},
-];
+	{
+		ignores: [
+			"dist",
+		],
+	},
+);

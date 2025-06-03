@@ -1,7 +1,9 @@
-const path = require("path");
-const Sequelize = require("sequelize");
-const {checkModels} = require("../../");
-const {resetDatabase} = require("../helpers.js");
+import {resolve} from "node:path";
+import {Sequelize, QueryInterface, DataTypes} from "sequelize";
+import {checkModels} from "../../src/index";
+import {resetDatabase} from "../helpers";
+import {getConfig} from "../config";
+
 const {
 	database,
 	username,
@@ -10,10 +12,11 @@ const {
 	port,
 	dialect,
 	dialectOptions,
-} = require("../config.js");
+} = getConfig();
 
 describe("checkModels", () => {
-	let sequelize, queryInterface;
+	let sequelize: Sequelize;
+	let queryInterface: QueryInterface;
 
 	beforeEach(async () => {
 		sequelize = new Sequelize(database, username, password, {
@@ -34,7 +37,7 @@ describe("checkModels", () => {
 	test("should check tables and views", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				primaryKey: true,
 	    },
 		});
@@ -47,19 +50,20 @@ describe("checkModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/with-views`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/with-views`),
 			dialectOptions,
+			extension: "cjs",
 			output: false,
 			quiet: true,
 		});
 
-		await expect(promise).resolves.toBe();
+		await expect(promise).resolves.toBeUndefined();
 	});
 
 	test("should just check tables", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				primaryKey: true,
 	    },
 		});
@@ -72,13 +76,14 @@ describe("checkModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
 			dialectOptions,
+			extension: "cjs",
 			output: false,
 			includeViews: false,
 			quiet: true,
 		});
 
-		await expect(promise).resolves.toBe();
+		await expect(promise).resolves.toBeUndefined();
 	});
 });

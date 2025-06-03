@@ -1,7 +1,11 @@
-const path = require("path");
-const Sequelize = require("sequelize");
-const {uploadModels} = require("../../");
-const {resetDatabase} = require("../helpers.js");
+import {resolve} from "node:path";
+import {Sequelize, QueryInterface, QueryTypes, DataTypes} from "sequelize";
+import {uploadModels} from "../../src/index";
+import {resetDatabase} from "../helpers";
+import {getConfig} from "../config";
+import {UnknownObject} from "../../src/types";
+import dialects from "../../src/dialects";
+
 const {
 	database,
 	username,
@@ -10,10 +14,11 @@ const {
 	port,
 	dialect,
 	dialectOptions,
-} = require("../config.js");
+} = getConfig();
 
 describe("uploadModels", () => {
-	let sequelize, queryInterface;
+	let sequelize: Sequelize;
+	let queryInterface: QueryInterface;
 
 	beforeEach(async () => {
 		sequelize = new Sequelize(database, username, password, {
@@ -39,20 +44,21 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
+			extension: "cjs",
 			dialectOptions,
 			quiet: true,
 		});
 
-		const showTablesQuery = require(`../../src/dialects/${dialect}.js`).showTablesQuery({
+		const {showTablesQuery} = dialects[dialect];
+
+		const tables = (await sequelize.query(showTablesQuery!({
 			database,
 			includeViews: true,
-		});
-
-		const tables = (await sequelize.query(showTablesQuery, {
+		}), {
 			raw: true,
-			type: Sequelize.QueryTypes.SHOWTABLES,
-		})).map(table => table.tableName || table);
+			type: QueryTypes.SHOWTABLES,
+		})).map((table: string | UnknownObject) => (typeof table === "object" && "tableName" in table ? table.tableName : table) as string);
 
 		const myTable = await queryInterface.describeTable("my_table");
 
@@ -63,7 +69,7 @@ describe("uploadModels", () => {
 	test("should alter table", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				allowNull: false,
 				primaryKey: true,
 	    },
@@ -76,7 +82,8 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			extension: "cjs",
 			dialectOptions,
 			alter: true,
 			quiet: true,
@@ -90,7 +97,7 @@ describe("uploadModels", () => {
 	test("should overwrite table", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				primaryKey: true,
 	    },
 		});
@@ -102,7 +109,8 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			extension: "cjs",
 			dialectOptions,
 			overwrite: true,
 			quiet: true,
@@ -116,7 +124,7 @@ describe("uploadModels", () => {
 	test("should fail when existing table", async () => {
 		await queryInterface.createTable("my_table", {
 			id: {
-	      type: Sequelize.DataTypes.INTEGER,
+	      type: DataTypes.INTEGER,
 				allowNull: false,
 				primaryKey: true,
 	    },
@@ -129,7 +137,8 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: path.resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			extension: "cjs",
 			dialectOptions,
 			quiet: true,
 		})).rejects.toThrow(/'my_table\.name' not in db/);
