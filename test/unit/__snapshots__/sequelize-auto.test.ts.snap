@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`sequelize-auto generateText should generate correct text 1`] = `
-"export default function (sequelize, DataTypes) {
+"module.exports = function (sequelize, DataTypes) {
   return sequelize.define("my_table", {
     createdAt: {
       type: DataTypes.DATE,
@@ -259,7 +259,7 @@ exports[`sequelize-auto generateText should generate correct text 1`] = `
 `;
 
 exports[`sequelize-auto generateText should sort fields and attributes 1`] = `
-"export default function (sequelize, DataTypes) {
+"module.exports = function (sequelize, DataTypes) {
   return sequelize.define("my_table", {
     atest: {
       type: DataTypes.INTEGER,
@@ -279,7 +279,7 @@ exports[`sequelize-auto generateText should sort fields and attributes 1`] = `
 `;
 
 exports[`sequelize-auto run writing files should write tables to directory 1`] = `
-"export default function (sequelize, DataTypes) {
+"module.exports = function (sequelize, DataTypes) {
 	return sequelize.define("table", {
 		id: {
 			primaryKey: true,
