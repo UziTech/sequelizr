@@ -1,3 +1,10 @@
+## [4.0.1](https://github.com/UziTech/sequelizr/compare/v4.0.0...v4.0.1) (2025-07-09)
+
+
+### Bug Fixes
+
+* add type declarations ([#893](https://github.com/UziTech/sequelizr/issues/893)) ([1caa7f1](https://github.com/UziTech/sequelizr/commit/1caa7f1958f4d3fb410d078fe19b55b575305345))
+
 # [4.0.0](https://github.com/UziTech/sequelizr/compare/v3.0.87...v4.0.0) (2025-06-03)
 
 
