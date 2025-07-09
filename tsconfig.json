@@ -3,9 +3,9 @@
     "target": "ES2024",
     "module": "NodeNext",
     "strict": true,
-    "skipLibCheck": true,
     "outDir": "dist",
     "sourceMap": true,
+    "declaration": true,
     "esModuleInterop": true,
   },
   "include": [
