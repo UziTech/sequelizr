@@ -59,7 +59,7 @@
     "globals": "^16.3.0",
     "jest": "^30.0.5",
     "jest-cli": "^30.0.5",
-    "mysql2": "3.14.3",
+    "mysql2": "3.14.4",
     "semantic-release": "^24.2.7",
     "tedious": "^19.0.0",
     "tmp-promise": "^3.0.3",
