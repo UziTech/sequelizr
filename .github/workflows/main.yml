@@ -18,7 +18,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v5
       - name: Install Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: '*'
       - name: Install Dependencies
@@ -35,7 +35,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v5
       - name: Install Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
       - name: Install Dependencies
@@ -63,7 +63,7 @@ jobs:
         run: |
           sudo docker run -e MYSQL_RANDOM_ROOT_PASSWORD=true -e MYSQL_USER=sequelizr_test -e MYSQL_PASSWORD=sequelizr_test -e MYSQL_DATABASE=sequelizr_test -d -p 3306:3306 --name mysql --health-cmd 'mysqladmin ping --silent' mysql:$MYSQL_VERSION
       - name: Install Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
       - name: Install Dependencies
@@ -99,7 +99,7 @@ jobs:
       - name: Setup MSSQL
         run: sqlcmd -S localhost -U sa -P c0MplicatedP@ssword -i ./scripts/mssql/setup.sql -C
       - name: Install Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
       - name: Install Dependencies
@@ -121,7 +121,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v5
       - name: Install Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
       - name: Install Dependencies
@@ -139,7 +139,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v5
       - name: Install Node
-        uses: actions/setup-node@v5
+        uses: actions/setup-node@v6
         with:
           node-version: 'lts/*'
       - name: Install Dependencies
