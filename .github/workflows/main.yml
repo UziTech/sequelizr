@@ -90,7 +90,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v6
       - name: Install MSSQL
-        uses: potatoqualitee/mssqlsuite@v1.11
+        uses: potatoqualitee/mssqlsuite@v1.12
         with:
           install: sqlengine, sqlclient
           version: ${{ matrix.version }}
