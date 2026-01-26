@@ -5,8 +5,10 @@ on:
     branches:
       - master
 
-jobs:
+permissions:
+  contents: read
 
+jobs:
   Unit_Tests:
     name: Unit Tests
     strategy:
@@ -20,7 +22,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v6
         with:
-          node-version: '*'
+          node-version: "*"
       - name: Install Dependencies
         run: npm ci
       - name: Build
@@ -37,7 +39,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v6
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
       - name: Install Dependencies
         run: npm ci
       - name: Build
@@ -50,7 +52,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        version: ['8', '9']
+        version: ["8", "9"]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -65,7 +67,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v6
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
       - name: Install Dependencies
         run: npm ci
       - name: Build
@@ -101,7 +103,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v6
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
       - name: Install Dependencies
         run: npm ci
       - name: Build
@@ -123,13 +125,18 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v6
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
       - name: Install Dependencies
         run: npm ci
       - name: Lint ✨
         run: npm run lint
 
   Release:
+    permissions:
+      contents: write # to be able to publish a GitHub release
+      issues: write # to be able to comment on released issues
+      pull-requests: write # to be able to comment on released pull requests
+      id-token: write # to enable use of OIDC for trusted publishing and npm provenance
     needs: [Unit_Tests, Unit_Coverage, MySQL_Tests, MSSQL_Tests, Lint]
     if: |
       github.ref == 'refs/heads/master' &&
@@ -141,7 +148,7 @@ jobs:
       - name: Install Node
         uses: actions/setup-node@v6
         with:
-          node-version: 'lts/*'
+          node-version: "lts/*"
       - name: Install Dependencies
         run: npm ci
       - name: Build
@@ -149,5 +156,4 @@ jobs:
       - name: Release 🎉
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npx semantic-release
