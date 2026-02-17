@@ -39,9 +39,9 @@ export async function uploadModels(options: UploadModelsOptions = {}) {
 		files = await readdir(directory ?? "");
 	} catch (ex) {
 		if (ex instanceof Error && "code" in ex && (ex as NodeJS.ErrnoException).code === "ENOENT") {
-			throw new Error(`No models for '${host}.${database}'`);
+			throw new Error(`No models for '${host}.${database}'`, {cause: ex});
 		}
-		throw new Error(`Cannot sync '${host}.${database}' models`);
+		throw new Error(`Cannot sync '${host}.${database}' models`, {cause: ex});
 	}
 
 	const db = new Sequelize(database ?? "", username ?? "", password, {

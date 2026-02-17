@@ -196,7 +196,7 @@ export class AutoSequelize {
 			raw: true,
 		}) as Row[];
 
-		let indexes: Index[] = [];
+		let indexes: Index[];
 		if (this.options.dialect === "sqlite") {
 			indexes = results.reduce((arr: Index[], row) => {
 				const match = row.sql.match(/CREATE(\s+UNIQUE)?\s+INDEX\s+(\S+)\s+ON\s+(\S+)\s*\(([^)]+)\)/i);
@@ -487,7 +487,7 @@ export class AutoSequelize {
 						return `(${lengths.join(", ")})`;
 					};
 					let val = `"${attrValue}"`;
-					let match = null;
+					let match;
 
 					if (_attr.match(/^(?:enum|set)/)) {
 						val = `DataTypes.ENUM${length()}`;
@@ -725,7 +725,7 @@ export class AutoSequelize {
 			if (ex instanceof Error && "code" in ex && (ex as NodeJS.ErrnoException).code === "EEXIST") {
 				const data = await readFile(file, {encoding: "utf8"});
 				if (data !== text) {
-					throw new Error(`${table} changed but already exists`);
+					throw new Error(`${table} changed but already exists`, {cause: ex});
 				}
 			} else {
 				throw ex;
