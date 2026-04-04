@@ -7,7 +7,7 @@
     "sourceMap": true,
     "declaration": true,
     "esModuleInterop": true,
-    "rootDir": ".",
+    "rootDir": "./src",
     "types": [
       "node",
       "jest"
