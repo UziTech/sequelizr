@@ -1,3 +1,10 @@
+## [4.0.3](https://github.com/UziTech/sequelizr/compare/v4.0.2...v4.0.3) (2026-04-04)
+
+
+### Bug Fixes
+
+* **deps:** update devdependency typescript to v6 ([#1088](https://github.com/UziTech/sequelizr/issues/1088)) ([f71ebaa](https://github.com/UziTech/sequelizr/commit/f71ebaa16e967753ea52151cb4dba112fc88cf17))
+
 ## [4.0.2](https://github.com/UziTech/sequelizr/compare/v4.0.1...v4.0.2) (2026-03-08)
 
 
