@@ -61,7 +61,7 @@
     "jest-cli": "^30.4.2",
     "mysql2": "3.22.5",
     "semantic-release": "^25.0.5",
-    "tedious": "^19.2.2",
+    "tedious": "^20.0.0",
     "tmp-promise": "^3.0.3",
     "ts-jest": "^29.4.11",
     "typescript": "^6.0.3",
