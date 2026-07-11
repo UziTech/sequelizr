@@ -60,7 +60,7 @@
     "jest": "^30.4.2",
     "jest-cli": "^30.4.2",
     "mysql2": "3.22.6",
-    "semantic-release": "^25.0.5",
+    "semantic-release": "^25.0.6",
     "tedious": "^20.0.0",
     "tmp-promise": "^3.0.3",
     "ts-jest": "^29.4.11",
