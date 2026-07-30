@@ -1,3 +1,10 @@
+## [4.0.4](https://github.com/UziTech/sequelizr/compare/v4.0.3...v4.0.4) (2026-07-30)
+
+
+### Bug Fixes
+
+* **deps:** update dependency yargs to ^18.1.0 ([#1172](https://github.com/UziTech/sequelizr/issues/1172)) ([4f6f158](https://github.com/UziTech/sequelizr/commit/4f6f15855b6b8a7ccee9efa7ec737a964b2d0e82))
+
 ## [4.0.3](https://github.com/UziTech/sequelizr/compare/v4.0.2...v4.0.3) (2026-04-04)
 
 
