@@ -10,7 +10,6 @@ export default tseslint.config(
 			globals: {
 				...globals.es2024,
 				...globals.node,
-				...globals.jest,
 			},
 			parserOptions: {
 				sourceType: "module",
@@ -82,6 +81,8 @@ export default tseslint.config(
 	{
 		ignores: [
 			"dist",
+			"dist-test",
+			"coverage",
 		],
 	},
 );

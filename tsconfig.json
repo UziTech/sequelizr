@@ -9,8 +9,7 @@
     "esModuleInterop": true,
     "rootDir": "./src",
     "types": [
-      "node",
-      "jest"
+      "node"
     ]
   },
   "include": [
