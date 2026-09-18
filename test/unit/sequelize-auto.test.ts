@@ -3,7 +3,7 @@ import {afterEach, beforeEach, describe, mock, test} from "node:test";
 import {dir, setGracefulCleanup, DirectoryResult} from "tmp-promise";
 import {join} from "node:path";
 import {readdir, readFile} from "node:fs/promises";
-import {Sequelize, QueryTypes, Options as SequelizeOptions} from "sequelize";
+import {Sequelize, Options as SequelizeOptions} from "sequelize";
 import {AutoSequelize} from "../../src/sequelize-auto.js";
 import {
 	EXPECTED_GENERATED_TEXT,
