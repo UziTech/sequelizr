@@ -65,3 +65,4 @@ typings/
 
 # built files
 dist
+dist-test
