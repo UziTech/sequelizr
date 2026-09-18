@@ -156,7 +156,7 @@ describe("sequelize-auto", () => {
 					type: "INT",
 				},
 			};
-			sequelize.queryInterface.describeTable.mockReturnValueOnce(describeTable);
+			sequelize.queryInterface.describeTable.mock.mockImplementationOnce(() => describeTable);
 			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
 				foreignKeys: false,
@@ -192,7 +192,7 @@ describe("sequelize-auto", () => {
 						type: "INT",
 					},
 				};
-				sequelize.queryInterface.describeTable.mockReturnValueOnce(describeTable);
+				sequelize.queryInterface.describeTable.mock.mockImplementationOnce(() => describeTable);
 				const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 					dialect: "mysql",
 					directory: tempDir.path,
