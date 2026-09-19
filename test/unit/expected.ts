@@ -1,7 +1,33 @@
-// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+export const EXPECTED_HELP_TEXT = `sequelizr <cmd> [opts]
 
-exports[`sequelize-auto generateText should generate correct text 1`] = `
-"module.exports = function (sequelize, DataTypes) {
+Commands:
+  sequelizr check [opts]     Check if models match the database tables.
+  sequelizr download [opts]  Save tables to models.
+  sequelizr upload [opts]    Create tables from models.
+
+Global Options:
+  -h, --help     Show help  [boolean]
+  -v, --version  Show version number  [boolean]
+
+Examples:
+  sequelizr <cmd> --help  Show args for a command.
+`;
+
+export const EXPECTED_WRITTEN_TABLE_MODEL = `module.exports = function (sequelize, DataTypes) {
+	return sequelize.define("table", {
+		id: {
+			primaryKey: true,
+			autoIncrement: true,
+			type: DataTypes.INTEGER,
+		},
+	}, {
+		tableName: "table",
+		timestamps: false,
+	});
+};
+`;
+
+export const EXPECTED_GENERATED_TEXT = `module.exports = function (sequelize, DataTypes) {
   return sequelize.define("my_table", {
     createdAt: {
       type: DataTypes.DATE,
@@ -255,11 +281,9 @@ exports[`sequelize-auto generateText should generate correct text 1`] = `
     schema: "schema",
   });
 };
-"
 `;
 
-exports[`sequelize-auto generateText should sort fields and attributes 1`] = `
-"module.exports = function (sequelize, DataTypes) {
+export const EXPECTED_SORTED_GENERATED_TEXT = `module.exports = function (sequelize, DataTypes) {
   return sequelize.define("my_table", {
     atest: {
       type: DataTypes.INTEGER,
@@ -275,21 +299,4 @@ exports[`sequelize-auto generateText should sort fields and attributes 1`] = `
     timestamps: false,
   });
 };
-"
-`;
-
-exports[`sequelize-auto run writing files should write tables to directory 1`] = `
-"module.exports = function (sequelize, DataTypes) {
-	return sequelize.define("table", {
-		id: {
-			primaryKey: true,
-			autoIncrement: true,
-			type: DataTypes.INTEGER,
-		},
-	}, {
-		tableName: "table",
-		timestamps: false,
-	});
-};
-"
 `;

@@ -1,10 +1,16 @@
-import {resolve} from "node:path";
+import assert from "node:assert/strict";
+import {dirname, resolve} from "node:path";
+import {fileURLToPath} from "node:url";
+import {afterEach, beforeEach, describe, test} from "node:test";
 import {Sequelize, QueryInterface, QueryTypes, DataTypes} from "sequelize";
-import {uploadModels} from "../../src/index";
-import {resetDatabase} from "../helpers";
-import {getConfig} from "../config";
-import {UnknownObject} from "../../src/types";
-import dialects from "../../src/dialects";
+import {uploadModels} from "../../src/index.js";
+import {resetDatabase} from "../helpers.js";
+import {getConfig} from "../config.js";
+import {UnknownObject} from "../../src/types.js";
+import dialects from "../../src/dialects/index.js";
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const projectRoot = resolve(__dirname, "../../..");
 
 const {
 	database,
@@ -44,7 +50,7 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: resolve(__dirname, `../fixtures/models/${dialect}/no-views`),
+			directory: resolve(projectRoot, `test/fixtures/models/${dialect}/no-views`),
 			extension: "cjs",
 			dialectOptions,
 			quiet: true,
@@ -62,8 +68,8 @@ describe("uploadModels", () => {
 
 		const myTable = await queryInterface.describeTable("my_table");
 
-		expect(tables).toEqual(["my_table"]);
-		expect(myTable.id.type).toBe("INT");
+		assert.deepEqual(tables, ["my_table"]);
+		assert.equal(myTable.id.type, "INT");
 	});
 
 	test("should alter table", async () => {
@@ -82,7 +88,7 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			directory: resolve(projectRoot, `test/fixtures/models/${dialect}/two-cols`),
 			extension: "cjs",
 			dialectOptions,
 			alter: true,
@@ -91,7 +97,7 @@ describe("uploadModels", () => {
 
 		const myTable = await queryInterface.describeTable("my_table");
 
-		expect(myTable.name).toBeTruthy();
+		assert.ok(myTable.name);
 	});
 
 	test("should overwrite table", async () => {
@@ -109,7 +115,7 @@ describe("uploadModels", () => {
 			host,
 			port,
 			dialect,
-			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			directory: resolve(projectRoot, `test/fixtures/models/${dialect}/two-cols`),
 			extension: "cjs",
 			dialectOptions,
 			overwrite: true,
@@ -118,7 +124,7 @@ describe("uploadModels", () => {
 
 		const myTable = await queryInterface.describeTable("my_table");
 
-		expect(myTable.name).toBeTruthy();
+		assert.ok(myTable.name);
 	});
 
 	test("should fail when existing table", async () => {
@@ -130,21 +136,21 @@ describe("uploadModels", () => {
 	    },
 		});
 
-		await expect(uploadModels({
+		await assert.rejects(() => uploadModels({
 			database,
 			username,
 			password,
 			host,
 			port,
 			dialect,
-			directory: resolve(__dirname, `../fixtures/models/${dialect}/two-cols`),
+			directory: resolve(projectRoot, `test/fixtures/models/${dialect}/two-cols`),
 			extension: "cjs",
 			dialectOptions,
 			quiet: true,
-		})).rejects.toThrow(/'my_table\.name' not in db/);
+		}), /'my_table\.name' not in db/);
 
 		const myTable = await queryInterface.describeTable("my_table");
 
-		expect(myTable.name).not.toBeTruthy();
+		assert.ok(!myTable.name);
 	});
 });

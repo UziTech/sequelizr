@@ -1,8 +1,10 @@
+import assert from "node:assert/strict";
+import {afterEach, beforeEach, describe, test} from "node:test";
 import {Sequelize, QueryInterface, DataTypes} from "sequelize";
-import {downloadModels} from "../../src/index";
-import {resetDatabase, dialectMap} from "../helpers";
-import {getConfig} from "../config";
-import {UnknownObject} from "../../src/types";
+import {downloadModels} from "../../src/index.js";
+import {resetDatabase, dialectMap} from "../helpers.js";
+import {getConfig} from "../config.js";
+import {UnknownObject} from "../../src/types.js";
 
 const {
 	database,
@@ -56,7 +58,8 @@ describe("downloadModels", () => {
 			directory: undefined,
 		});
 
-		expect(Object.keys(auto.tables)).toEqual(expect.arrayContaining(["my_table", "my_view"]));
+		assert.ok("my_table" in auto.tables);
+		assert.ok("my_view" in auto.tables);
 	});
 
 	test("should get only tables", async () => {
@@ -81,7 +84,7 @@ describe("downloadModels", () => {
 			directory: undefined,
 		});
 
-		expect(Object.keys(auto.tables)).toEqual(["my_table"]);
+		assert.deepEqual(Object.keys(auto.tables), ["my_table"]);
 	});
 
 	test("should use field info", async () => {
@@ -105,24 +108,28 @@ describe("downloadModels", () => {
 			directory: undefined,
 		});
 
-		expect(auto.tables.my_table).toEqual(expect.objectContaining({
-			id: expect.objectContaining({
+		assert.deepEqual(auto.tables.my_table, {
+			...auto.tables.my_table,
+			id: {
+				...(auto.tables.my_table.id as UnknownObject),
 				primaryKey: true,
 				autoIncrement: true,
 				defaultValue: null,
 				type: "INT",
-			}),
-			name: expect.objectContaining({
+			},
+			name: {
+				...(auto.tables.my_table.name as UnknownObject),
 				allowNull: false,
 				defaultValue: null,
 				type: "VARCHAR(255)",
-			}),
-			date: expect.objectContaining({
+			},
+			date: {
+				...(auto.tables.my_table.date as UnknownObject),
 				allowNull: true,
 				defaultValue: dm.CURRENT_TIMESTAMP,
 				type: "DATETIME",
-			}),
-		}));
+			},
+		});
 	});
 
 	test("should use correct types", async () => {
@@ -151,14 +158,14 @@ describe("downloadModels", () => {
 		});
 
 		const {my_table} = auto.tables;
-		expect((my_table.id as UnknownObject).type).toBe("INT");
-		expect((my_table.string as UnknownObject).type).toBe("VARCHAR(255)");
-		expect((my_table.date as UnknownObject).type).toBe("DATETIME");
-		expect((my_table.num as UnknownObject).type).toBe("FLOAT");
+		assert.equal((my_table.id as UnknownObject).type, "INT");
+		assert.equal((my_table.string as UnknownObject).type, "VARCHAR(255)");
+		assert.equal((my_table.date as UnknownObject).type, "DATETIME");
+		assert.equal((my_table.num as UnknownObject).type, "FLOAT");
 		if (dialect === "mysql") {
-			expect((my_table.dub as UnknownObject).type).toBe("DOUBLE");
+			assert.equal((my_table.dub as UnknownObject).type, "DOUBLE");
 		}
-		expect((my_table.deci as UnknownObject).type).toBe(dm["DECIMAL(10,2)"]);
-		expect((my_table.tex as UnknownObject).type).toBe("TEXT");
+		assert.equal((my_table.deci as UnknownObject).type, dm["DECIMAL(10,2)"]);
+		assert.equal((my_table.tex as UnknownObject).type, "TEXT");
 	});
 });

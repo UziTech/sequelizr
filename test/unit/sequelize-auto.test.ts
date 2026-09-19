@@ -1,7 +1,15 @@
+import assert from "node:assert/strict";
+import {afterEach, beforeEach, describe, mock, test} from "node:test";
 import {dir, setGracefulCleanup, DirectoryResult} from "tmp-promise";
 import {join} from "node:path";
 import {readdir, readFile} from "node:fs/promises";
-import {Sequelize, QueryTypes, Options as SequelizeOptions} from "sequelize";
+import {Sequelize, Options as SequelizeOptions} from "sequelize";
+import {AutoSequelize} from "../../src/sequelize-auto.js";
+import {
+	EXPECTED_GENERATED_TEXT,
+	EXPECTED_SORTED_GENERATED_TEXT,
+	EXPECTED_WRITTEN_TABLE_MODEL,
+} from "./expected.js";
 
 setGracefulCleanup();
 
@@ -15,15 +23,15 @@ class SequelizeMock {
 	options?: SequelizeOptions;
 
 	queryInterface: {
-		describeTable: jest.Mock;
-		showAllTables: jest.Mock;
+		describeTable: ReturnType<typeof mock.fn>;
+		showAllTables: ReturnType<typeof mock.fn>;
 	};
 
-	getQueryInterface: jest.Mock;
+	getQueryInterface: ReturnType<typeof mock.fn>;
 
-	query: jest.Mock;
+	query: ReturnType<typeof mock.fn>;
 
-	close: jest.Mock;
+	close: ReturnType<typeof mock.fn>;
 
 	static QueryTypes: object;
 
@@ -33,31 +41,36 @@ class SequelizeMock {
 		this.password = password;
 		this.options = options;
 		this.queryInterface = {
-			describeTable: jest.fn(),
-			showAllTables: jest.fn(),
+			describeTable: mock.fn(),
+			showAllTables: mock.fn(),
 		};
 
-		this.getQueryInterface = jest.fn(() => this.queryInterface);
+		this.getQueryInterface = mock.fn(() => this.queryInterface);
 
-		this.query = jest.fn();
+		this.query = mock.fn();
 
-		this.close = jest.fn();
+		this.close = mock.fn();
 	}
 }
 SequelizeMock.QueryTypes = {
 	SELECT: "SELECT",
 	SHOWTABLES: "SHOWTABLES",
 };
-jest.doMock("sequelize", () => ({Sequelize: SequelizeMock, QueryTypes}));
 
-import {AutoSequelize} from "../../src/sequelize-auto";
+function normalizeLineEndings(text: string) {
+	return text.replace(/\r\n/g, "\n");
+}
+
+afterEach(() => {
+	mock.restoreAll();
+});
 
 describe("sequelize-auto", () => {
 	describe("constructor", () => {
 		test("should load sequelize-auto", () => {
 			const auto = new AutoSequelize("database", "username", "password");
 
-			expect(auto).toBeTruthy();
+			assert.ok(auto);
 		});
 
 		test("should load mssql", () => {
@@ -65,7 +78,7 @@ describe("sequelize-auto", () => {
 				dialect: "mssql",
 			});
 
-			expect(auto).toBeTruthy();
+			assert.ok(auto);
 		});
 
 		test("should load mysql", () => {
@@ -73,7 +86,7 @@ describe("sequelize-auto", () => {
 				dialect: "mysql",
 			});
 
-			expect(auto).toBeTruthy();
+			assert.ok(auto);
 		});
 
 		test("should allow passing sequelize instance", () => {
@@ -83,66 +96,58 @@ describe("sequelize-auto", () => {
 				quiet: true,
 			});
 
-			expect(auto).toBeTruthy();
+			assert.ok(auto);
 		});
 
 		test("should ignore skipTables with tables", () => {
-			jest.spyOn(console, "error").mockImplementation(() => {});
+			const consoleError = mock.method(console, "error", () => {});
 
 			new AutoSequelize("database", "username", "password", {
 				tables: [],
 				skipTables: [],
 			});
 
-
-			expect(console.error).toHaveBeenCalledWith("The 'skipTables' option will be ignored because the 'tables' option is given");
+			assert.equal(consoleError.mock.calls.length, 1);
+			assert.deepEqual(consoleError.mock.calls[0]?.arguments, ["The 'skipTables' option will be ignored because the 'tables' option is given"]);
 		});
 
 		test("should allow tables as string", () => {
-			jest.spyOn(console, "error").mockImplementation(() => {});
-
 			const auto = new AutoSequelize("database", "username", "password", {
 				tables: "table",
 			});
 
-			expect(auto.options.tables).toEqual(["table"]);
+			assert.deepEqual(auto.options.tables, ["table"]);
 		});
 
 		test("should allow skipTables as string", () => {
-			jest.spyOn(console, "error").mockImplementation(() => {});
-
 			const auto = new AutoSequelize("database", "username", "password", {
 				skipTables: "skiptable",
 			});
 
-			expect(auto.options.skipTables).toEqual(["skiptable"]);
+			assert.deepEqual(auto.options.skipTables, ["skiptable"]);
 		});
 
 		test("should lowercase tables", () => {
-			jest.spyOn(console, "error").mockImplementation(() => {});
-
 			const auto = new AutoSequelize("database", "username", "password", {
 				tables: "Table",
 			});
 
-			expect(auto.options.tables).toEqual(["table"]);
+			assert.deepEqual(auto.options.tables, ["table"]);
 		});
 
 		test("should lowercase skipTables", () => {
-			jest.spyOn(console, "error").mockImplementation(() => {});
-
 			const auto = new AutoSequelize("database", "username", "password", {
 				skipTables: "SkipTable",
 			});
 
-			expect(auto.options.skipTables).toEqual(["skiptable"]);
+			assert.deepEqual(auto.options.skipTables, ["skiptable"]);
 		});
 	});
 
 	describe("run", () => {
 		test("should build tables", async () => {
 			const sequelize = new SequelizeMock();
-			sequelize.query.mockReturnValueOnce(["table"]);
+			sequelize.query.mock.mockImplementationOnce(() => ["table"]);
 			const describeTable = {
 				id: {
 					primaryKey: true,
@@ -151,7 +156,7 @@ describe("sequelize-auto", () => {
 					type: "INT",
 				},
 			};
-			sequelize.queryInterface.describeTable.mockReturnValueOnce(describeTable);
+			sequelize.queryInterface.describeTable.mock.mockImplementationOnce(() => describeTable);
 			const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 				dialect: "mysql",
 				foreignKeys: false,
@@ -162,7 +167,7 @@ describe("sequelize-auto", () => {
 
 			await auto.run();
 
-			expect(auto.tables.table).toBe(describeTable);
+			assert.equal(auto.tables.table, describeTable);
 		});
 
 		describe("writing files", () => {
@@ -178,7 +183,7 @@ describe("sequelize-auto", () => {
 
 			test("should write tables to directory", async () => {
 				const sequelize = new SequelizeMock();
-				sequelize.query.mockReturnValueOnce(["table"]);
+				sequelize.query.mock.mockImplementationOnce(() => ["table"]);
 				const describeTable = {
 					id: {
 						primaryKey: true,
@@ -187,7 +192,7 @@ describe("sequelize-auto", () => {
 						type: "INT",
 					},
 				};
-				sequelize.queryInterface.describeTable.mockReturnValueOnce(describeTable);
+				sequelize.queryInterface.describeTable.mock.mockImplementationOnce(() => describeTable);
 				const auto = new AutoSequelize(sequelize as unknown as Sequelize, {
 					dialect: "mysql",
 					directory: tempDir.path,
@@ -200,11 +205,11 @@ describe("sequelize-auto", () => {
 
 				const files = await readdir(tempDir.path);
 
-				expect(files).toEqual(["table.js"]);
+				assert.deepEqual(files, ["table.js"]);
 
 				const contents = await readFile(join(tempDir.path, files[0]), {encoding: "utf8"});
 
-				expect(contents).toMatchSnapshot();
+				assert.equal(normalizeLineEndings(contents), EXPECTED_WRITTEN_TABLE_MODEL);
 			});
 		});
 	});
@@ -480,7 +485,7 @@ describe("sequelize-auto", () => {
 			};
 			const text = auto.generateText("my_table", (level: number) => "  ".repeat(level));
 
-			expect(text).toMatchSnapshot();
+			assert.equal(normalizeLineEndings(text), EXPECTED_GENERATED_TEXT);
 		});
 
 		test("should sort fields and attributes", () => {
@@ -502,7 +507,7 @@ describe("sequelize-auto", () => {
 			};
 			const text = auto.generateText("my_table", (level: number) => "  ".repeat(level));
 
-			expect(text).toMatchSnapshot();
+			assert.equal(normalizeLineEndings(text), EXPECTED_SORTED_GENERATED_TEXT);
 		});
 	});
 });
