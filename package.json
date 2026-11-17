@@ -62,7 +62,7 @@
     "eslint": "^10.15.0",
     "globals": "^17.14.0",
     "mysql2": "3.24.6",
-    "semantic-release": "^25.0.9",
+    "semantic-release": "^26.0.1",
     "tedious": "^20.3.9",
     "tmp-promise": "^3.0.3",
     "typescript": "^6.0.3",
